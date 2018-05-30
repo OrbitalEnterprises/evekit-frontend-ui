@@ -1,0 +1,93 @@
+<div class="container-fluid">
+
+<div class="row col-wrap">
+  <div class="col-md-12">
+    <div id="xmlproxy-panel" class="panel panel-default">
+      <div class="panel-heading">
+        <h3 class="panel-title">EVE Static Data Export</h3>
+      </div>
+      <div class="panel-body col-extend">
+      EveKit hosts online versions of the last two releases of the EVE Online Static Data Export.
+      These are nothing more than a live version of the <a href="https://github.com/OrbitalEnterprises/evekit-sde">EveKit SDE</a> 
+      GitHub project pointed at databases containing the appropriate releases.  See the project page for more details
+      on how the online version is setup.
+      <p>
+      The current hosted versions are:
+      <table class="table">
+      <tr>
+      <th>Release Date</th>
+      <th>Release Name</th>
+      <th>Model URL</th>
+      <th>Link</th>
+      </tr>
+      <tr ng-repeat="(key, value) in releases">
+      <td>{{value.reldate}}</td>
+      <td>{{value.name}}</td>
+      <td><a ng-href="{{value.link}}">{{value.link}}</a></td>
+      <td>{{value.model}}</td>
+      </tr>
+      </table>
+      <p>
+      As with all EveKit APIs, the online SDE is annotated with <a href="http://swagger.io/">Swagger</a> making it very easy to
+      browse the SDE or generate clients in a variety of languages.  You can browse any of the current hosted SDE releases
+      using the <a href="#/sde/ui">Swagger UI panel</a>.  See below for quick instructions on generating your own client
+      (the <a href="https://github.com/OrbitalEnterprises/evekit-sde">GitHub project</a> contains more detailed instructions).
+      <h4>SDE Query Parameters</h4>
+      The online SDE uses a special query language which allows you to select SDE elements by querying any of the fields which
+      make up an element.  For example, an Agent currently has eight fields: agentID, agentTypeID, corporationID, divisionID,
+      isLocator, level, locationID, and quality.  Each of these fields can be included in a query to select agents from the SDE.
+      <p>
+      Each SDE service call has a separate parameter for each queryable field of the type being queried.  For example, the "/agt/agent"
+      endpoint has eight parameters corresponding to the queryable fields of agents.  Each of these parameters accepts a special
+      syntax indicating how the field should be queried.  If a parameter is missing, then it is not used to filter results.  Two
+      additional parameters control the paging of results:
+      <ul>
+      <li> maxresults: limits the number of results returned by the query.  This parameter sets page size.  
+      <li> contid (continuation ID): sets the offset into the result set from which results will be returned.
+      Paging through results is accomplished by incrementing this value by "maxresults" after each request.
+      </ul>
+      Both paging parameters are optional with sensible defaults.  A query which returns zero results marks the last page.
+      <p>
+      The query string for each SDE field consists of a JSON string which specifies the type of filter on this parameter:
+      <ul>
+      <li>{any: &lt;boolean&gt;} -  Wildcard selector. If true, then this field is not used to filter returned data. Setting this value to false has no effect.
+      <li>{like: &lt;string&gt;} - String match selector. If the associated field is string valued, then all returned data must 
+      satisfy the SQL expression 'field LIKE selector'. Normal SQL 'LIKE' syntax is allowed (e.g. % as wildcard).  The match is case insensitive.
+      <li>{values: [&lt;v1&gt;,...,&lt;vn&gt;]} - Set selector. The associated field of each returned data item must equal one of the listed values.
+      <li>{start: &lt;lower&gt;, end: &lt;upper&gt;} -  Range selector. The associated field of each returned data item must satisfy lower &le; value &le; upper.
+      </ul>
+      This syntax allows very flexible selection on SDE data.  For example, to quickly find the inventory category for ships, 
+      set the "categoryName" selector to "{like: '%Ship%' }" on the "inv/category" endpoint.  To find all types with "Raven" in the name, 
+      set "typeName" to "{like: '%Raven%'}" on the "inv/type" endpoint; and, to further restrict this set to those types actually on the market, 
+      set "marketGroupID" to "{start: 0, end: 1000000}".
+      <h4>Generating Clients</h4>
+      Generating clients for the SDE is straightforward given the URL of the swagger model (see table above).
+      <p>
+      If you plan to use the SDE from a browser, there is no need to generate a separate Javascript client.  Instead, you
+      can reference the Swagger Javascript client builder directly as follows:
+      <pre>
+      &lt;!-- Set up Swagger --&gt;
+      &lt;script src='https://cdn.rawgit.com/swagger-api/swagger-js/master/browser/swagger-client.min.js' type='text/javascript'&gt;&lt;/script&gt;
+      &lt;script type="text/javascript"&gt;
+      var url = "-- SWAGGER MODEL URL HERE --";
+      window.swagger = new SwaggerClient({ 
+        url: url,
+        success: function() { /* called when the client is ready */ }
+      });
+      &lt;/script&gt;
+      </pre>
+      Where "-- SWAGGER MODEL URL HERE --" is substituted with the appropriate URL from the table above.
+      <p>
+      For a non-Javascript client, you can use the <a href="http://editor.swagger.io/#/">Swagger Editor online demo</a>.  To generate a client, 
+      enter the appropriate swagger model URL under "File->Import URL..", then use the "Generate Client" menu to download an appropriate client.
+      <h4 style="padding-top: 1em; padding-bottom: 1em;">Need more help?</h4>
+      Check out our <a href="http://blog.orbital.enterprises/p/evekit-guides-videos-and-tutorials.html" title="Guides">Guides, Tutorials and Videos</a>!
+      </div>
+    </div>
+  </div>
+  
+</div>  <!-- row -->
+
+<!-- End of view -->
+</div>
+

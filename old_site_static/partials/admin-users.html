@@ -1,0 +1,78 @@
+<div class="container-fluid">
+
+<div class="row col-wrap">
+  <div class="col-md-12">
+    <div class="panel panel-default">
+      <div class="panel-heading">
+        <table style="border-collapse: collapse; border: 0px;">
+          <tr>
+            <td nowrap><h3 class="panel-title">User List</h3></td>
+            <td align="right" width="100%">
+              <div class="btn-group">
+                <button type="button" class="btn btn-default" ng-click="refresh()">Refresh</button>
+              </div>
+            </td>
+          </tr>
+        </table>
+      </div>
+      
+      <div class="panel-body">
+        <table class="table" style="width: 100%">
+        <tr>
+          <th>UID</th>
+          <th>Last Signon</th>
+          <th>Last Signon Name</th>
+          <th>Last Signon Source</th>
+          <th>Joined</th>          
+          <th>Admin?</th>          
+          <th>Active?</th>          
+          <th>Actions</th>          
+        </tr>
+        <tr ng-repeat-start="user in user_list | orderBy : getLastSignOnTime : true">
+          <td style="vertical-align: middle">{{user.uid}}</td>
+          <td style="vertical-align: middle">{{user.last != -1 ? (user.last|date:'yyyy-MM-dd HH:mm:ss':'UTC') : 'Never'}}</td>
+          <td style="vertical-align: middle">{{user.screenName}}</td>
+          <td style="vertical-align: middle">{{user.source}}</td>
+          <td style="vertical-align: middle">{{user.created != -1 ? (user.created|date:'yyyy-MM-dd HH:mm:ss':'UTC') : 'ERROR!'}}</td>
+          <td style="vertical-align: middle">{{user.admin}}</td>
+          <td style="vertical-align: middle">{{user.active}}</td>
+          <td>
+            <button type="button" class="btn btn-primary" ng-click="toggleAccountView(user.uid)">{{user_account_list[user.uid] != undefined ? "Hide Sync Accounts" : "Show Sync Accounts"}}</button>
+            <button type="button" class="btn btn-primary" ng-click="toggleEnabled(user)">{{user.active ? "Deactivate" : "Activate"}}</button>
+            <button type="button" class="btn btn-primary" ng-click="becomeUser(user.uid)">Become User</button>
+          </td>
+        </tr>
+        <tr ng-repeat-end ng-show="user_account_list[user.uid] != undefined">
+          <td></td>
+          <td colspan="6" style="vertical-align: middle">
+          <table class="table">
+          <tr>
+            <th>ID</th>
+            <th>Name</th>
+            <th>Type</th>
+            <th>Disabled?</th>
+            <th>Last Sync</th>
+            <th>Delete Time</th>
+            <th>Actions</th>
+          </tr>
+          <tr ng-repeat="acct in user_account_list[user.uid]">
+            <td>{{acct.aid}}</td>
+            <td>{{acct.name}}</td>
+            <td>{{acct.characterType ? 'Character' : 'Corporation'}}</td>
+            <td>{{acct.disabled}}</td>
+            <td>{{acct.lastSynchronized != -1 ? (acct.lastSynchronized|date:'yyyy-MM-dd HH:mm:ss':'UTC') : 'Never'}}</td>
+            <td>{{acct.markedForDelete != -1 ? (acct.markedForDelete|date:'yyyy-MM-dd HH:mm:ss':'UTC') : 'N/A'}}</td>
+            <td>
+              <button type="button" class="btn btn-primary" ng-click="toggleAccountDisabled(user.uid, acct.aid, !acct.disabled)">{{acct.disabled ? "Enable" : "Disable"}}</button>
+            </td>
+          </tr>
+          </table>
+          </td>
+        </tr>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+
+</div>

@@ -1,0 +1,251 @@
+<div class="container-fluid">
+
+<div class="row col-wrap">
+  <div class="col-md-12">
+    <div id="md-info-panel" class="panel panel-default">
+      <div class="panel-heading">
+        <h3 class="panel-title">EVE Market Data</h3>
+      </div>
+      <div class="panel-body col-extend">
+      EveKit provides access to EVE Online order book and market history data.  There are two types
+      of access provided:
+      <p>
+      <ol>
+      <li> <strong>Live:</strong> EveKit provides REST endpoints for accessing live and historical 
+      market data.  Like all EveKit APIs, these endpoints are annotated with <a href="http://swagger.io">Swagger</a>
+      which makes it easy to generate a client in your language of choice.
+      <li> <strong>Archive:</strong> At the close of each day, EveKit archives all stored order books and market history.
+      These files can be downloaded directly as described in the panel below.
+      </ol>
+      <p>
+      The live data endpoints are best used for interactive tools where market information is retrieved
+      for specific types or regions.  These endpoints are not efficient for bulk retrieval or complicated
+      analysis.  For bulk downloads or analysis, archived data is more convenient to use.
+            
+      <h4>Live Data Access</h4>
+      
+      You can browse the API for live data access using the <a href="#/md/ui">Swagger UI panel</a>.
+      This API is nothing more than a live version of the 
+      <a href="https://github.com/OrbitalEnterprises/evekit-marketdata-server">EveKit MarketData Server</a>
+      GitHub project.  This server is designed to work with the data collected by 
+      the <a href="">EveKit MarketData</a> scraper and serves both recent data (typically, order books
+      are no more than five minutes old), as well as archived data.  See the panel below for
+      details on the availability and format of archived data.
+      <p>
+      We use this API to implement a simple <a href="#/md/book">book viewer and history browser</a>.
+       
+      <h4>Data Archive Process</h4>      
+      
+      EveKit continuously collects marketdata via CREST.  The code for this process is accessible
+      in the <a href="https://github.com/OrbitalEnterprises/evekit-marketdata">EveKit MarketData</a>
+      GitHub project.  The current deployment collects market history once a day, and order book data 
+      every five minutes (the minimum cache timeout) for every region and type.  At the end of each day,
+      collected data is re-assembled into a more convenient format and stored in Google's storage cloud.
+      This process started at the end of May, 2016.  The available date ranges of data are:
+      <p>
+      <ul>
+      <li>Order books for all regions and types are available from <strong>2016-05-31</strong> onward.
+      <li>Market history for all regions and types is available from <strong>2015-04-01</strong> onward.
+      </ul>
+      
+      It should be noted that market history for the current day is typically not published on CREST
+      until the end of the <strong>following</strong> day.  Also, the archive process takes several hours.
+      On a typical day, archived book and market history is available by 12:00 UTC.
+      <p>
+      Archival data is stored in a format designed to make it easy to access subsets of the data
+      by market type.  However, simple tar'd and gzip'd formats are also provided for download
+      and unpacking.  The panel below describes these data formats.
+      
+      <h4 style="padding-top: 1em; padding-bottom: 1em;">Need more help?</h4>
+      Check out our <a href="http://blog.orbital.enterprises/p/evekit-guides-videos-and-tutorials.html" title="Guides">Guides, Tutorials and Videos</a>!
+      You can also post a question on our <a href="https://groups.google.com/forum/#!forum/orbital-enterprises">message board</a>.
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="row col-wrap">
+  <div class="col-md-12">
+    <div id="md-archive-panel" class="panel panel-default">
+      <div class="panel-heading">
+        <h3 class="panel-title">Archive Access and Formats</h3>
+      </div>
+      <div class="panel-body col-extend">
+      Archive data is stored in Google's storage cloud organized by date at the prefix: 
+      <pre>
+      https://storage.googleapis.com/evekit_md/YYYY/MM/DD
+      </pre>
+      Market history and order book data are stored separately.  Market history uses the prefix "market" in all files.
+      Order books use the prefix "interval" in all files.  Currently, order books are snapped at five minute intervals
+      which corresponds to the minimum cache time for the associated CREST endpoints.  The interval snap time
+      is indicated by the "5" suffix in the interval file names.  Our generation tools are capable of sampling data
+      at other intervals, but currently we only provide data with five minute intervals.
+      <p>      
+      Three files are stored for each data type:
+      <p>
+      <table class="table">
+      <tr><th>File Name</th><th>Description</th></tr>
+      <tr>
+      <td><strong>market_YYYYMMDD.tgz</strong><br><strong>interval_YYYYMMDD_5.tgz</strong></td>
+      <td>Downloadable archive of daily market history or order books.  Files include data for all regions on the given day.</td> 
+      </tr>
+      <tr>
+      <td><strong>market_YYYYMMDD.bulk</strong><br><strong>interval_YYYYMMDD_5.bulk</strong></td>
+      <td>Daily data in "bulk" form, designed to be partially retrieved via an HTTP "range" request.  This format is intended to be used
+      by online tools which only need a subset of data, perhaps to drive web-based tools.</td>
+      </tr>
+      <tr>
+      <td><strong>market_YYYYMMDD.index.gz</strong><br><strong>interval_YYYYMMDD_5.index.gz</strong></td>
+      <td>Index file which provides offsets into the "bulk" files based on EVE market type.  This file is read first to determine
+      the appropriate byte offset for a "range" request to the bulk files.</td>
+      </tr>
+      </table>
+      
+      <h4>Download File Format</h4>
+      
+      The first file type in the table above is designed to be downloaded for offline use.  These files are tar'd and gzip'd archives of
+      market data organized by EVE market type:
+      <p>
+      <table class="table">
+      <tr><th>File Name</th><th>Entry Name</th><th>Description</th></tr>
+      <tr>
+      <td>market_YYYYMMDD.tgz</td>
+      <td>market_TYPE_YYYYMMDD.history.gz</td>
+      <td>Market history for the given type and day across all regions.</td>
+      </tr>
+      <tr>
+      <td>interval_YYYYMMDD_5.tgz</td>
+      <td>interval_TYPE_YYYYMMDD_5.book.gz</td>
+      <td>All order books for the given type and day across all regions.</td>
+      </tr>
+      </table>
+      <p>
+      All files store data in CSV form, but gzip'd to save space.  Market history files are typically less than 2 MB in archive form.
+      Order book (interval) files are substantially larger, typically around 200 MB in archive form.
+      <p>
+      Market history entries contain one line per region.  Each line has the format:
+      <p>
+      <table class="table">
+      <tr><th>Field</th><th>Description</th></tr>
+      <tr><td>TYPE</td><td>EVE market type ID</td></tr>
+      <tr><td>REGION</td><td>EVE market region ID</td></tr>
+      <tr><td>ORDER COUNT</td><td>Number of market orders for this type in this region on this day</td></tr>
+      <tr><td>LOW PRICE</td><td>Low trade price for this type in this region on this day</td></tr>
+      <tr><td>HIGH PRICE</td><td>High trade price for this type in this region on this day</td></tr>
+      <tr><td>AVERAGE PRICE</td><td>Average trade price for this type in this region on this day</td></tr>
+      <tr><td>VOLUME</td><td>Daily volume for this type in this region</td></tr>
+      <tr><td>DATE</td><td>History date in milliseconds UTC (since the epoch)</td></tr>
+      </table>
+      <p>
+      Order book interval files have a more complicated format:
+      <pre>
+      TYPE
+      SNAPSHOTS_PER_REGION
+      FIRST_REGION_ID
+      FIRST_REGION_FIRST_SNAPSHOT_TIME
+      FIRST_REGION_FIRST_SNAPSHOT_BUY_ORDER_COUNT
+      FIRST_REGION_FIRST_SNAPSHOT_SELL_ORDER_COUNT
+      FIRST_REGION_FIRST_SNAPSHOT_BUY_ORDER
+      ...
+      FIRST_REGION_FIRST_SNAPSHOT_SELL_ORDER
+      ...
+      FIRST_REGION_SECOND_SNAPSHOT_TIME
+      ...
+      SECOND_REGION_ID
+      ...
+      </pre>
+      The "SNAPSHOTS_PER_REGION" field indicates the number of book snapshots stored for each type and region.
+      With the current default of 5 minute snapshots, this value will always be 288.  Therefore, snapshot times 
+      (e.g. FIRST_REGION_FIRST_SNAPSHOT_TIME) will also be fixed, starting at 00:00 UTC and incrementing by 
+      5 minute intervals to 23:55 UTC.
+      <p>
+      All fields are always present except for individual orders which may be missing if there are no buy
+      or sell orders for a given region at a given time.
+      <p>
+      Each buy or sell order line is in CSV format with the following fields:
+      <table class="table">
+      <tr><th>Field</th><th>Description</th></tr>
+      <tr><td>ORDER ID</td><td>Unique market order ID.</td></tr>
+      <tr><td>BUY</td><td>"true" if this order represents a buy, "false" otherwise.</td></tr>
+      <tr><td>ISSUED</td><td>Order issue date in milliseconds UTC (since the epoch).</td></tr>
+      <tr><td>PRICE</td><td>Order price.</td></tr>
+      <tr><td>VOLUME ENTERED</td><td>Volume entered when order was created.</td></tr>
+      <tr><td>MIN VOLUME</td><td>Minimum volume required for each order fill.</td></tr>
+      <tr><td>VOLUME</td><td>Current remaining volume to be filled in the order.</td></tr>
+      <tr><td>ORDER RANGE</td><td>Order range string.  One of "station", "solarsystem", "region" or a number representing the number of jobs allowed from the station where the order was entered.</td></tr>
+      <tr><td>LOCATION ID</td><td>Location ID of station where order was entered.</td></tr>
+      <tr><td>DURATION</td><td>Order duration in days.</td></tr> 
+      </table>
+      
+      <h4>Reading Bulk Data</h4>
+
+      Bulk data is formatted to allow easy sampling of individual market history or order book data.  Reading this data involves a two step process:
+      <p>
+      <ol>
+      <li> Fetch the index file and find the offset of the desired type.
+      <li> Use a "range" HTTP request to read the appropriate data from the bulk file.
+      </ol>
+      <p>
+      Index files are compressed lists of pairs giving each type and the offset into the bulk file where data for that type is stored.  For example:
+      <pre>
+      $ curl https://storage.googleapis.com/evekit_md/2016/06/24/market_20160624.index.gz | zcat
+      market_18_20160624.history.gz 0
+      market_19_20160624.history.gz 1033
+      market_20_20160624.history.gz 1683
+      market_21_20160624.history.gz 3374
+      market_22_20160624.history.gz 4089
+      market_34_20160624.history.gz 4804
+      market_35_20160624.history.gz 8432
+      market_36_20160624.history.gz 11935
+      market_37_20160624.history.gz 15258
+      ...
+      </pre>
+      To read market history for type 34 (Tritanium), for example, we need to read data starting at offset 4804 and ending at offset
+      8431 (the offset for type 35 minus one).  This can be achieved with an HTTP "range" request on the bulk file.  For example:
+      <pre>
+      $ curl -H "range: bytes=4804-8431" https://storage.googleapis.com/evekit_md/2016/06/24/market_20160624.bulk | zcat
+      34,10000025,16,5.51,5.51,5.51,19028609,1466726400000
+      34,10000027,3,4.90,4.90,4.90,47864147,1466726400000
+      34,10000028,19,5.04,5.04,5.04,4697021,1466726400000
+      34,10000029,29,6.00,6.10,6.00,30600727,1466726400000
+      34,10000030,352,5.16,5.81,5.41,482468387,1466726400000
+      34,10000016,406,5.49,5.90,5.60,289408396,1466726400000
+      34,10000018,1,3.03,3.03,3.03,226468,1466726400000
+      34,10000020,198,4.95,5.21,5.20,379550710,1466726400000
+      34,10000021,6,6.00,6.00,6.00,14742118,1466726400000
+      34,10000022,5,2.75,2.75,2.75,213126126,1466726400000
+      ...
+      </pre>
+      Interval (order book) data is accessed in a similar fashion.
+      <p>
+      <h5>NOTE: Market History Bulk Files with Zlib/Node.js</h5>
+      Bulk files are created by concatenating gzip'd files representing data for specific types.
+      In the case of market history, each row is actually a single gzip'd file.  So when reading market history
+      for a given type, you are actually reading the concatenation of several individual gzip'd files.
+      For standard gzip libraries this isn't a problem.  As shown in the example output above, zcat is more
+      than happy to read through several concatenated gzip files.  But in Node.js with the standard ZLib
+      library this isn't the case.  Zlib will stop reading after at the end of the first gzip'd buffer,
+      regardless of whether the remainder of the buffer contains other gzip'd content.  If you need to work
+      with the bulk files from Node.js, then you'll either need to use a different Zlib, or detect splits
+      in the bulk file by looking for the gzip header magic bytes.  The latter approach is used in the 
+      <a href="https://github.com/OrbitalEnterprises/evekit-marketdata-server">EveKit MarketData Server</a>.
+      Take a look at <a href="https://github.com/OrbitalEnterprises/evekit-marketdata-server/blob/master/api/helpers/evekit_market.js">evekit_market.js</a> for example code.
+      It is <strong>not</strong> necessary to do this with interval (order book) data.  Data for each type
+      in the interval files consists of a single gzip'd file.
+      
+      <h4>Examples and Code</h4>
+      
+      Keep an eye on the <a href="http://blog.orbital.enterprises/p/evekit-guides-videos-and-tutorials.html" title="Guides">Guides, Tutorials and Videos</a>
+      section of our blog for upcoming examples of using the various market data formats.  There is also sample code in some of our
+      GitHub projects, particularly the <a href="https://github.com/OrbitalEnterprises/evekit-marketdata-server">EveKit MarketData Server</a>
+      which provides code for reading from the bulk format (in Node.js).
+      
+      </div>
+    </div>
+  </div>
+  
+</div>  <!-- row -->
+
+<!-- End of view -->
+</div>
+

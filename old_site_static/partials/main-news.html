@@ -1,0 +1,163 @@
+<div class="container-fluid">
+
+<div vertilize-container class="row col-wrap">
+  <div class="col-md-6">
+    <div vertilize id="intro-panel" class="panel panel-default">
+      <div class="panel-heading">
+        <h3 class="panel-title">Welcome to EveKit!</h3>
+      </div>
+      <div class="panel-body col-extend">
+      EveKit is a web-based toolkit for building applications based on the EVE Online third party APIs.
+      EveKit provides the following services (use the toolbar above to switch between services):
+ 
+      <table style="border-collapse: collapse; border: 0px; margin-top: 1em; margin-bottom: 1em;">
+      <tr>
+        <td nowrap align="right" valign="middle" style="padding-bottom: 10px;">
+        <i class="fa fa-users fa-2x"></i>
+        </td>
+        <td nowrap align="right" valign="middle" style="padding-left: 20px; padding-bottom: 10px;">
+        <strong>Account Synchronization Services</strong>
+        </td>
+        <td style="padding-left: 20px; padding-bottom: 10px;">
+        Keep an up to date copy of your character and corporation data on the web, 
+        with convenient APIs for access from your own applications.
+        </td>
+      </tr>
+      <tr>
+        <td nowrap align="right" valign="middle" style="padding-bottom: 10px;">
+        <i class="fa fa-database fa-2x"></i>
+        </td>
+        <td nowrap align="right" valign="middle" style="padding-left: 20px; padding-bottom: 10px;">
+        <strong>EVE Static Data Export Online</strong>
+        </td>
+        <td style="padding-left: 20px; padding-bottom: 10px;">
+        Access the latest static data export online using our REST interfaces, or easily generate
+        a client library in your favorite language.
+        </td>
+      </tr>
+      <tr>
+        <td nowrap align="right" valign="middle" style="padding-bottom: 10px;">
+        <i class="fa fa-line-chart fa-2x"></i>
+        </td>
+        <td nowrap align="right" valign="middle" style="padding-left: 20px; padding-bottom: 10px;">
+        <strong>EVE Market Data</strong>
+        </td>
+        <td style="padding-left: 20px; padding-bottom: 10px;">
+        Quickly view recent or historic order books or market data, or download data for your own use.
+        </td>
+      </tr>
+      </table>     
+      
+      These services combine to provide a rich set of capabilities which can be used in a variety of different
+      third party applications. 
+      
+      <h4 style="padding-bottom: 1em; padding-top: 1em;">Key features:</h4>
+      
+      <table style="border-collapse: collapse; border: 0px;">
+      <tr>
+        <td nowrap align="right" valign="middle" style="padding-bottom: 10px;">
+        <span class="glyphicon glyphicon-globe glyph-list"></span>
+        </td>
+        <td style="padding-left: 10px; padding-bottom: 10px;">
+        EveKit services are web-ready.  Every API is annotated with <a href="http://swagger.io">Swagger</a> markup
+        making it easy to work directly with REST services (returning JSON), or generate a client in the 
+        language of your choice (using free tools like the <a href="http://editor.swagger.io/">Swagger Editor</a>). 
+        </td>
+      </tr>
+      <tr>
+        <td nowrap align="right" valign="middle" style="padding-bottom: 10px;">
+        <span class="glyphicon glyphicon-download glyph-list"></span>
+        </td>
+        <td style="padding-left: 10px; padding-bottom: 10px;">
+        EveKit account synchronization can download for both characters and corporations, at least as frequently as 
+        the EVE API cache timers allow.
+        </td>
+      </tr>
+      <tr>
+        <td nowrap align="right" valign="middle" style="padding-bottom: 10px;">
+        <span class="glyphicon glyphicon-calendar glyph-list"></span>
+        </td>
+        <td style="padding-left: 10px; padding-bottom: 10px;">
+        Account synchronization keeps a <b>complete history</b> of everything.  Want to know what your assets looked 
+        like a month ago?  No problem.  The account model APIs allow you to
+        access your data at a date you specify (defaulting to the latest live data).
+        </td>
+      </tr>
+      <tr>
+        <td nowrap align="right" valign="middle" style="padding-bottom: 10px;">
+        <span class="glyphicon glyphicon-tags glyph-list"></span>
+        </td>
+        <td style="padding-left: 10px; padding-bottom: 10px;">
+        Account data we store on your behalf can be tagged with persistent <b>meta data</b>.  This makes it easy to
+        store custom data you might need for certain applications right next to your regular account data.
+        </td>
+      </tr>
+      <tr>
+        <td nowrap align="right" valign="middle" style="padding-bottom: 10px;">
+        <span class="glyphicon glyphicon-hdd glyph-list"></span>
+        </td>
+        <td style="padding-left: 10px; padding-bottom: 10px;">
+        EveKit provides interfaces to key reference data like the EVE Static Data Export and EVE Market Data.
+        We always provide access to the last two SDE dumps.  We scrape market data continuously (at least as frequently
+        as the cache timers allow), and generate daily dump files for download.
+        </td>
+      </tr>
+      <tr>
+        <td nowrap align="right" valign="middle" style="padding-bottom: 10px;">
+        <span class="glyphicon glyphicon-cloud-download glyph-list"></span>
+        </td>
+        <td style="padding-left: 10px; padding-bottom: 10px;">
+        Any account data we store on your behalf is always available to you in <b>bulk</b> form (as CSV files).  We recognize that not 
+        everyone will want to use our APIs to access their data, so we generate daily snapshots which you can access from our 
+        account synchronization services.  We don't trap your data behind our APIs, you can get a complete snapshot any time you like.
+        </td>
+      </tr>
+      </table>
+
+      Use the toolbar to select one of our services to get started.  If you need help, or want to explore more of our documentation,
+      check out our <a href="http://blog.orbital.enterprises/p/evekit-guides-videos-and-tutorials.html" title="Guides">Guides, Tutorials and Videos</a>!
+      </div>
+    </div>
+  </div>
+
+  <div class="col-md-6">
+    <div vertilize id="news-panel" class="panel panel-default">
+      <div class="panel-heading">
+        <h3 class="panel-title"><a href="http://blog.orbital.enterprises/search/label/evekit" target="_blank">Recent Blog Updates About EveKit</a></h3>
+      </div>
+      <div id="news-scroll" class="panel-body col-extend">
+        <ul id="news-scroll-list" class="list-group">
+          <li ng-repeat="ni in newsList" class="list-group-item" style="border: none; margin-bottom: 10px;">
+            <span class="badge">{{(ni.updated_ !== null ? 'Updated ' : 'Created ')}} {{getNewsDate(ni)|date:'yyyy-MM-dd HH:mm:ss':'UTC'}}</span>
+            <h4 class="list-group-item-heading"><a href="{{ni.linkRef_}}" target="_blank">{{ni.title_}}</a></h4>
+            <p class="list-group-item-text" ng-bind-html="ni.renderDetail_"></p>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
+  
+</div>  <!-- row -->
+
+<div class="row col-wrap">
+  
+  <div class="col-md-12">
+    <div id="about-panel" class="panel panel-default">
+      <div class="panel-heading">
+        <h3 class="panel-title">About EveKit</h3>
+      </div>
+      <div class="panel-body">
+      <ul>
+      <li> EveKit is provided by Dark Planet Ventures (DPVT), a one player - multiple alts extremely tiny EVE corporation.
+      <li> Federated login decals from <a href='https://github.com/necolas/css3-social-signin-buttons' target="_blank">CSS3 Social Signin Buttons</a>.
+      <li> Static EVE data is generated from <a href="https://www.fuzzwork.co.uk/" target="_blank">Fuzzy Steve's</a> <a href="https://www.fuzzwork.co.uk/dump/" target="_blank">SQL SDE conversions</a>.
+      <li> Last but not least, many thanks to the contributors and documentors at the <a href='http://eveonline-third-party-documentation.readthedocs.org/' target="_blank">EVE Third Party Documentation Project</a>. 
+      </ul>
+      </div>
+    </div>
+  </div>
+  
+</div> <!-- row -->
+
+<!-- End of view -->
+</div>

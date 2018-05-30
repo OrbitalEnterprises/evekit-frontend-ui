@@ -1,0 +1,72 @@
+<div class="container-fluid">
+
+    <div class="row col-wrap">
+        <div class="col-md-12">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h3 class="panel-title">User Account Information {{loading ? "(Loading...)" : ""}}</h3>
+                </div>
+
+                <div class="panel-body col-extend">
+                    <div class="modal-body">
+                        <form class="form-horizontal" role="form">
+                            <div class="form-group">
+                                <label class="col-sm-3 control-label" style="text-align: left;">
+                                    Last Sign On:
+                                </label>
+                                <label class="col-sm-3 control-label">
+                                    <em>{{lastlogin|date:'yyyy-MM-dd HH:mm:ss':'UTC'}} UTC</em> via {{lastloginmethod}}
+                                </label>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-3 control-label" style="text-align: left;">
+                                    User Since:
+                                </label>
+                                <label class="col-sm-3 control-label">
+                                    <em>{{createdate|date:'yyyy-MM-dd':'UTC'}}</em>
+                                </label>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-3 control-label" for="set-expired-contact"
+                                       style="text-align: left;">
+                                    Expired ESI Token Contact Address:
+                                    <i class="fa fa-info-circle"
+                                       title="Enter a valid e-mail address if you'd like an alert when one of your ESI tokens expires and can not be renewed."></i>
+                                </label>
+                                <div class="col-sm-3">
+                                    <input id="set-expired-contact" type="email" class="form-control"
+                                           ng-model="tokenContactAddress" placeholder="Enter contact e-mail">
+                                </div>
+                                <div class="col-sm-2">
+                                    <button type="button" ng-show="expiredTokenContact !== tokenContactAddress"
+                                            class="btn btn-info" value="Save" ng-click="setExpireContact();">Save
+                                    </button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                    <b>Sign ons:</b>
+                    <table class="table">
+                        <tr ng-repeat="meth in signonMethods">
+                            <td nowrap ng-hide="signon[meth.name] == undefined"><span
+                                    class="btn-auth btn-{{meth.name}}"><b>{{meth.display}}</b></span> as <b>{{signon[meth.name].screenname}}</b>
+                            </td>
+                            <td nowrap ng-hide="signon[meth.name] == undefined">
+                                <button type="button" class="btn btn-info" value="Remove"
+                                        ng-click="removeAuthSource(meth.name);">Remove
+                                </button>
+                            </td>
+                            <td nowrap ng-hide="signon[meth.name] != undefined"><a class="btn-auth btn-{{meth.name}}"
+                                                                                   href=""
+                                                                                   ng-click="addAuthSource(meth.name);">Add
+                                <b>{{meth.display}}</b> Sign On</a></td>
+                            <td ng-hide="signon[meth.name] != undefined"></td>
+                        </tr>
+                    </table>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+</div>

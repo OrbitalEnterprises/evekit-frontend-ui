@@ -1,0 +1,38 @@
+<div class="container-fluid">
+
+<div id="swagger-sde-row" class="row col-wrap">
+  <div class="col-md-2 col-md-offset-5">
+    <div class="form-horizontal form-group">
+      <label class="col-md-3 control-label">Release:</label>
+      <div class="col-md-9">
+      <select class="form-control" 
+              ng-model="release"
+              ng-change="updateSDE()" 
+              ng-options="key as key for (key, value) in releases">
+      </select>
+      </div>
+    </div>
+  </div>
+  
+  <div id="swagger-sde-model-holder" class="col-md-12" style="padding-top: 10px;">
+  <iframe ng-src="{{urlExtra}}" 
+          id="api-sde"
+          style="width: 100%;">
+  </iframe>
+  </div>
+</div>
+
+<!-- End of view -->
+</div>
+
+<script type="text/javascript">
+  // resize holder to full length  
+  var fixHeight = function() {
+    // Fix height of scrollable
+    $('#api-sde').height($('#bottom-nav').position().top - $('#swagger-sde-model-holder').position().top - 15);
+  };
+  // resize with window
+  $(window).resize(fixHeight);
+  // force a resize when ready
+  $(fixHeight);
+</script> 

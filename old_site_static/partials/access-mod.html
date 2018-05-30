@@ -1,0 +1,87 @@
+<div class="container-fluid">
+
+<div class="row col-wrap">
+  <div class="col-md-12">
+    <div class="panel panel-default">
+      <div class="panel-heading">
+        <table style="border-collapse: collapse; border: 0px;">
+          <tr>
+            <td nowrap><h3 class="panel-title">{{isModify ? 'Modify' : 'Create'}} Data Access Key {{ loading ? "(Loading...)" : "" }}</h3></td>
+            <td align="right" width="100%">
+              <div class="btn-group pull-right">
+                <button type="button" class="btn btn-default" ng-click="save()" ng-hide="!dirty">Save Changes</button>
+                <button type="button" class="btn btn-default" ng-click="cancel()">Cancel</button>
+              </div>
+            </td>
+          </tr>
+        </table>
+      </div>
+      <div class="panel-body">
+        <form class="form-horizontal" role="form">
+          <div class="form-group">
+					  <label class="col-sm-1 control-label" for="key-mod-name">Access Key Name</label>
+            <div class="col-sm-2">
+              <input id="key-mod-name" type="text" class="form-control" ng-model="modKeyName" placeholder="Enter key name" validatekeyname
+                     data-placement="right" data-container="body" data-content="Enter a unique access key name made up of characters, numbers or '_'." data-trigger="manual">
+            </div>
+            <label class="col-sm-2 control-label" for="key-mod-expiry">Expiry (YYYY-MM-DD)</label>
+            <div class="col-sm-1">
+              <input id="key-mod-expiry" type="text" class="form-control" ng-model="modKeyExpiry" validatekeyexpiry
+                     data-placement="top" data-container="body" data-content="Enter a key expiry date or click 'Never'.  This key will be invalid after the specified date." data-trigger="manual">
+            </div>
+            <div class="col-sm-1">
+              <button type="button" class="btn btn-info" ng-click="modKeyExpiry = 'Never'"><span class="glyphicon glyphicon-arrow-left"></span> Never</button>
+            </div>
+            <label class="col-sm-2 control-label" for="key-mod-limit">Limit (YYYY-MM-DD)</label>
+            <div class="col-sm-1">
+              <input id="key-mod-limit" type="text" class="form-control" ng-model="modKeyLimit" validatekeylimit
+                     data-placement="top" data-container="body" data-content="Enter a key limit date or click 'Unlimited'.  This key will not be able to access data older than this date." data-trigger="manual">
+            </div>
+            <div class="col-sm-1">
+              <button type="button" class="btn btn-info" ng-click="modKeyLimit = 'Unlimited'"><span class="glyphicon glyphicon-arrow-left"></span> Unlimited</button>
+            </div>
+          </div>
+          <script>
+          $('#key-mod-expiry').datepicker({dateFormat: 'yy-mm-dd'});
+          $('#key-mod-limit').datepicker({dateFormat: 'yy-mm-dd'});
+          </script>
+          <div class="form-group">
+            <label class="col-sm-2 control-label" for="key-mod-prohibit-btn">Prohibited Access</label>
+            <div class="col-sm-1">
+              <button type="button" id="key-mod-prohibit-btn" class="btn btn-default" ng-click="moveAllToAllowed()">Move All To Allowed</button>
+            </div>
+            <label class="col-sm-offset-1 col-sm-2 control-label" for="key-mod-allow-btn">Allowed Access</label>
+            <div class="col-sm-1">
+              <button type="button" id="key-mod-allow-btn" class="btn btn-default" ng-click="moveAllToProhibited()">Move All To Prohibited</button>
+            </div>
+          </div>
+          <div id="access-selector" class="form-group not-selectable">
+            <div id="prohibited-drop" class="col-sm-offset-1 col-sm-3" style="border: 2px solid black; padding-top: 10px;">
+              <ul class="list-group">
+                <li ng-repeat="access in maskValues"
+                    class="list-group-item {{filterProhibited(access) ? 'list-group-item-danger' : 'key-prohibited'}}" 
+                    ng-click="selectProhibit(access)"
+                    title="{{access.meaning_}}">
+                {{access.description_}}
+                </li>
+              </ul>
+            </div>
+            <div id="allowed-drop" class="col-sm-offset-1 col-sm-3" style="border: 2px solid black; padding-top: 10px;">
+              <ul class="list-group">
+                <li ng-repeat="access in maskValues" 
+                    class="list-group-item {{filterAllowed(access) ? 'list-group-item-success' : 'key-allowed'}}" 
+                    ng-click="selectAllow(access)"
+                    title="{{access.meaning_}}">
+                {{access.description_}}
+                </li>
+              </ul>
+            </div>
+          </div>
+        </form>
+
+      </div>
+    </div>
+  </div>    
+</div>
+
+</div>

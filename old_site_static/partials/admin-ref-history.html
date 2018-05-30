@@ -1,0 +1,48 @@
+<div class="container-fluid">
+
+<div class="row col-wrap" style="padding-top: 15px;">
+  <div class="col-md-12">
+    <div class="panel panel-default">
+      <div class="panel-heading">
+        <table style="border: 0px; border-collapse: collapse;">
+          <tr>
+            <td nowrap><h3 class="panel-title">Ref Data Synchronization History {{loading ? "(Loading ...)" : ""}}</h3></td>
+          </tr>
+        </table>
+      </div>
+      
+      <div class="panel-body" style="overflow-x: scroll">
+      
+      <table id="refHistoryScrollTable" style="width: 680px; padding: 0px; border-collapse: separate; border-spacing: 4px; border: 0px;">
+        <thead style="display: block;">
+          <tr>
+            <td align="center" valign="bottom" class="history-label" style="width: 134px; white-space: nowrap; height: 12em;">Sync Start</td>
+            <td align="center" valign="bottom" class="history-label" style="width: 134px; white-space: nowrap; height: 12em;">Sync End</td>
+            <td style="width: 26px;"><div class="sync-history-cont"><div title="Server Status Status" class="history-label history-label-rot">Server Status</div></div></td>
+            <td style="width: 26px;"><div class="sync-history-cont"><div title="Alliance List Status" class="history-label history-label-rot">Alliances</div></div></td>
+            <td style="width: 26px;"><div class="sync-history-cont"><div title="Sovereignty Map Status" class="history-label history-label-rot">Sov. Map</div></div></td>
+            <td style="width: 26px;"><div class="sync-history-cont"><div title="Sovereignty Campaigns Status" class="history-label history-label-rot">Sov. Campaigns</div></div></td>
+            <td style="width: 26px;"><div class="sync-history-cont"><div title="Sovereignty Structures Status" class="history-label history-label-rot">Sov. Structures</div></div></td>
+            <td style="width: 26px;"><div class="sync-history-cont"><div title="Faction Wars Status" class="history-label history-label-rot">Faction Wars</div></div></td>
+            <td style="width: 26px;"><div class="sync-history-cont"><div title="Faction War Statistics Status" class="history-label history-label-rot">Fac. War Stats</div></div></td>
+            <td style="width: 26px;"><div class="sync-history-cont"><div title="Faction War Systems Status" class="history-label history-label-rot">Fac. War Systems</div></div></td>
+            <td style="width: 26px;"><div class="sync-history-cont"><div title="Faction War Leaders Status" class="history-label history-label-rot">Fac. War Leaders</div></div></td>
+            <td style="width: 26px;"><div class="sync-history-cont"><div title="Faction War Corporation Leaders Status" class="history-label history-label-rot">Fac. War Corp. Leaders</div></div></td>
+            <td style="width: 26px;"><div class="sync-history-cont"><div title="Faction War Character Leaders Status" class="history-label history-label-rot">Fac. War Char. Leaders</div></div></td>
+          </tr>
+        </thead>
+        <tbody id="refHistoryScroll" style="display: block; overflow-y: scroll;">
+        <tr ng-repeat="his in syncHistory">
+          <td align="center" class="entry-label" style="white-space: nowrap;">{{getStartTime(his)|date:'yyyy-MM-dd HH:mm:ss':'UTC'}}</td>
+          <td align="center" class="entry-label" style="white-space: nowrap;">{{getEndTime(his)|date:'yyyy-MM-dd HH:mm:ss':'UTC'}}</td>
+          <td ng-repeat="stat in endpointList" class="{{determineRefHistoryClass(his, stat)}}" style="width: 26px;" title="{{determineRefHistoryTitle(his, stat)}}"></td>
+        </tr>
+        </tbody>
+      </table>
+
+      </div>
+    </div>
+  </div>
+</div>
+
+</div>

@@ -1,0 +1,52 @@
+<div class="container-fluid">
+
+<div class="row col-wrap">
+  <div class="col-md-12">
+    <div class="panel panel-default">
+      <div class="panel-heading">
+        <table style="border-collapse: collapse; border: 0px;">
+          <tr>
+            <td nowrap><h3 class="panel-title">User Account Property Editor</h3></td>
+            <td align="right" width="100%">
+              <div class="btn-group">
+                <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+                  {{uid == null ? 'Select UID' : uid.uid}}&nbsp;<span class="caret"></span>
+                </button>
+                <ul class="dropdown-menu dropdown-menu-right" role="menu">
+                  <li ng-repeat="uid in uid_list">
+                    <a href="" ng-click="selectUid(uid)">{{uid.uid}}</a>
+                  </li>
+                </ul>
+              </div>
+            </td>
+          </tr>
+        </table>
+      </div>
+      
+      <div class="panel-body">
+        <table class="table table-striped" style="width: 100%">
+        <tr>
+          <th style="color: #000">Property Name</th>
+          <th style="color: #000">Property Value</th>
+          <th style="color: #000">Actions</th>
+        </tr>
+        <tr>
+          <td><input type="text" class="form-control" placeholder="new.property.name" ng-model="newprop.name"/></td>
+          <td><input type="text" class="form-control" placeholder="new property value" ng-model="newprop.value"/></td>
+          <td><button type="button" class="btn btn-primary" ng-click="saveNewProperty()">Add Property</button></td>
+        </tr>
+        <tr ng-repeat="prop in prop_list">
+          <td style="color: {{($index % 2 == 0 ? '#000' : '#fff')}}; vertical-align: middle">{{prop.propertyName}}</td>
+          <td><input type="text" class="form-control" ng-model="prop.propertyValue" /></td>
+          <td>
+            <button type="button" class="btn btn-primary" ng-click="savePropChange(prop)">Save Change</button>
+            <button type="button" class="btn btn-primary" ng-click="deleteProperty(prop)">Delete Property</button>
+          </td>
+        </tr>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+
+</div>

@@ -1,0 +1,91 @@
+<div class="container-fluid">
+
+<div class="row col-wrap" style="padding-top: 15px;">
+  <div class="col-md-12">
+    <div class="panel panel-default">
+      <div class="panel-heading">
+        <table style="border: 0px; border-collapse: collapse;">
+          <tr>
+            <td nowrap><h3 class="panel-title">Account Synchronization History for <b>{{accountName}}</b> {{loading ? "(Loading ...)" : ""}}</h3></td>
+            <td align="right" width="100%">
+              <div class="btn-group pull-right">
+                <button type="button" class="btn btn-default" ng-click="$location.url('/account/view')">Return to Account List</button>
+              </div>
+            </td>
+          </tr>
+        </table>
+      </div>
+      
+      <div class="panel-body" style="overflow-x: scroll">
+
+        <!-- Account Sync History Table -->
+        <table id="accountHistoryScrollTable" style="width: {{determineHeaderWidth()}}px; padding: 0px; border-collapse: separate; border-spacing: 4px; border: 0px;">
+          <thead style="display: block;">
+          <tr>
+            <td align="center" valign="bottom" class="history-label" style="width: 134px; white-space: nowrap; height: 12em;">Sync Start</td>
+            <td align="center" valign="bottom" class="history-label" style="width: 134px; white-space: nowrap; height: 12em;">Sync End</td>
+            <td style="width: 26px;"><div class="sync-history-cont"><div title="Asset List Status" class="history-label history-label-rot">Assets</div></div></td>
+            <td style="width: 26px;"><div class="sync-history-cont"><div title="Blueprints Status" class="history-label history-label-rot">Blueprints</div></div></td>
+            <td style="width: 26px;"><div class="sync-history-cont"><div title="Bookmarks Status" class="history-label history-label-rot">Bookmarks</div></div></td>
+            <td style="width: 26px;"><div class="sync-history-cont"><div title="Contact List Status" class="history-label history-label-rot">Contacts</div></div></td>
+            <td style="width: 26px;"><div class="sync-history-cont"><div title="Contracts Status" class="history-label history-label-rot">Contracts</div></div></td>
+            <td style="width: 26px;"><div class="sync-history-cont"><div title="Faction Warfare Stats Status" class="history-label history-label-rot">FacWar</div></div></td>
+            <td style="width: 26px;"><div class="sync-history-cont"><div title="Industry Job Status" class="history-label history-label-rot">Industry</div></div></td>
+            <td style="width: 26px;"><div class="sync-history-cont"><div title="Kill Log Status" class="history-label history-label-rot">Kills</div></div></td>
+            <td style="width: 26px;"><div class="sync-history-cont"><div title="Market Order Status" class="history-label history-label-rot">Market</div></div></td>
+            <td style="width: 26px;"><div class="sync-history-cont"><div title="Mining Ledger Status" class="history-label history-label-rot">Mining</div></div></td>
+            <td style="width: 26px;"><div class="sync-history-cont"><div title="Character Sheet Status" class="history-label history-label-rot">Char Sheet</div></div></td>
+            <td style="width: 26px;"><div class="sync-history-cont"><div title="Corporation Sheet Status" class="history-label history-label-rot">Corp Sheet</div></div></td>
+            <td style="width: 26px;"><div class="sync-history-cont"><div title="Standings Status" class="history-label history-label-rot">Standings</div></div></td>
+            <td style="width: 26px;"><div class="sync-history-cont"><div title="Wallet Balance Status" class="history-label history-label-rot">Balance</div></div></td>
+            <td style="width: 26px;"><div class="sync-history-cont"><div title="Wallet Journal Status" class="history-label history-label-rot">Journal</div></div></td>
+            <td style="width: 26px;"><div class="sync-history-cont"><div title="Wallet Transactions Status" class="history-label history-label-rot">Transactions</div></div></td>
+            <td ng-show="isChar" style="width: 26px;"><div class="sync-history-cont"><div title="Research Status" class="history-label history-label-rot">Research</div></div></td>
+            <td ng-show="isChar" style="width: 26px;"><div class="sync-history-cont"><div title="Calendar Event Attendees Status" class="history-label history-label-rot">Calendar</div></div></td>
+            <td ng-show="isChar" style="width: 26px;"><div class="sync-history-cont"><div title="Character Clones Status" class="history-label history-label-rot">Clones</div></div></td>
+            <td ng-show="isChar" style="width: 26px;"><div class="sync-history-cont"><div title="Corporation Roles Status" class="history-label history-label-rot">Corp Roles</div></div></td>
+            <td ng-show="isChar" style="width: 26px;"><div class="sync-history-cont"><div title="Character Fatigue Status" class="history-label history-label-rot">Fatigue</div></div></td>
+            <td ng-show="isChar" style="width: 26px;"><div class="sync-history-cont"><div title="Fittings Status" class="history-label history-label-rot">Fittings</div></div></td>
+            <td ng-show="isChar" style="width: 26px;"><div class="sync-history-cont"><div title="Fleets Status" class="history-label history-label-rot">Fleets</div></div></td>
+            <td ng-show="isChar" style="width: 26px;"><div class="sync-history-cont"><div title="Implants Status" class="history-label history-label-rot">Implants</div></div></td>
+            <td ng-show="isChar" style="width: 26px;"><div class="sync-history-cont"><div title="Locations Status" class="history-label history-label-rot">Location</div></div></td>
+            <td ng-show="isChar" style="width: 26px;"><div class="sync-history-cont"><div title="Loyalty Status" class="history-label history-label-rot">Loyalty</div></div></td>
+            <td ng-show="isChar" style="width: 26px;"><div class="sync-history-cont"><div title="Mail Status" class="history-label history-label-rot">Mail</div></div></td>
+            <td ng-show="isChar" style="width: 26px;"><div class="sync-history-cont"><div title="Medals Status" class="history-label history-label-rot">Medals</div></div></td>
+            <td ng-show="isChar" style="width: 26px;"><div class="sync-history-cont"><div title="Notifications Status" class="history-label history-label-rot">Notes</div></div></td>
+            <td ng-show="isChar" style="width: 26px;"><div class="sync-history-cont"><div title="Online Status" class="history-label history-label-rot">Online</div></div></td>
+            <td ng-show="isChar" style="width: 26px;"><div class="sync-history-cont"><div title="Opportunities Status" class="history-label history-label-rot">Opportunities</div></div></td>
+            <td ng-show="isChar" style="width: 26px;"><div class="sync-history-cont"><div title="Planetary Colonies Status" class="history-label history-label-rot">Planetary Colonies</div></div></td>
+            <td ng-show="isChar" style="width: 26px;"><div class="sync-history-cont"><div title="Ship Type Status" class="history-label history-label-rot">Ship Type</div></div></td>
+            <td ng-show="isChar" style="width: 26px;"><div class="sync-history-cont"><div title="Skill Queue Status" class="history-label history-label-rot">Skill Queue</div></div></td>
+            <td ng-show="isChar" style="width: 26px;"><div class="sync-history-cont"><div title="Skills Status" class="history-label history-label-rot">Skills</div></div></td>
+            <td ng-show="isChar" style="width: 26px;"><div class="sync-history-cont"><div title="Titles Status" class="history-label history-label-rot">Titles</div></div></td>
+            <td ng-show="!isChar" style="width: 26px;"><div class="sync-history-cont"><div title="Alliance Contacts Status" class="history-label history-label-rot">Alliance Contacts</div></div></td>
+            <td ng-show="!isChar" style="width: 26px;"><div class="sync-history-cont"><div title="Container Logs Status" class="history-label history-label-rot">Container Logs</div></div></td>
+            <td ng-show="!isChar" style="width: 26px;"><div class="sync-history-cont"><div title="Customs Status" class="history-label history-label-rot">Customs</div></div></td>
+            <td ng-show="!isChar" style="width: 26px;"><div class="sync-history-cont"><div title="Divisions Status" class="history-label history-label-rot">Divisions</div></div></td>
+            <td ng-show="!isChar" style="width: 26px;"><div class="sync-history-cont"><div title="Facilities Status" class="history-label history-label-rot">Facilities</div></div></td>
+            <td ng-show="!isChar" style="width: 26px;"><div class="sync-history-cont"><div title="Medals Status" class="history-label history-label-rot">Medals</div></div></td>
+            <td ng-show="!isChar" style="width: 26px;"><div class="sync-history-cont"><div title="Membership Status" class="history-label history-label-rot">Membership</div></div></td>
+            <td ng-show="!isChar" style="width: 26px;"><div class="sync-history-cont"><div title="Shareholders Status" class="history-label history-label-rot">Shareholders</div></div></td>
+            <td ng-show="!isChar" style="width: 26px;"><div class="sync-history-cont"><div title="Starbases Status" class="history-label history-label-rot">Starbases</div></div></td>
+            <td ng-show="!isChar" style="width: 26px;"><div class="sync-history-cont"><div title="Structures Status" class="history-label history-label-rot">Structures</div></div></td>
+            <td ng-show="!isChar" style="width: 26px;"><div class="sync-history-cont"><div title="Titles Status" class="history-label history-label-rot">Titles</div></div></td>
+            <td ng-show="!isChar" style="width: 26px;"><div class="sync-history-cont"><div title="Member Tracking Status" class="history-label history-label-rot">Member Tracking</div></div></td>
+          </tr>
+          </thead>
+          <tbody id="accountHistoryScroll" style="display: block; overflow-y: scroll;">
+          <tr ng-repeat="his in syncHistory">
+            <td align="center" class="entry-label" style="white-space: nowrap;">{{getStartTime(his)|date:'yyyy-MM-dd HH:mm:ss':'UTC'}}</td>
+            <td align="center" class="entry-label" style="white-space: nowrap;">{{getEndTime(his)|date:'yyyy-MM-dd HH:mm:ss':'UTC'}}</td>
+            <td ng-repeat="stat in endpointList" ng-show="determineHistoryHide(stat)" class="{{determineHistoryClass(his, stat)}}" style="width: 26px;" title="{{determineHistoryTitle(his, stat)}}"></td>
+          </tr>
+          </tbody>
+        </table>
+
+      </div>
+    </div>
+  </div>
+</div>
+
+</div>
