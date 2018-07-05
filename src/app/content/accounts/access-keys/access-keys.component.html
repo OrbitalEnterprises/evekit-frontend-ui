@@ -1,0 +1,100 @@
+<div class="mat-typography" style="padding: 10px;">
+  <!-- Header -->
+  <div class="ek-tbl" style="width: 100%">
+    <div class="ek-tbl-row">
+      <div class="ek-tbl-cell" style="text-align: left; white-space: nowrap;">
+        <span style="font-family: 'Orbitron', sans-serif; font-weight: bold;">
+          Model Access Keys
+        </span>
+      </div>
+      <div class="ek-tbl-cell" style="width: 100%; text-align: right; white-space: nowrap;">
+        <button mat-icon-button
+                (click)="openCreateKeyDialog()"
+                matTooltip="Add access key">
+          <mat-icon>add</mat-icon>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <div *ngIf="accessKeys.length === 0" style="padding: 20px; text-align: center;">
+    <span class="ek-label-warn" style="font-weight: bold;">
+      Add an access key to access your model data.
+    </span>
+  </div>
+
+
+  <div class="ek-tbl" style="width: 100%; margin-top: 20px;" *ngIf="accessKeys.length > 0">
+    <div *ngFor="let ak of accessKeys" style="position: relative; margin-bottom: 40px; padding: 10px;">
+      <div class="list-corner-upper-left"></div>
+      <div class="ek-tbl-row">
+        <div class="tk-tbl-cell" style="width: 100%; white-space: nowrap; text-align: left;">
+          <span class="ek-label ek-label-bk-primary">
+            {{ak.keyName}}
+          </span>
+          <span style="white-space: nowrap; float: right; margin-top: -10px;">
+            <button mat-icon-button
+                    (click)="viewKeyDialog(ak)"
+                    matTooltip="List permissions">
+              <fa-icon [icon]="icScopes" size="lg"></fa-icon>
+            </button>
+            <button mat-icon-button
+                    matTooltip="Explore data">
+              <fa-icon [icon]="icExplore" size="lg"></fa-icon>
+            </button>
+            <button mat-icon-button
+                    (click)="openEditKeyDialog(ak)"
+                    matTooltip="Modify">
+              <mat-icon>settings</mat-icon>
+            </button>
+            <button mat-icon-button
+                    (click)="removeKeyDialog(ak)"
+                    matTooltip="Delete">
+              <mat-icon>delete</mat-icon>
+            </button>
+          </span>
+        </div>
+      </div>
+      <div class="ek-tbl-row">
+        <div class="ek-tbl-cell">
+          <span style="white-space: nowrap;">
+            <fa-icon class="ek-label-primary"
+                     [icon]="icKey"
+                     matTooltip="Access key"
+                     size="lg"></fa-icon>
+            <span class="ek-label-primary" style="padding-left: 5px; padding-right: 20px;">
+              {{ ak.accessKey }}
+            </span>
+            <fa-icon class="ek-label-accent"
+                    [icon]="icExpiry"
+                     matTooltip="Expiration date"
+                     size="lg"></fa-icon>
+            <span class="ek-label-accent" style="padding-left: 5px; padding-right: 20px;">
+              {{ ak.expiry > 0 ? (ak.expiry | date:'yyyy-MM-dd':'UTC') : 'NEVER'}}
+            </span>
+            <fa-icon class="ek-label-accent"
+                     [icon]="icLimit"
+                     matTooltip="History limit"
+                     size="lg"></fa-icon>
+            <span class="ek-label-accent" style="padding-left: 5px;">
+              {{ ak.limit > 0 ? (ak.limit | date:'yyyy-MM-dd':'UTC') : 'UNLIMITED'}}
+            </span>
+          </span>
+        </div>
+      </div>
+      <div class="ek-tbl-row">
+        <div class="ek-tbl-cell" style="white-space: nowrap;">
+          <fa-icon class="ek-label-primary"
+                   [icon]="icCredential"
+                   matTooltip="Access credential"
+                   size="lg"></fa-icon>
+          <span class="ek-label-primary" style="padding-left: 5px;">
+            {{ ak.credential }}
+          </span>
+        </div>
+      </div>
+      <div class="list-corner-lower-right"></div>
+    </div>
+  </div>
+
+</div>

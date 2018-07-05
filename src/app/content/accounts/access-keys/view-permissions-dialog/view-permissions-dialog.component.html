@@ -1,0 +1,20 @@
+<h3 class="ek-label-primary" mat-dialog-title>
+  Permissions for {{account.characterType ? 'Character' : 'Corporation'}} Model Access Key '{{key.keyName}}'
+</h3>
+<mat-dialog-content class="mat-typography">
+
+  <div class="ek-tbl" style="width: 100%;">
+    <div class="ek-tbl-row" *ngFor="let perm of maskList">
+      <div class="ek-tbl-cell" style="white-space: nowrap;">
+        <b>{{perm.description}}</b>
+      </div>
+      <div class="ek-tbl-cell" style="white-space: nowrap; padding-left: 10px;">
+        {{perm.meaning}}
+      </div>
+    </div>
+  </div>
+
+</mat-dialog-content>
+<mat-dialog-actions style="justify-content: center;">
+  <button mat-button (click)="ok()">OK</button>
+</mat-dialog-actions>

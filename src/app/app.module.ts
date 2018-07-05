@@ -1,16 +1,42 @@
-import { BrowserModule } from '@angular/platform-browser';
-import { NgModule } from '@angular/core';
-
-import { AppComponent } from './app.component';
+import {BrowserModule} from '@angular/platform-browser';
+import {NgModule} from '@angular/core';
+import {AppComponent} from './app.component';
+import {MaterialModule} from './material/material.module';
+import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
+import {OverlayContainer} from '@angular/cdk/overlay';
+import {appStoreModel} from './store/store-model';
+import {PlatformModule} from './platform/platform.module';
+import {RouterModule} from '@angular/router';
+import {HashLocationStrategy, LocationStrategy} from '@angular/common';
+import {standardRouteConfig} from './routing';
+import {AdminActivator, LoggedInActivator} from './platform/activators';
+import {Configuration, PlatformServiceApiModule} from './platform-service-api';
+import {SdeServiceApiModule} from './sde-service-api';
 
 @NgModule({
   declarations: [
     AppComponent
   ],
   imports: [
-    BrowserModule
+    BrowserModule,
+    MaterialModule,
+    BrowserAnimationsModule,
+    PlatformModule,
+    appStoreModel,
+    RouterModule,
+    standardRouteConfig,
+    PlatformServiceApiModule.forRoot(() => new Configuration({ basePath: 'http://localhost:8888/api'})),
+    SdeServiceApiModule.forRoot(() => new Configuration({ basePath: 'http://localhost:8080/evekit-sde/api/ws/v20180529'}))
   ],
-  providers: [],
+  providers: [
+    {provide: LocationStrategy, useClass: HashLocationStrategy},
+    AdminActivator,
+    LoggedInActivator
+  ],
   bootstrap: [AppComponent]
 })
-export class AppModule { }
+export class AppModule {
+  constructor(overlayContainer: OverlayContainer) {
+    overlayContainer.getContainerElement().classList.add('evekit-light-theme');
+  }
+}

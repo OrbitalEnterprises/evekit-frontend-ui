@@ -1,0 +1,26 @@
+<button mat-raised-button
+        color="primary"
+        [matMenuTriggerFor]="loginMenu"
+        matTooltip="Logged out.  Click to select a log in method.">
+  Log In
+</button>
+
+<mat-menu [overlapTrigger]="false" #loginMenu="matMenu">
+  <mat-list dense>
+    <mat-list-item>
+      <button mat-menu-item class="btn-auth btn-twitter" (click)="startAuth('twitter')">
+        <span><b>Twitter</b></span>
+      </button>
+    </mat-list-item>
+    <mat-list-item>
+      <button mat-menu-item class="btn-auth btn-google" (click)="startAuth('google')">
+        <span><b>Google</b></span>
+      </button>
+    </mat-list-item>
+    <mat-list-item>
+      <button mat-menu-item class="btn-auth btn-eve" (click)="startAuth('eve')">
+        <span><b>EVE Online</b></span>
+      </button>
+    </mat-list-item>
+  </mat-list>
+</mat-menu>

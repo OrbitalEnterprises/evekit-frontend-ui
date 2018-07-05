@@ -1,0 +1,13 @@
+export * from './account.service';
+import { AccountService } from './account.service';
+export * from './accountV2.service';
+import { AccountV2Service } from './accountV2.service';
+export * from './admin.service';
+import { AdminService } from './admin.service';
+export * from './authentication.service';
+import { AuthenticationService } from './authentication.service';
+export * from './credential.service';
+import { CredentialService } from './credential.service';
+export * from './release.service';
+import { ReleaseService } from './release.service';
+export const APIS = [AccountService, AccountV2Service, AdminService, AuthenticationService, CredentialService, ReleaseService];

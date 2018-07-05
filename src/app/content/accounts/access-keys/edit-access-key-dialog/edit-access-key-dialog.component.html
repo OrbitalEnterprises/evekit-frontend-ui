@@ -1,0 +1,70 @@
+<h3 class="ek-label-primary" mat-dialog-title>{{keyEditMode}} {{account.characterType ? 'Character' : 'Corporation'}}
+  Model Access Key</h3>
+<mat-dialog-content class="mat-typography">
+  <form [formGroup]="formModel" style="width: 100%;">
+    <mat-form-field hintLabel="Use letters, characters, or underscores." style="width: 400px;">
+      <input matInput placeholder="Enter new key name (can be changed later)" [formControl]="keyName">
+      <mat-error *ngIf="keyName.hasError('keyNameUnique')">
+        Access key name in use, please choose another.
+      </mat-error>
+    </mat-form-field>
+    <br>
+
+    <span>
+      <mat-form-field style="width: 300px;">
+        <input matInput
+               [matDatepicker]="expiryPicker"
+               [formControl]="expiry"
+               (dateChange)="checkSetExpiry()"
+               placeholder="Choose a key expiry date or 'Never'.">
+        <mat-datepicker-toggle matSuffix [for]="expiryPicker"></mat-datepicker-toggle>
+        <mat-datepicker #expiryPicker></mat-datepicker>
+      </mat-form-field>
+      <span style="padding-left: 20px; padding-right: 20px;"><b>OR</b></span>
+      <mat-checkbox [formControl]="expiryNever" (change)="checkClearExpiry()">
+        &nbsp;Never
+      </mat-checkbox>
+    </span><br>
+
+    <span>
+      <mat-form-field style="width: 300px;">
+        <input matInput
+               [matDatepicker]="limitPicker"
+               [formControl]="limit"
+               (dateChange)="checkSetLimit()"
+               placeholder="Choose a key limit date or 'Unlimited'.">
+        <mat-datepicker-toggle matSuffix [for]="limitPicker"></mat-datepicker-toggle>
+        <mat-datepicker #limitPicker></mat-datepicker>
+      </mat-form-field>
+      <span style="padding-left: 20px; padding-right: 20px;"><b>OR</b></span>
+      <mat-checkbox [formControl]="limitUnlimited" (change)="checkClearLimit()">
+        &nbsp;Unlimited
+      </mat-checkbox>
+    </span><br>
+
+    <span><b>SELECTED PERMISSIONS</b></span>
+    <span style="float: right;">
+      <button mat-button (click)="selectAllPermissions()">Select All</button>
+      <button mat-button (click)="clearAllPermissions()">Clear All</button>
+    </span>
+    <div class="ek-tbl" style="width: 100%;">
+      <div class="ek-tbl-row" *ngFor="let perm of maskList; let i = index">
+        <div class="ek-tbl-cell" style="white-space: nowrap;">
+          <mat-checkbox [formControl]="permList.controls[i]">
+            <b>{{perm.description}}</b>
+          </mat-checkbox>
+        </div>
+        <div class="ek-tbl-cell" style="white-space: nowrap; padding-left: 10px;">
+          {{perm.meaning}}
+        </div>
+      </div>
+    </div>
+
+  </form>
+</mat-dialog-content>
+<mat-dialog-actions style="justify-content: center;">
+  <button mat-button (click)="cancel()">Cancel</button>
+  <button mat-button (click)="save()" [disabled]="!isValid()">
+    {{keyEditMode === 'Add' ? 'Add Key' : 'Save Changes'}}
+  </button>
+</mat-dialog-actions>

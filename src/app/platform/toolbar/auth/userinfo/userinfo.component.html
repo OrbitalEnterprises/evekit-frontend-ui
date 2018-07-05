@@ -1,0 +1,6 @@
+<button mat-mini-fab
+        class="ek-user-button"
+        matTooltip="Show user information"
+        (click)="openInfoDialog()">
+  {{ lastSource$ | async | extractScreenName | extractFirst }}
+</button>

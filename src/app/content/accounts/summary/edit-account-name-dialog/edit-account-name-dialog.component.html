@@ -1,0 +1,15 @@
+<h3 class="ek-label-primary" mat-dialog-title>Change Account Name</h3>
+<mat-dialog-content class="mat-typography">
+  <form [formGroup]="formModel">
+    <mat-form-field hintLabel="Use letters, characters, or underscores." style="width: 400px;">
+      <input matInput placeholder="{{currentName}}" [formControl]="accountName">
+      <mat-error *ngIf="accountName.hasError('accountNameUnique')">
+        Account name in use, please choose another.
+      </mat-error>
+    </mat-form-field>
+  </form>
+</mat-dialog-content>
+<mat-dialog-actions style="justify-content: center;">
+  <button mat-button (click)="cancel()">Cancel</button>
+  <button mat-button (click)="save()" [disabled]="!formModel.valid">Save</button>
+</mat-dialog-actions>

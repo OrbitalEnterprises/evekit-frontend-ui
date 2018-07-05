@@ -1,0 +1,71 @@
+<h3 mat-dialog-title>User Information</h3>
+<div mat-dialog-content class="mat-typography">
+  <div style="display: table; width: 100%;">
+    <div style="display: table-row;">
+      <div style="display: table-cell; vertical-align: middle;">
+        <div class="ek-user-button mat-mini-fab mat-primary"
+             style="padding-top: 4px;">
+          {{ lastSource$ | async | extractScreenName | extractFirst }}
+        </div>
+      </div>
+      <div style="display: table-cell; white-space: nowrap; padding-left: 10px; vertical-align: middle;">
+        <span style="font-weight: bold; text-align: left;">Logged In:&nbsp;</span>
+        {{ lastSource$ | async | extractScreenName }} via&nbsp;
+        <span class="btn-auth btn-{{ lastSource$ | async | extractSourceName }}">
+            <span><b>{{ sourceType(lastSource$ | async | extractSourceName) }}</b></span>
+          </span><br>
+        <span style="font-weight: bold; text-align: left;">Joined:&nbsp;</span>
+        {{ account$ | async | extractUserCreated | date:'yyyy-MM-dd HH:mm:ss':'UTC'}}
+      </div>
+      <div style="display: table-cell; padding-left: 10px; vertical-align: top;">
+        <button mat-raised-button
+                color="accent"
+                (click)="logout()">
+          Log Out
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <div style="margin-top: 10px;">
+    <mat-divider></mat-divider>
+
+    <div style="display: table; margin-top: 5px; width: 100%">
+      <div style="display: table-row">
+        <div style="display: table-cell; vertical-align: middle;">
+          <span style="font-weight: bold; white-space: nowrap">
+            Login Sources:
+          </span>
+        </div>
+      </div>
+    </div>
+
+    <div style="display: table; margin-top: 5px;">
+      <div style="display: table-row;" *ngFor="let st of sourceTypes">
+        <div style="display: table-cell; white-space: nowrap;">
+          <span class="btn-auth btn-{{ st }}">
+            <span><b>{{ sourceType(st) }}</b></span>
+          </span>
+          <span *ngIf="hasSignOn(st)">
+            as <b>{{ signOnName(st) }}</b> on <b>{{ signOnTime(st) | date:'yyyy-MM-dd HH:mm:ss':'UTC'}}</b>
+          </span>
+        </div>
+        <div style="display: table-cell; padding-left: 10px; padding-bottom: 5px;">
+          <button mat-raised-button
+                  color="warn"
+                  (click)="removeSource(st)"
+                  *ngIf="hasSignOn(st)">
+            Remove
+          </button>
+          <button mat-raised-button
+                  color="primary"
+                  (click)="addSource(st)"
+                  *ngIf="!hasSignOn(st)">
+            Add
+          </button>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>

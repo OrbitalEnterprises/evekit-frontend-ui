@@ -1,0 +1,79 @@
+<mat-tree [dataSource]="dataSource" [treeControl]="treeControl" style="background-color: #fafafa">
+
+  <mat-tree-node *matTreeNodeDef="let node;when: isFlatComingSoonMenuNode"
+                 matTreeNodePadding>
+    <button mat-icon-button disabled></button>
+    <div *ngIf="node.icon != null">
+      <mat-icon style="vertical-align: middle">{{node.icon}}</mat-icon>
+    </div>
+    <div *ngIf="node.img != null">
+      <img [src]="node.img" [width]="24" [height]="24">
+    </div>
+    <span style="padding-left: 10px; position: relative">
+      <span
+        style="color: red; font-size: 8pt; font-weight: bold; white-space: nowrap; z-index: 10; display: block; position: absolute; top: -10px; left: 0;">
+        Coming Soon!
+      </span>
+      {{node.name}}
+    </span>
+  </mat-tree-node>
+
+  <mat-tree-node *matTreeNodeDef="let node;when: isFlatSingleMenuNode"
+                 matTreeNodePadding
+                 [ngClass]="generateRouteClass(node)"
+                 (click)="router.navigate(generateRoute(node))">
+    <button mat-icon-button [disableRipple]="true"></button>
+    <div *ngIf="node.icon != null">
+      <mat-icon style="vertical-align: middle">{{node.icon}}</mat-icon>
+    </div>
+    <div *ngIf="node.img != null">
+      <img [src]="node.img" [width]="24" [height]="24">
+    </div>
+    <span style="padding-left: 10px;">{{node.name}}</span>
+  </mat-tree-node>
+
+  <mat-tree-node *matTreeNodeDef="let node;when: isFlatCallbackMenuNode"
+                 matTreeNodePadding
+                 [ngClass]="'hover-menu'"
+                 (click)="node.callback()">
+    <button mat-icon-button [disableRipple]="true"></button>
+    <div *ngIf="node.icon != null">
+      <mat-icon style="vertical-align: middle">{{node.icon}}</mat-icon>
+    </div>
+    <div *ngIf="node.img != null">
+      <img [src]="node.img" [width]="24" [height]="24">
+    </div>
+    <span style="padding-left: 10px;">{{node.name}}</span>
+  </mat-tree-node>
+
+  <mat-tree-node *matTreeNodeDef="let node;when: isFlatSyncAccountMenuNode"
+                 matTreeNodePadding
+                 [ngClass]="generateRouteClass(node)"
+                 (click)="router.navigate(generateRoute(node))">
+    <button mat-icon-button [disableRipple]="true"></button>
+    <div>
+      <img class="{{node.charType ? 'ek-label-bk-primary' : 'ek-label-bk-accent'}}"
+           [src]="node.img"
+           [width]="24"
+           [height]="24">
+    </div>
+    <span style="padding-left: 10px;">{{node.name}}</span>
+  </mat-tree-node>
+
+  <mat-tree-node *matTreeNodeDef="let node;when: hasChild"
+                 matTreeNodePadding>
+    <button mat-icon-button matTreeNodeToggle>
+      <mat-icon class="mat-icon-rtl-mirror">
+        {{treeControl.isExpanded(node) ? 'arrow_drop_down' : 'arrow_right'}}
+      </mat-icon>
+    </button>
+    <div *ngIf="node.icon != null">
+      <mat-icon style="vertical-align: middle">{{node.icon}}</mat-icon>
+    </div>
+    <div *ngIf="node.img != null">
+      <img [src]="node.img" [width]="32" [height]="32">
+    </div>
+    <span style="padding-left: 10px;">{{node.name}}</span>
+  </mat-tree-node>
+
+</mat-tree>

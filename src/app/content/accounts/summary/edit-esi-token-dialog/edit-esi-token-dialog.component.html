@@ -1,0 +1,26 @@
+<h3 class="ek-label-primary" mat-dialog-title>{{esiEditMode}} {{account.characterType ? 'Character' : 'Corporation'}} ESI Credential</h3>
+<mat-dialog-content class="mat-typography">
+  <span><b>SELECTED SCOPES</b></span>
+  <span style="float: right;">
+    <button mat-button (click)="selectAllScopes()">Select All</button>
+    <button mat-button (click)="clearAllScopes()">Clear All</button>
+  </span>
+  <form [formGroup]="formModel" style="width: 100%;">
+    <div class="ek-tbl" style="width: 100%;">
+      <div class="ek-tbl-row" *ngFor="let scope of esiScopePairs; let i = index">
+        <div class="ek-tbl-cell" style="white-space: nowrap;">
+          <mat-checkbox [formControl]="esiScopeControls.controls[i]">
+            <b>{{scope.name}}</b>
+          </mat-checkbox>
+        </div>
+        <div class="ek-tbl-cell" style="white-space: nowrap; padding-left: 10px;">
+          {{scope.description}}
+        </div>
+      </div>
+    </div>
+  </form>
+</mat-dialog-content>
+<mat-dialog-actions style="justify-content: center;">
+  <button mat-button (click)="cancel()">Cancel</button>
+  <button mat-button (click)="save()" [disabled]="!formModel.valid">{{esiEditMode === 'Add' ? 'Add Credential' : 'Authorize Changes'}}</button>
+</mat-dialog-actions>

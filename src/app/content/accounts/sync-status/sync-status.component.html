@@ -1,0 +1,74 @@
+<div class="mat-typography" style="padding: 10px;">
+  <!-- Header -->
+  <div class="ek-tbl" style="width: 100%">
+    <div class="ek-tbl-row">
+      <div class="ek-tbl-cell" style="text-align: left; white-space: nowrap;">
+        <span style="font-family: 'Orbitron', sans-serif; font-weight: bold;">
+          Model Synchronization - {{account.characterType ? 'Character' : 'Corporation' }}
+        </span>
+      </div>
+      <div class="ek-tbl-cell" style="width: 100%; text-align: right; white-space: nowrap;">
+        <button mat-icon-button
+                (click)="reloadInfo()"
+                matTooltip="Refresh view">
+          <mat-icon>refresh</mat-icon>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Sync Status Section -->
+  <div class="ek-tbl" style="width: 100%; padding-top: 10px; padding-bottom: 10px;">
+    <div class="ek-tbl-row">
+      <div class="ek-tbl-cell" style="white-space: nowrap;">
+        <b>Last Synch:</b>
+      </div>
+      <div class="ek-tbl-cell" style="white-space: nowrap; padding-left: 10px;">
+        {{ lastSyncTracker === null ? 'N/A' : (lastSyncTracker.syncEnd | date:'yyyy-MM-dd HH:mm:ss':'UTC') }}
+      </div>
+      <div class="ek-tbl-cell" style="white-space: nowrap;">
+        <b>Next Synch:</b>
+      </div>
+      <div class="ek-tbl-cell" style="white-space: nowrap; padding-left: 10px;">
+        {{ nextSyncTracker === null ? 'N/A' : (nextSyncTracker.scheduled | date:'yyyy-MM-dd HH:mm:ss':'UTC') }}
+      </div>
+    </div>
+  </div>
+
+  <div class="ek-tbl" style="padding-top: 5px; margin-left: auto; margin-right: auto;">
+    <div class="ek-tbl-row">
+      <div class="ek-tbl-cell"></div>
+      <div class="ek-tbl-cell status-table status-center">
+        <span class="ek-label {{account.characterType ? 'ek-label-bk-primary' : 'ek-label-bk-accent'}}">
+          {{account.characterType ? 'Character' : 'Corporation'}}
+        </span>
+      </div>
+      <div class="ek-tbl-cell"></div>
+    </div>
+
+    <div class="ek-tbl-row" *ngFor="let pair of statusPairs">
+      <div class="ek-tbl-cell status-table status-right">
+        <span *ngIf="pair.left !== null"
+              class="ek-small-label {{account.characterType ? 'ek-label-bk-primary' : 'ek-label-bk-accent'}}">
+          {{pair.left.name()}}
+        </span>
+      </div>
+      <div class="ek-tbl-cell status-table status-ind">
+        <fa-icon class="{{pair.left !== null ? pair.left.status() : 'status-blank'}}"
+                 [icon]="icSquare"
+                 matTooltip="{{pair.left !== null ? pair.left.message() : ''}}"
+                 size="2x"></fa-icon>
+        &nbsp;
+        <fa-icon class="{{pair.right !== null ? pair.right.status() : 'status-blank'}}"
+                 [icon]="icSquare"
+                 matTooltip="{{pair.right !== null ? pair.right.message() : ''}}"
+                 size="2x"></fa-icon>
+      </div>
+      <div class="ek-tbl-cell status-table status-left">
+        <span *ngIf="pair.right !== null" class="ek-small-label ek-label-bk-accent2">{{pair.right.name()}}</span>
+      </div>
+    </div>
+
+  </div>
+
+</div>

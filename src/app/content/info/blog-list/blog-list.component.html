@@ -1,0 +1,41 @@
+<mat-card class="mat-card-isolated">
+  <mat-card-header style="border-radius: 15px;">
+    <mat-card-title style="padding-left: 10px;">
+      <h4>
+        News and Updates
+      </h4>
+    </mat-card-title>
+  </mat-card-header>
+  <mat-card-content>
+    <div style="display: table; padding-left: 10px; padding-right: 10px;">
+      <ng-template ngFor let-entry [ngForOf]="blogEntries">
+        <div style="display: table-row;">
+          <div style="display: table-cell; padding-top: 5px;">
+            <div style="display: table; width: 100%;">
+              <div style="display: table-row;">
+                <div style="display: table-cell; width: 100%; font-weight: bold;">
+                  <a href="{{entry.link.toString()}}" target="_blank">
+                    {{entry.title}}
+                  </a>
+                </div>
+                <div style="display: table-cell;">
+                  <mat-chip-list>
+                    <mat-chip style="white-space: nowrap">
+                      {{entry.entryDate|date:'yyyy-MM-dd':'UTC'}}
+                    </mat-chip>
+                  </mat-chip-list>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div style="display: table-row">
+          <div style="display: table-cell; padding-left: 10px;">
+            <p [innerHTML]="sanitize(entry.detail)"></p>
+            <mat-divider style="left: 20px; width: 95%;"></mat-divider>
+          </div>
+        </div>
+      </ng-template>
+    </div>
+  </mat-card-content>
+</mat-card>

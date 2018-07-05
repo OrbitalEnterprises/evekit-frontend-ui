@@ -1,0 +1,23 @@
+<h3 class="mat-primary" mat-dialog-title>Settings</h3>
+<mat-dialog-content class="mat-typography">
+  <form [formGroup]="formModel">
+    <div formArrayName="settings" style="display: table">
+      <div *ngFor="let setting of settingsList; let i=index" style="display: table-row">
+        <div style="display: table-cell; white-space: nowrap">
+          {{setting.name}}
+        </div>
+        <div style="display: table-cell; white-space: nowrap; justify-content: right; padding-left: 10px;">
+          <input type="{{setting.controlType}}" [formControlName]="i" value="{{getSettingValue(i)}}">
+          &nbsp;
+          <mat-icon matTooltip="{{setting.description}}"
+                    style="vertical-align: middle;">help
+          </mat-icon>
+        </div>
+      </div>
+    </div>
+  </form>
+</mat-dialog-content>
+<mat-dialog-actions style="justify-content: center;">
+  <button mat-button (click)="cancelChanges()">Cancel</button>
+  <button mat-button (click)="saveChanges()">Save</button>
+</mat-dialog-actions>

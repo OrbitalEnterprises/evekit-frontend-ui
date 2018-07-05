@@ -1,0 +1,46 @@
+.status-table {
+  white-space: nowrap;
+  vertical-align: middle;
+  padding: 3px;
+}
+
+.status-ok {
+  color: green;
+}
+
+.status-fail {
+  color: red;
+}
+
+.status-warning {
+  color: orange;
+}
+
+.status-notprocessed {
+  color: #666666;
+}
+
+.status-blank {
+  color: #fafafa;
+}
+
+.status-ind {
+  text-align: center;
+}
+
+.status-sep {
+  width: 5px;
+}
+
+.status-right {
+  text-align: right;
+}
+
+.status-left {
+  text-align: left;
+}
+
+.status-center {
+  text-align: center;
+}
+

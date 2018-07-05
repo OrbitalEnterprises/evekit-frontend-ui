@@ -1,0 +1,254 @@
+<div class="mat-typography" style="padding: 10px;" *ngIf="account !== null">
+  <!-- Header -->
+  <div class="ek-tbl" style="width: 100%">
+    <div class="ek-tbl-row">
+      <div class="ek-tbl-cell" style="text-align: left;">
+        <span style="font-family: 'Orbitron', sans-serif; font-weight: bold;">
+          Summary
+        </span>
+      </div>
+      <div class="ek-tbl-cell" style="text-align: center; width: 100%;">
+        <span class="ek-label {{account.characterType ? 'ek-label-bk-primary' : 'ek-label-bk-accent'}}">
+          {{account.name}}
+        </span>
+      </div>
+      <div class="ek-tbl-cell" style="text-align: right; white-space: nowrap;">
+        <button mat-icon-button
+                matTooltip="Edit"
+                (click)="openAccountNameDialog()"
+                *ngIf="account.markedForDelete === -1">
+          <mat-icon>edit</mat-icon>
+        </button>
+        <a mat-icon-button
+           class="summary-menu"
+           href="{{'snapshot?acct=' + account.aid}}"
+           target="_blank"
+           matTooltip="Download latest snapshot">
+          <mat-icon>cloud_download</mat-icon>
+        </a>
+        <button mat-icon-button
+                matTooltip="Mark for removal"
+                (click)="markForDelete()"
+                *ngIf="account.markedForDelete === -1">
+          <mat-icon>delete</mat-icon>
+        </button>
+        <button mat-icon-button color="warn"
+                matTooltip="Cancel removal"
+                (click)="unmarkForDelete()"
+                *ngIf="account.markedForDelete !== -1">
+          <mat-icon>restore_from_trash</mat-icon>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Delete Warning -->
+  <div class="ek-label-bk-warn" style="text-align: center;" *ngIf="account.markedForDelete !== -1">
+    <span matTooltip="Use restore button to undo">
+      {{'SCHEDULED FOR DELETE AT ' + ((account.markedForDelete + (24 * 60 * 60 * 1000)) | date:'yyyy-MM-dd HH:mm:ss':'UTC')}}
+    </span>
+  </div>
+
+  <!-- Character/Corporation Names -->
+  <div class="ek-tbl" style="width: 100%; margin-top: 5px;" *ngIf="account.eveCharacterID !== -1">
+    <div class="ek-tbl-row">
+      <div class="ek-tbl-cell ek-label ek-label-bk-primary" style="text-align: left; white-space: nowrap;">
+        {{account.eveCharacterName}}
+      </div>
+      <div class="ek-tbl-cell" style="width: 100%;"></div>
+      <div class="ek-tbl-cell ek-label ek-label-bk-accent" style="text-align: right; white-space: nowrap;">
+        {{account.eveCorporationName}}
+      </div>
+    </div>
+  </div>
+
+  <!-- Character/Corporation portraits and attributes -->
+  <div *ngIf="account.eveCharacterID === -1" style="padding: 30px; text-align: center;">
+    <span class="ek-label-warn" style="font-weight: bold;">
+      No Character/Corporation Information.<br>
+      Please add or refresh your ESI Token below.
+    </span>
+  </div>
+  <div class="ek-tbl" style="width: 100%; margin-top: 5px;" *ngIf="account.eveCharacterID !== -1">
+    <div class="ek-tbl-row">
+      <div class="ek-tbl-cell" style="vertical-align: middle;">
+        <img src="{{'https://image.eveonline.com/character/' + account.eveCharacterID + '_128.jpg'}}"
+             style="background-color: #000000">
+      </div>
+      <div class="ek-tbl-cell" style="width: 100%; padding-left: 5px; padding-right: 5px; vertical-align: top;">
+        <div class="ek-tbl" style="width: 100%">
+          <div class="ek-tbl-row">
+            <div class="ek-tbl-cell attr-left">
+              <fa-icon [icon]="attrGender" size="lg" matTooltip="Gender"></fa-icon>
+              &nbsp;
+              {{ charInfo ? charInfo.gender : "" }}
+            </div>
+            <div class="ek-tbl-cell attr-right">
+              {{ ceo ? ceo : "" }}
+              &nbsp;
+              <fa-icon [icon]="attrCEO" size="lg" matTooltip="CEO"></fa-icon>
+            </div>
+          </div>
+          <div class="ek-tbl-row">
+            <div class="ek-tbl-cell attr-left">
+              <fa-icon [icon]="attrRace" size="lg" matTooltip="Race"></fa-icon>
+              &nbsp;
+              {{ race ? race : ""}}
+            </div>
+            <div class="ek-tbl-cell attr-right">
+              {{ corpInfo ? corpInfo.ticker : "" }}
+              &nbsp;
+              <fa-icon [icon]="attrTicker" size="lg" matTooltip="Ticker"></fa-icon>
+            </div>
+          </div>
+          <div class="ek-tbl-row">
+            <div class="ek-tbl-cell attr-left">
+              <fa-icon [icon]="attrBloodline" size="lg" matTooltip="Bloodline"></fa-icon>
+              &nbsp;
+              {{ bloodline ? bloodline : "" }}
+            </div>
+            <div class="ek-tbl-cell attr-right">
+              {{ corpInfo ? (corpInfo.date_founded ? (corpInfo.date_founded | date:'yyyy-MM-dd') : "N/A") : "" }}
+              &nbsp;
+              <fa-icon [icon]="attrBirthday" size="lg" matTooltip="Founded"></fa-icon>
+            </div>
+          </div>
+          <div class="ek-tbl-row">
+            <div class="ek-tbl-cell attr-left">
+              <fa-icon [icon]="attrAncestry" size="lg" matTooltip="Ancestry"></fa-icon>
+              &nbsp;
+              {{ ancestry ? ancestry : "" }}
+            </div>
+            <div class="ek-tbl-cell attr-right">
+              {{ corpInfo ? corpInfo.member_count : "" }}
+              &nbsp;
+              <fa-icon [icon]="attrMembers" size="lg" matTooltip="Member Count"></fa-icon>
+            </div>
+          </div>
+          <div class="ek-tbl-row">
+            <div class="ek-tbl-cell attr-left">
+              <fa-icon [icon]="attrBirthday" size="lg" matTooltip="Birthday"></fa-icon>
+              &nbsp;
+              {{ charInfo ? (charInfo.birthday | date:'yyyy-MM-dd') : "" }}
+            </div>
+            <div class="ek-tbl-cell attr-right">
+              {{ corpInfo ? (corpInfo.shares ? corpInfo.shares : "") : "" }}
+              &nbsp;
+              <fa-icon [icon]="attrShares" size="lg" matTooltip="Share Count"></fa-icon>
+            </div>
+          </div>
+          <div class="ek-tbl-row">
+            <div class="ek-tbl-cell attr-left">
+              <fa-icon [icon]="attrSecStatus" size="lg" matTooltip="Security Status"></fa-icon>
+              &nbsp;
+              {{ charInfo ? (charInfo.security_status | number:'1.1-2') : "" }}
+            </div>
+            <div class="ek-tbl-cell attr-right">
+              {{ corpInfo ? (corpInfo.tax_rate | percent) : "" }}
+              &nbsp;
+              <fa-icon [icon]="attrTaxes" size="lg" matTooltip="Tax Rate"></fa-icon>
+            </div>
+          </div>
+          <div class="ek-tbl-row">
+            <div class="ek-tbl-cell attr-left">
+              <fa-icon [icon]="attrAlliance" size="lg" matTooltip="Alliance"></fa-icon>
+              &nbsp;
+              {{ charAlliance ? charAlliance : "" }}
+            </div>
+            <div class="ek-tbl-cell attr-right">
+              {{ corpAlliance ? corpAlliance : "" }}
+              &nbsp;
+              <fa-icon [icon]="attrAlliance" size="lg" matTooltip="Alliance"></fa-icon>
+            </div>
+          </div>
+          <div class="ek-tbl-row">
+            <div class="ek-tbl-cell attr-left">
+              <fa-icon [icon]="attrFaction" size="lg" matTooltip="Faction"></fa-icon>
+              &nbsp;
+              {{ charFaction ? charFaction : "" }}
+            </div>
+            <div class="ek-tbl-cell attr-right">
+              {{ corpFaction ? corpFaction : "" }}
+              &nbsp;
+              <fa-icon [icon]="attrFaction" size="lg" matTooltip="Faction"></fa-icon>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="ek-tbl-cell" style="vertical-align: middle;">
+        <img src="{{'https://image.eveonline.com/corporation/' + account.eveCorporationID + '_128.png'}}"
+             style="background-color: #000000">
+      </div>
+    </div>
+  </div>
+  <div class="ek-tbl" style="width: 100%; padding-top: 10px;">
+    <div class="ek-tbl-row">
+      <div class="ek-tbl-cell attr-right" *ngIf="account.eveCharacterID !== -1">
+        {{ station ? station : "" }}
+        &nbsp;
+        <fa-icon [icon]="attrStation" size="lg" matTooltip="Corp Home Station"></fa-icon>
+      </div>
+    </div>
+    <div class="ek-tbl-row">
+      <div class="ek-tbl-cell" style="white-space: nowrap; padding-top: 10px;">
+        <b>Added to EveKit:</b>&nbsp;&nbsp;
+        {{ account.created | date:'yyyy-MM-dd':'UTC' }}
+      </div>
+    </div>
+  </div>
+
+  <div class="ek-tbl" style="width: 100%; padding-top: 20px;">
+    <div class="ek-tbl-row">
+      <div class="ek-tbl-cell" style="white-space: nowrap;">
+        <span class="ek-label ek-label-bk-accent2">
+          ESI Token
+        </span>
+        <button mat-icon-button
+                *ngIf="account.accessToken === null"
+                (click)="openAddESITokenDialog()"
+                matTooltip="Add ESI Token">
+          <mat-icon>add</mat-icon>
+        </button>
+      </div>
+      <div class="ek-tbl-cell attr-left"
+           style="width: 100%; padding-left: 10px;"
+           *ngIf="account.accessToken !== null">
+        <mat-icon *ngIf="account.valid" class="ek-label-ok" style="vertical-align: middle;">thumb_up</mat-icon>
+        <mat-icon *ngIf="!account.valid" class="mat-warn" style="vertical-align: middle;">thumb_down</mat-icon>
+        <span *ngIf="account.valid" style="padding-left: 10px; white-space: nowrap; vertical-align: middle;">
+          <b>Next Refresh:</b> {{account.accessTokenExpiry | date:'yyyy-MM-dd HH:mm:ss':'UTC'}}
+        </span>
+        <span *ngIf="!account.valid" style="padding-left: 10px; white-space: nowrap; vertical-align: middle;">
+          <b class="ek-label-warn">PLEASE REAUTHORIZE!</b>
+        </span>
+      </div>
+      <div class="ek-tbl-cell" *ngIf="account.accessToken !== null">
+        <span style="white-space: nowrap;">
+          <button mat-icon-button
+                  *ngIf="!account.valid"
+                  (click)="reauthorizeESIToken()"
+                  matTooltip="Reauthorize scopes">
+            <fa-icon class="ek-label-warn" [icon]="icSignIn" size="lg"></fa-icon>
+          </button>
+          <button mat-icon-button
+                  *ngIf="account.valid"
+                  (click)="openEditESITokenDialog()"
+                  matTooltip="Change scopes">
+            <mat-icon>settings</mat-icon>
+          </button>
+          <button mat-icon-button
+                  (click)="viewScopesDialog()"
+                  matTooltip="List scopes">
+            <mat-icon>list</mat-icon>
+          </button>
+          <button mat-icon-button
+                  (click)="removeESITokenDialog()"
+                  matTooltip="Remove ESI token">
+            <mat-icon>delete</mat-icon>
+          </button>
+        </span>
+      </div>
+    </div>
+  </div>
+
+</div>
