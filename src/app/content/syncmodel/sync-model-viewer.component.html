@@ -1,3 +1,53 @@
-<p>
-  sync-model-viewer works!
-</p>
+<div class="top-title">
+  <div class="light-corner-upper-left"></div>
+  <div class="light-corner-upper-right"></div>
+  <div style="display: inline-block; padding-top: 5px;">
+    <span style="font-family: 'Orbitron', sans-serif; font-weight: bold;">
+      Model View
+    </span>
+  </div>
+
+  <mat-menu #keyMenu="matMenu" [overlapTrigger]="false">
+    <button *ngFor="let ke of keyMenuList"
+            mat-menu-item
+            (click)="selectKey(ke.aid, ke.kid)">
+      {{ ke.title }}
+    </button>
+  </mat-menu>
+
+  <button mat-raised-button
+          color="{{ isChar ? 'primary' : 'accent'}}"
+          style="float: right;"
+          [matMenuTriggerFor]="keyMenu"
+          *ngIf="accountList.length > 0">
+    {{ title === null ? 'Select Key' : title}}
+    <mat-icon>arrow_drop_down</mat-icon>
+  </button>
+
+  <div class="mat-typography" style="margin-top: 25px;">
+    <p>
+      The EveKit Model API is a <a href="https://en.wikipedia.org/wiki/Representational_state_transfer">REST</a> API
+      which exposes an <a href="https://swagger.io">OpenAPI</a> specification.  You can generate a client in your
+      favorite language using tools like <a href="https://swagger.io/tools/swagger-codegen/">Swagger CodeGen</a> or
+      the <a href="https://swagger.io/tools/swagger-editor/">Swagger Editor</a> and the model URL shown below.
+    </p>
+
+    <p>
+      You can browse the API in the <a href="https://swagger.io/tools/swagger-ui/">Swagger UI</a> below.  If you are
+      logged in, and have defined one or more data access keys, then
+      you can use the selector at the right to browse the API using your selected access key.
+    </p>
+
+    <p>
+      The Model API uses a special query language which allows filtering fields by value, by range, or
+      SQL-like wildcards on string-valued fields. See the <a href="https://github.com/OrbitalEnterprises/evekit-model-frontend#model-api-method-structure-and-queries">GitHub project</a>
+      for a complete description of the query language.
+    </p>
+  </div>
+</div>
+
+<mat-divider></mat-divider>
+
+<div class="view-frame">
+  <iframe [src]="trustedURL" id="api-model" style="width: 95%; height: 98%; border-width: 0"></iframe>
+</div>

@@ -1,0 +1,55 @@
+<div class="top-title">
+  <div class="light-corner-upper-left"></div>
+  <div class="light-corner-upper-right"></div>
+  <div style="display: inline-block; padding-top: 5px;">
+    <span style="font-family: 'Orbitron', sans-serif; font-weight: bold;">
+      Static Data Export View
+    </span>
+  </div>
+
+  <mat-menu #sdeMenu="matMenu" [overlapTrigger]="false">
+    <button *ngFor="let sde of sdeList"
+            mat-menu-item
+            (click)="selectSDE(sde)">
+      {{ sde.title }}
+    </button>
+  </mat-menu>
+
+  <button mat-raised-button
+          color="primary"
+          style="float: right;"
+          [matMenuTriggerFor]="sdeMenu">
+    {{ title === null ? 'Select SDE' : title}}
+    <mat-icon>arrow_drop_down</mat-icon>
+  </button>
+
+  <div class="mat-typography" style="margin-top: 25px;">
+    <p>
+      EveKit provides a <a href="https://en.wikipedia.org/wiki/Representational_state_transfer">REST</a> API for
+      accessing the last two Static Data Export (SDE) releases from CCP.  EveKit also exposes an
+      <a href="https://swagger.io">OpenAPI</a> specification for each release.  You can generate a client in your
+      favorite language using tools like <a href="https://swagger.io/tools/swagger-codegen/">Swagger CodeGen</a> or
+      the <a href="https://swagger.io/tools/swagger-editor/">Swagger Editor</a> and the specification URL shown below.
+    </p>
+
+    <p>
+      You can browse the SDE API in the <a href="https://swagger.io/tools/swagger-ui/">Swagger UI</a> below.
+      Use the menu on the right to select the appropriate SDE release.
+    </p>
+
+    <p>
+      The SDE API uses a special query language which allows filtering fields by value, by range, or
+      SQL-like wildcards on string-valued fields. See our <a href="https://github.com/OrbitalEnterprises/evekit-model-frontend#model-api-method-structure-and-queries">GitHub project</a>
+      for a complete description of the query language.
+    </p>
+  </div>
+</div>
+
+<mat-divider></mat-divider>
+
+<div class="view-frame">
+  <iframe *ngIf="modelURL !== null"
+          [src]="trustedURL"
+          id="sde-model"
+          style="width: 95%; height: 98%; border-width: 0"></iframe>
+</div>

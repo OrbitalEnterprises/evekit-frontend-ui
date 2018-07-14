@@ -39,6 +39,7 @@
               <fa-icon [icon]="icScopes" size="lg"></fa-icon>
             </button>
             <button mat-icon-button
+                    (click)="router.navigate(generateExploreRoute(ak))"
                     matTooltip="Explore data">
               <fa-icon [icon]="icExplore" size="lg"></fa-icon>
             </button>
@@ -88,7 +89,7 @@
                    [icon]="icCredential"
                    matTooltip="Access credential"
                    size="lg"></fa-icon>
-          <span class="ek-label-primary" style="padding-left: 5px;">
+          <span class="ek-label-primary" style="padding-left: 5px; font-size: 10pt;">
             {{ ak.credential }}
           </span>
         </div>

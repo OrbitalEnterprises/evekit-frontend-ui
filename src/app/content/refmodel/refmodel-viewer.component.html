@@ -1,0 +1,40 @@
+<div class="top-title">
+  <div class="light-corner-upper-left"></div>
+  <div class="light-corner-upper-right"></div>
+  <div style="display: inline-block; padding-top: 5px;">
+    <span style="font-family: 'Orbitron', sans-serif; font-weight: bold;">
+      Reference Data View
+    </span>
+  </div>
+
+  <div class="mat-typography" style="margin-top: 15px;">
+    <p>
+      EveKit captures regular snapshots of some EVE Online reference data.  This data can be accessed using
+      a <a href="https://en.wikipedia.org/wiki/Representational_state_transfer">REST</a> API which also
+      includes an <a href="https://swagger.io">OpenAPI</a> specification.  You can generate a client in your
+      favorite language using tools like <a href="https://swagger.io/tools/swagger-codegen/">Swagger CodeGen</a> or
+      the <a href="https://swagger.io/tools/swagger-editor/">Swagger Editor</a> and the specification URL shown below.
+    </p>
+
+    <p>
+      Note that EveKit provides access to both current and historical data.  Thus, while the same data can
+      be accessed directly from the <a href="https://esi.evetech.net/latest/?datasource=tranquility">ESI</a>,
+      EveKit can also serve historic views.
+    </p>
+
+    <p>
+      You can browse the Reference Data API in the <a href="https://swagger.io/tools/swagger-ui/">Swagger UI</a> below.
+      The Reference Data API uses a special query language which allows filtering fields by value, by range, or
+      SQL-like wildcards on string-valued fields. See our <a href="https://github.com/OrbitalEnterprises/evekit-model-frontend#model-api-method-structure-and-queries">GitHub project</a>
+      for a complete description of the query language.
+    </p>
+  </div>
+</div>
+
+<mat-divider></mat-divider>
+
+<div class="view-frame">
+  <iframe [src]="trustedURL"
+          id="ref-model"
+          style="width: 95%; height: 98%; border-width: 0"></iframe>
+</div>

@@ -12,6 +12,7 @@ import {standardRouteConfig} from './routing';
 import {AdminActivator, LoggedInActivator} from './platform/activators';
 import {Configuration, PlatformServiceApiModule} from './platform-service-api';
 import {SdeServiceApiModule} from './sde-service-api';
+import {environment} from '../environments/environment';
 
 @NgModule({
   declarations: [
@@ -25,8 +26,8 @@ import {SdeServiceApiModule} from './sde-service-api';
     appStoreModel,
     RouterModule,
     standardRouteConfig,
-    PlatformServiceApiModule.forRoot(() => new Configuration({ basePath: 'http://localhost:8888/api'})),
-    SdeServiceApiModule.forRoot(() => new Configuration({ basePath: 'http://localhost:8080/evekit-sde/api/ws/v20180529'}))
+    PlatformServiceApiModule.forRoot(() => new Configuration({ basePath: environment.platformServiceApiBasePath})),
+    SdeServiceApiModule.forRoot(() => new Configuration({ basePath: environment.sdeServiceApiBasePath}))
   ],
   providers: [
     {provide: LocationStrategy, useClass: HashLocationStrategy},

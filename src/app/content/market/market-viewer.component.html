@@ -1,0 +1,50 @@
+<div class="top-title">
+  <div class="light-corner-upper-left"></div>
+  <div class="light-corner-upper-right"></div>
+  <div style="display: inline-block; padding-top: 5px;">
+    <span style="font-family: 'Orbitron', sans-serif; font-weight: bold;">
+      Market Data View
+    </span>
+  </div>
+
+  <div class="mat-typography" style="margin-top: 15px;">
+    <p>
+      EveKit captures regular snapshots of EVE Online market data, including both order books and
+      market history. Two types of access are provided:
+    </p>
+
+    <ul>
+      <li><b>Live REST API</b>: EveKit provides a <a
+        href="https://en.wikipedia.org/wiki/Representational_state_transfer">REST</a> API
+        which also includes an <a href="https://swagger.io">OpenAPI</a> specification. You can generate a client in your
+        favorite language using tools like <a href="https://swagger.io/tools/swagger-codegen/">Swagger CodeGen</a> or
+        the <a href="https://swagger.io/tools/swagger-editor/">Swagger Editor</a> and the specification URL shown below
+      </li>
+
+      <li><b>Archive</b>: At the close of each day (midnight UTC), EveKit packages all order books
+        and market history into a convenient format for bulk retrieval.  These files are publicly available
+        on the cloud.
+      </li>
+    </ul>
+
+    <p>
+      The "live" service is best for interactive tools where specific market information is needed for explicit
+      types or regions.  This service is <b>not</b> efficient for bulk or large volume retrieval.  The "archive"
+      service is intended to support bulk retrieval.
+    </p>
+
+    <p>
+      You can browse the live Market Data API in the <a href="https://swagger.io/tools/swagger-ui/">Swagger UI</a>
+      below.  For information about the archive service, please consult our
+      <a href="https://github.com/OrbitalEnterprises/evekit-marketdata-server">GitHub project</a>.
+    </p>
+  </div>
+</div>
+
+<mat-divider></mat-divider>
+
+<div class="view-frame">
+  <iframe [src]="trustedURL"
+          id="market-model"
+          style="width: 95%; height: 98%; border-width: 0"></iframe>
+</div>

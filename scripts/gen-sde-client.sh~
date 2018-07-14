@@ -1,0 +1,16 @@
+#!/bin/bash
+#
+# Generate an SDE client for the latest published SDE spec.  Results will be placed in the directory where this command is executed.
+SRCSPEC=https://evekit-sde.orbital.enterprises/latest/swagger.json
+
+# Prepare work area
+WKDIR=${TMP}/work-$$
+mkdir ${WKDIR}
+trap "rm -rf ${WKDIR}" EXIT
+cd ${WKDIR}
+
+# Retrieve client from generator
+curl -X POST -H "content-type:application/json" -d '{"swaggerUrl":"${SRCSPEC}"}' https://generator.swagger.io/api/gen/clients/typescript-angular > client_gen_response.json
+CLLINK=$(cat client_gen_response.json | jq '.link')
+wget -O tsclient.zip tsclient.zip ${CLLINK}
+unzip tsclient.zip

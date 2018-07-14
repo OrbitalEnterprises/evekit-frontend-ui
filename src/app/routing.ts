@@ -38,9 +38,23 @@ const standardRoutes: Routes = [
   },
   {
     // Sync Model Viewer
-    // TODO: this should optionally allow a sync account and access key ID to pre-populate credentials.
-    path: 'sapi/model',
+    path: 'sapi/model/:aid/:kid',
     loadChildren: './content/syncmodel/syncmodel.module#SyncmodelModule'
+  },
+  {
+    // SDE Viewer
+    path: 'sapi/sde',
+    loadChildren: './content/sde/sde.module#SdeModule'
+  },
+  {
+    // Reference Data Viewer
+    path: 'sapi/ref',
+    loadChildren: './content/refmodel/refmodel.module#RefmodelModule'
+  },
+  {
+    // Market Data Viewer
+    path: 'sapi/market',
+    loadChildren: './content/market/market.module#MarketModule'
   },
   {
     // Accounts display

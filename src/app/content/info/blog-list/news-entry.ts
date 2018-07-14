@@ -2,6 +2,7 @@
  * Class representing blog news entry.
  */
 export class NewsEntry {
+  update: boolean;
   badge: string;
   badgeColor: string;
   entryDate: Date;
@@ -11,11 +12,13 @@ export class NewsEntry {
 
   constructor(blogResult: any) {
     if (blogResult.hasOwnProperty('published')) {
+      this.update = false;
       this.badge = 'Created: ';
       this.badgeColor = 'primary';
       this.entryDate = new Date(blogResult.published);
     }
     if (blogResult.hasOwnProperty('updated')) {
+      this.update = true;
       this.badge = 'Updated: ';
       this.badgeColor = 'accent';
       this.entryDate = new Date(blogResult.updated);

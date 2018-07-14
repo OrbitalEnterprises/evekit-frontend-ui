@@ -3,7 +3,7 @@ import {AccountService, SynchronizedAccountAccessKey, SynchronizedEveAccount} fr
 import {Observable, Subscription} from 'rxjs';
 import {AppState} from '../../../store/store-model';
 import {Store} from '@ngrx/store';
-import {ActivatedRoute} from '@angular/router';
+import {ActivatedRoute, Router} from '@angular/router';
 import {selectSyncAccounts} from '../../../platform/selectors';
 import {map} from 'rxjs/operators';
 import {faCalendarAlt, faDoorOpen, faHistory, faKey, faShieldAlt, faUnlock} from '@fortawesome/free-solid-svg-icons';
@@ -37,7 +37,8 @@ export class AccessKeysComponent implements OnDestroy {
               private store: Store<AppState>,
               private accountService: AccountService,
               private dialog: MatDialog,
-              private dialogService: DialogsService) {
+              private dialogService: DialogsService,
+              public router: Router) {
     // Setup tracking of account ID from params
     this.aid = this.routeInfo.paramMap.pipe(map(
       mm => {
@@ -148,6 +149,10 @@ export class AccessKeysComponent implements OnDestroy {
           );
       }
     });
+  }
+
+  generateExploreRoute(key: SynchronizedAccountAccessKey): any[] {
+    return ['/sapi/model', this.account.aid, key.kid];
   }
 
 }

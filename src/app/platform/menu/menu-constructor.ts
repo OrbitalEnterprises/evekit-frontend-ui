@@ -20,9 +20,10 @@ const MENU_STRUCTURE: MenuNode[] = [
   new ExpandableMenuNode('Accounts', 'people', null)
     .addGuard(MenuGuard.LOGGED_IN),
   new ExpandableMenuNode('APIs', 'code', null)
-    .addChild(new SingleMenuNode('Model', '/sapi/model', 'memory', null))
+    .addChild(new SingleMenuNode('Model', '/sapi/model/-1/-1', 'memory', null))
     .addChild(new SingleMenuNode('SDE', '/sapi/sde', 'language', null))
-    .addChild(new SingleMenuNode('Market', '/sapi/market', 'bar_chart', null)),
+    .addChild(new SingleMenuNode('Market', '/sapi/market', 'bar_chart', null))
+    .addChild(new SingleMenuNode('Reference', '/sapi/ref', 'library_books', null)),
   new ExpandableMenuNode('Admin', 'build', null)
     .addGuard(MenuGuard.ADMIN)
     .addChild(new SingleMenuNode('Sys Props', '/admin/sysprops', 'settings', null))
@@ -31,7 +32,7 @@ const MENU_STRUCTURE: MenuNode[] = [
     .addChild(new SingleMenuNode('User List', '/admin/userlist', 'list', null))
     .addChild(new SingleMenuNode('Ref History', '/admin/refhistory', 'history', null))
     .addChild(new SingleMenuNode('Notifications', '/admin/notifications', 'priority_high', null)),
-  new SingleMenuNode('stEVE', '/steve', 'chat', null)
+  new SingleMenuNode('EVA', '/eva', 'chat', null)
     .addGuard(MenuGuard.COMING_SOON),
   new SingleMenuNode('Extension Manager', '/extadmin', 'settings_ethernet', null)
     .addGuard(MenuGuard.COMING_SOON)
