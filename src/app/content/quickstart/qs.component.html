@@ -1,0 +1,196 @@
+<div class="mat-typography" style="position: relative; margin-left: 10px; margin-right: 10px; margin-top: 10px;">
+  <div class="light-corner-upper-left"></div>
+  <div class="light-corner-upper-right"></div>
+  <div style="display: inline-block; padding-top: 10px; padding-left: 10px;">
+    <span style="font-family: 'Orbitron', sans-serif; font-weight: bold;">
+      Quick Start
+    </span>
+  </div>
+  <div style="float: right; margin-right: 10px; margin-top: 10px;">
+    <button mat-raised-button
+            color="accent"
+            (click)="cancel()">
+      Cancel
+    </button>
+  </div>
+  <div style="padding: 20px;">
+    <p>
+      EveKit tracks your EVE Online player data using a "synchronized account",
+      which consists of a character or corporation you designate,
+      along with an appropriate <a href="https://esi.evetech.net/ui/">ESI</a>
+      token for retrieving your data from CCP servers.
+    </p>
+
+    <p>
+      The following workflow will guide you through the process of creating
+      a synchronized account.  If you've been sent here by an EveKit extension
+      or third party application, then you can use this workflow to either
+      create a new synchronized account, or select an existing account.
+      You can also (optionally) create a data access key, which is required
+      if you would like to allow extensions or third party applications to
+      access your data.
+    </p>
+
+    <mat-vertical-stepper [linear]="true" style="background-color: #fafafa;">
+      <mat-step [completed]="user !== null" #logStep>
+        <ng-template matStepLabel>
+          Login to EveKit
+          <span *ngIf="logStep.completed && source !== null">
+        <b>- You Have Logged In Via</b>
+        <span class="btn-auth btn-{{ source.source }}" style="margin-left: 10px;">
+            <span><b>{{ sourceType(source.source) }}</b></span>
+        </span>
+      </span>
+        </ng-template>
+        <mat-list dense *ngIf="source === null" style="width: 200px;">
+          <mat-list-item>
+            <button mat-menu-item class="btn-auth btn-twitter" (click)="startAuth('twitter')">
+              <span><b>Twitter</b></span>
+            </button>
+          </mat-list-item>
+          <mat-list-item>
+            <button mat-menu-item class="btn-auth btn-google" (click)="startAuth('google')">
+              <span><b>Google</b></span>
+            </button>
+          </mat-list-item>
+          <mat-list-item>
+            <button mat-menu-item class="btn-auth btn-eve" (click)="startAuth('eve')">
+              <span><b>EVE Online</b></span>
+            </button>
+          </mat-list-item>
+        </mat-list>
+        <span *ngIf="source !== null">
+        You can
+        <button mat-raised-button
+                color="accent"
+                (click)="logout()">
+          Log Out
+        </button>
+        if you wish to login as a different user.
+     </span>
+        <div>
+          <button mat-button
+                  [disabled]="!logStep.completed"
+                  matStepperNext>
+            Next
+          </button>
+        </div>
+      </mat-step>
+      <mat-step [completed]="selectedAccount !== null" #accountStep>
+        <ng-template matStepLabel>
+          Create or Choose an EveKit Account
+          <span *ngIf="accountStep.completed">
+        <b>- You Have Selected</b>
+      <div
+        class="ek-label {{selectedAccount.characterType ? 'ek-label-bk-primary' : 'ek-label-bk-accent'}}"
+        style="display: inline-block; margin-left: 10px;">
+        {{selectedAccount.name}} - ({{selectedAccount.characterType ? 'Character' : 'Corporation'}})
+      </div>
+      </span>
+        </ng-template>
+        <button mat-raised-button
+                (click)="createSyncAccount()"
+                color="accent">
+          Create New Account
+        </button>
+        <b *ngIf="syncAccounts.length > 0">&nbsp;OR&nbsp;</b>
+        <mat-menu #accountMenu="matMenu" [overlapTrigger]="false">
+          <button *ngFor="let ac of syncAccounts"
+                  (click)="selectAccount(ac)"
+                  mat-menu-item>
+            {{ ac.name + " (" + (ac.characterType ? 'Character' : 'Corporation') + ")" }}
+          </button>
+        </mat-menu>
+        <button mat-raised-button
+                color="primary"
+                [matMenuTriggerFor]="accountMenu"
+                *ngIf="syncAccounts.length > 0">
+          {{ selectedAccount === null ? 'Select Existing Account' : "Selected: " + selectedAccount.name }}
+          <mat-icon>arrow_drop_down</mat-icon>
+        </button>
+        <div>
+          <button mat-button
+                  matStepperPrevious>
+            Back
+          </button>
+          <button mat-button
+                  [disabled]="!accountStep.completed"
+                  matStepperNext>
+            Next
+          </button>
+        </div>
+      </mat-step>
+      <mat-step [completed]="scopesAdded" #tokenStep>
+        <ng-template matStepLabel>
+          Set ESI Token
+          <span *ngIf="tokenStep.completed">
+        <b>- Token Set</b>
+      </span>
+        </ng-template>
+        <button mat-raised-button
+                *ngIf="selectedAccount !== null"
+                color="accent">
+          {{selectedAccount.valid ? 'Change Scopes' : 'Add Token'}}
+        </button>
+        <b *ngIf="selectedAccount !== null && selectedAccount.valid">&nbsp;OR&nbsp;</b>
+        <button mat-raised-button
+                *ngIf="selectedAccount !== null && selectedAccount.valid"
+                (click)="skipChangeScopes()"
+                color="primary">
+          Skip
+        </button>
+        <div>
+          <button mat-button matStepperPrevious>Back</button>
+          <button mat-button matStepperNext>Next</button>
+        </div>
+      </mat-step>
+      <mat-step [completed]="selectedKey !== null" [optional]="true" #keyStep>
+        <ng-template matStepLabel>
+          Create or Choose a Data Access Key
+          <span *ngIf="selectedKey !== null">
+        <b>- You Have Selected</b>
+      <div
+        class="ek-label ek-label-bk-primary"
+        style="display: inline-block; margin-left: 10px;">
+        {{selectedKey.keyName}}
+      </div>
+      </span>
+        </ng-template>
+        <button mat-raised-button
+                color="accent">
+          Create New Data Access Key
+        </button>
+        <b *ngIf="accessKeys.length > 0">&nbsp;OR&nbsp;</b>
+        <mat-menu #keyMenu="matMenu" [overlapTrigger]="false">
+          <button *ngFor="let kk of accessKeys"
+                  (click)="selectKey(kk)"
+                  mat-menu-item>
+            {{ kk.keyName }}
+          </button>
+        </mat-menu>
+        <button mat-raised-button
+                color="primary"
+                [matMenuTriggerFor]="keyMenu"
+                *ngIf="accessKeys.length > 0">
+          {{ selectedKey === null ? 'Select Existing Access Key' : "Selected: " + selectedKey.keyName }}
+          <mat-icon>arrow_drop_down</mat-icon>
+        </button>
+        <div>
+          <button mat-button matStepperPrevious>Back</button>
+          <button mat-button matStepperNext>Next</button>
+        </div>
+      </mat-step>
+      <mat-step>
+        <ng-template matStepLabel>Done!</ng-template>
+        <div>
+          <button mat-button matStepperPrevious>Back</button>
+          <button mat-raised-button
+                  (click)="finish()"
+                  color="accent">
+            Finish
+          </button>
+        </div>
+      </mat-step>
+    </mat-vertical-stepper>
+  </div>
+</div>

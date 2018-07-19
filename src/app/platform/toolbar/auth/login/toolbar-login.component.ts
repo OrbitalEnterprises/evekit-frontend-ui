@@ -5,14 +5,11 @@ import {Component, OnInit} from '@angular/core';
   templateUrl: './toolbar-login.component.html',
   styleUrls: ['auth-buttons.css', './toolbar-login.component.css']
 })
-export class ToolbarLoginComponent implements OnInit {
+export class ToolbarLoginComponent {
 
   constructor() { }
 
-  ngOnInit() {
-  }
-
-  startAuth(tp: string) {
+  startAuth(tp: string): void {
     window.location.assign('/api/ws/v1/auth/login/' + tp);
   }
 

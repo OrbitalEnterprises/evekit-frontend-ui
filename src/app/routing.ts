@@ -37,6 +37,11 @@ const standardRoutes: Routes = [
     loadChildren: './content/info/info-content.module#InfoContentModule'
   },
   {
+    // Quickstart page
+    path: 'qs',
+    loadChildren: './content/quickstart/quickstart.module#QuickstartModule'
+  },
+  {
     // Sync Model Viewer
     path: 'sapi/model/:aid/:kid',
     loadChildren: './content/syncmodel/syncmodel.module#SyncmodelModule'

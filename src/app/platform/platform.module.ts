@@ -8,7 +8,6 @@ import {CommonModule, HashLocationStrategy, Location, LocationStrategy} from '@a
 import {NgModule} from '@angular/core';
 import {MaterialModule} from '../material/material.module';
 import {VersionComponent} from './version/version.component';
-import {PlatformServiceApiModule} from '../platform-service-api';
 import {ToolbarComponent} from './toolbar/toolbar.component';
 import {ToolbarSettingsComponent} from './toolbar/settings/toolbar-settings.component';
 import {ToolbarNotificationsComponent} from './toolbar/notifications/toolbar-notifications.component';
@@ -23,7 +22,7 @@ import {SettingsDialogComponent} from './toolbar/settings/settings-dialog.compon
 import {ReactiveFormsModule} from '@angular/forms';
 import {MenuComponent} from './menu/menu.component';
 import {RouterModule} from '@angular/router';
-import { CreateSyncAccountComponent } from './menu/create-sync-account/create-sync-account.component';
+import {CreateSyncAccountComponent} from './menu/create-sync-account/create-sync-account.component';
 
 @NgModule({
   imports: [

@@ -51,14 +51,14 @@ export class CreateSyncAccountComponent {
   save(): void {
     this.acctService.saveSyncAccount(-1, -1, this.accountName.value, this.accountType.value === 'CHARACTER')
       .subscribe(
-        () => {
+        newAccount => {
           // Reload sync accounts
-          this.dialogRef.close();
+          this.dialogRef.close(newAccount);
           refreshSyncAccounts(this.userAccount, this.acctService, this.store);
         },
         () => {
           // Error
-          this.dialogRef.close();
+          this.dialogRef.close(null``);
           this.dialog.makeWarnDialog('Add Account Failed',
             'Failed to add account.  Please try again.  If this problem persists, please contact the administrator.')
             .afterClosed().subscribe(
@@ -71,7 +71,7 @@ export class CreateSyncAccountComponent {
   }
 
   cancel(): void {
-    this.dialogRef.close();
+    this.dialogRef.close(null);
   }
 
 }
