@@ -11,11 +11,12 @@ import {FontAwesomeModule} from '@fortawesome/angular-fontawesome';
 import {AccessKeysComponent} from './access-keys/access-keys.component';
 import {EditAccountNameDialogComponent} from './summary/edit-account-name-dialog/edit-account-name-dialog.component';
 import {ReactiveFormsModule} from '@angular/forms';
-import {EditEsiTokenDialogComponent} from './summary/edit-esi-token-dialog/edit-esi-token-dialog.component';
+import {EditEsiTokenDialogComponent} from '../../edit-esi-token/edit-esi-token-dialog/edit-esi-token-dialog.component';
 import {ViewScopesDialogComponent} from './summary/view-scopes-dialog/view-scopes-dialog.component';
-import {EditAccessKeyDialogComponent} from './access-keys/edit-access-key-dialog/edit-access-key-dialog.component';
-import {MomentDateModule} from '@angular/material-moment-adapter';
-import { ViewPermissionsDialogComponent } from './access-keys/view-permissions-dialog/view-permissions-dialog.component';
+import {EditAccessKeyDialogComponent} from '../../edit-access-key/edit-access-key-dialog/edit-access-key-dialog.component';
+import {ViewPermissionsDialogComponent} from './access-keys/view-permissions-dialog/view-permissions-dialog.component';
+import {EditEsiTokenModule} from '../../edit-esi-token/edit-esi-token.module';
+import {EditAccessKeyModule} from '../../edit-access-key/edit-access-key.module';
 
 @NgModule({
   imports: [
@@ -26,7 +27,8 @@ import { ViewPermissionsDialogComponent } from './access-keys/view-permissions-d
     HttpClientModule,
     FontAwesomeModule,
     ReactiveFormsModule,
-    MomentDateModule
+    EditEsiTokenModule,
+    EditAccessKeyModule
   ],
   declarations: [
     AccountsViewComponent,
@@ -34,9 +36,7 @@ import { ViewPermissionsDialogComponent } from './access-keys/view-permissions-d
     SyncStatusComponent,
     AccessKeysComponent,
     EditAccountNameDialogComponent,
-    EditEsiTokenDialogComponent,
     ViewScopesDialogComponent,
-    EditAccessKeyDialogComponent,
     ViewPermissionsDialogComponent],
   entryComponents: [
     EditAccountNameDialogComponent,

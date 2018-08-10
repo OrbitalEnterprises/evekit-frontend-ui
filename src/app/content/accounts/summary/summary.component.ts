@@ -1,5 +1,5 @@
 import {Component, OnDestroy} from '@angular/core';
-import {ActivatedRoute} from '@angular/router';
+import {ActivatedRoute, Router} from '@angular/router';
 import {AppState} from '../../../store/store-model';
 import {Store} from '@ngrx/store';
 import {AccountService, AccountV2Service, CredentialService, SynchronizedEveAccount} from '../../../platform-service-api';
@@ -31,7 +31,7 @@ import {DialogsService} from '../../../platform/dialogs.service';
 import {refreshSyncAccounts} from '../../../platform/version/account-tools';
 import {MatDialog} from '@angular/material';
 import {EditAccountNameDialogComponent} from './edit-account-name-dialog/edit-account-name-dialog.component';
-import {EditEsiTokenDialogComponent} from './edit-esi-token-dialog/edit-esi-token-dialog.component';
+import {EditEsiTokenDialogComponent} from '../../../edit-esi-token/edit-esi-token-dialog/edit-esi-token-dialog.component';
 import {ViewScopesDialogComponent} from './view-scopes-dialog/view-scopes-dialog.component';
 
 @Component({
@@ -79,6 +79,7 @@ export class SummaryComponent implements OnDestroy {
               private stationService: StationService,
               private acctService: AccountV2Service,
               private adminService: AccountService,
+              private router: Router,
               private dialog: MatDialog,
               private credsService: CredentialService,
               private dialogService: DialogsService) {
@@ -91,7 +92,6 @@ export class SummaryComponent implements OnDestroy {
     ));
 
     // Match the account when the aid changes, then reload everything
-    // TODO: error handling
     this.aid.subscribe(
       aid => {
         if (this.account === null || aid !== this.account.aid) {
@@ -114,7 +114,13 @@ export class SummaryComponent implements OnDestroy {
                     this.account = acct;
                   }
                 }
-                this.reloadInfo();
+                if (this.account === null) {
+                  // Perhaps navigated here by mistake, reroute to /info
+                  // noinspection JSIgnoredPromiseFromCall
+                  this.router.navigate(['/info']);
+                } else {
+                  this.reloadInfo();
+                }
               });
         }
       }
@@ -130,13 +136,15 @@ export class SummaryComponent implements OnDestroy {
 
   reloadInfo(): void {
     // Load Character and Corporation info
-    // TODO: error handling
     if (this.account.eveCharacterID !== -1) {
       fetchCharacterInfo(this.httpClient, this.account.eveCharacterID)
         .subscribe(
           cinfo => {
             this.charInfo = cinfo;
             this.reloadCharacterInfoMap();
+          },
+          () => {
+            this.dialogService.displayGenericUserError('Unable to Retrieve Character Info', 'Failed to retrieve character info');
           }
         );
       fetchCorporationInfo(this.httpClient, this.account.eveCorporationID)
@@ -144,62 +152,98 @@ export class SummaryComponent implements OnDestroy {
           cinfo => {
             this.corpInfo = cinfo;
             this.reloadCorporationInfoMap();
+          },
+          () => {
+            this.dialogService.displayGenericUserError('Unable to Retrieve Corporation Info', 'Failed to retrieve corporation info');
           }
         );
     }
   }
 
   reloadCharacterInfoMap(): void {
-    // TODO: error handling
     mapRace(this.charInfo.race_id, this.charService)
-      .subscribe(raceName => {
-        this.race = raceName;
-      });
+      .subscribe(
+        raceName => {
+          this.race = raceName;
+        },
+        () => {
+          this.dialogService.displayGenericUserError('Unable to Retrieve Race Info', 'Failed to retrieve Race info');
+        }
+      );
     mapBloodline(this.charInfo.bloodline_id, this.charService)
-      .subscribe(bloodlineName => {
-        this.bloodline = bloodlineName;
-      });
+      .subscribe(
+        bloodlineName => {
+          this.bloodline = bloodlineName;
+        },
+        () => {
+          this.dialogService.displayGenericUserError('Unable to Retrieve Bloodline Info', 'Failed to retrieve bloodline info');
+        }
+      );
     if (this.charInfo.ancestry_id > 0) {
       mapAncestry(this.charInfo.ancestry_id, this.charService)
-        .subscribe(ancestryName => {
-          this.ancestry = ancestryName;
-        });
+        .subscribe(
+          ancestryName => {
+            this.ancestry = ancestryName;
+          },
+          () => {
+            this.dialogService.displayGenericUserError('Unable to Retrieve Ancestry Info', 'Failed to retrieve ancestry info');
+          }
+        );
     } else {
       this.ancestry = 'N/A';
     }
     if (this.charInfo.faction_id > 0) {
       mapFaction(this.charInfo.faction_id, this.charService)
-        .subscribe(factionName => {
-          this.charFaction = factionName;
-        });
+        .subscribe(
+          factionName => {
+            this.charFaction = factionName;
+          },
+          () => {
+            this.dialogService.displayGenericUserError('Unable to Retrieve Character Faction Info',
+              'Failed to retrieve character faction info');
+          }
+        );
     } else {
       this.charFaction = 'N/A';
     }
     if (this.charInfo.alliance_id > 0) {
       mapAlliance(this.httpClient, this.charInfo.alliance_id)
-        .subscribe(allianceName => {
-          this.charAlliance = allianceName;
-        });
+        .subscribe(
+          allianceName => {
+            this.charAlliance = allianceName;
+          },
+          () => {
+            this.dialogService.displayGenericUserError('Unable to Retrieve Character Alliance Info',
+              'Failed to retrieve character alliance info');
+          }
+        );
     } else {
       this.charAlliance = 'N/A';
     }
   }
 
   reloadCorporationInfoMap(): void {
-    // TODO: error handling
     fetchCharacterInfo(this.httpClient, this.corpInfo.ceo_id)
       .subscribe(
         cinfo => {
           this.ceo = cinfo.name;
+        },
+        () => {
+          this.dialogService.displayGenericUserError('Unable to Retrieve Corporation CEO Info', 'Failed to retrieve corporation CEO info');
         }
       );
     if (this.corpInfo.home_station_id > 0) {
       if (this.corpInfo.home_station_id >= 60000000 &&
         this.corpInfo.home_station_id <= 64000000) {
         mapStation(this.corpInfo.home_station_id, this.stationService)
-          .subscribe(stationName => {
-            this.station = stationName;
-          });
+          .subscribe(
+            stationName => {
+              this.station = stationName;
+            },
+            () => {
+              this.dialogService.displayGenericUserError('Unable to Retrieve Home Station Info', 'Failed to retrieve home station info');
+            }
+          );
       } else {
         this.station = 'Not Public';
       }
@@ -209,17 +253,29 @@ export class SummaryComponent implements OnDestroy {
     // map home station
     if (this.corpInfo.faction_id > 0) {
       mapFaction(this.corpInfo.faction_id, this.charService)
-        .subscribe(factionName => {
-          this.corpFaction = factionName;
-        });
+        .subscribe(
+          factionName => {
+            this.corpFaction = factionName;
+          },
+          () => {
+            this.dialogService.displayGenericUserError('Unable to Retrieve Corporation Faction Info',
+              'Failed to retrieve corporation faction info');
+          }
+        );
     } else {
       this.corpFaction = 'N/A';
     }
     if (this.corpInfo.alliance_id > 0) {
       mapAlliance(this.httpClient, this.corpInfo.alliance_id)
-        .subscribe(allianceName => {
-          this.corpAlliance = allianceName;
-        });
+        .subscribe(
+          allianceName => {
+            this.corpAlliance = allianceName;
+          },
+          () => {
+            this.dialogService.displayGenericUserError('Unable to Retrieve Corporation Alliance Info',
+              'Failed to retrieve corporation alliance info');
+          }
+        );
     } else {
       this.corpAlliance = 'N/A';
     }
@@ -230,23 +286,31 @@ export class SummaryComponent implements OnDestroy {
       `Are you sure you want to mark this account for removal?  (Becomes permanent in 24 hours.)`);
     dialogRef.afterClosed().subscribe(result => {
       if (result) {
-        // TODO: error handling
         this.adminService.deleteSyncAccount(-1, this.account.aid)
-          .subscribe(() => {
-            // On success, force a reload of all sync accounts
-            refreshSyncAccounts(this.account.userAccount, this.adminService, this.store);
-          });
+          .subscribe(
+            () => {
+              // On success, force a reload of all sync accounts
+              refreshSyncAccounts(this.account.userAccount, this.adminService, this.store);
+            },
+            () => {
+              this.dialogService.displayGenericUserError('Unable to Mark Account', 'Failed to mark account for deletion');
+            }
+          );
       }
     });
   }
 
   unmarkForDelete(): void {
-    // TODO: error handling
     this.adminService.restoreSyncAccount(-1, this.account.aid)
-      .subscribe(() => {
-        // On success, force a reload of all sync accounts
-        refreshSyncAccounts(this.account.userAccount, this.adminService, this.store);
-      });
+      .subscribe(
+        () => {
+          // On success, force a reload of all sync accounts
+          refreshSyncAccounts(this.account.userAccount, this.adminService, this.store);
+        },
+        () => {
+          this.dialogService.displayGenericUserError('Unable to Restore Account', 'Failed to restore account marked for removal');
+        }
+      );
   }
 
   openAccountNameDialog(): void {
@@ -289,7 +353,9 @@ export class SummaryComponent implements OnDestroy {
 
   reauthorizeESIToken(): void {
     // UI should normally prevent this, but just in case...
-    if (this.account.scopes === null || this.account.scopes.length === 0) { return; }
+    if (this.account.scopes === null || this.account.scopes.length === 0) {
+      return;
+    }
 
     this.credsService.setESICredential(this.account.aid, this.account.scopes)
       .subscribe(
@@ -299,8 +365,8 @@ export class SummaryComponent implements OnDestroy {
         },
         () => {
           // Error
-          this.dialogService.makeWarnDialog(`Reauthorize ESI Token Failed`,
-            'Failed to reauthorize ESI token.  Please try again.  If this problem persists, please contact the administrator.')
+          this.dialogService.displayGenericUserError(`Reauthorize ESI Token Failed`,
+            'Failed to reauthorize ESI token')
             .afterClosed().subscribe(
             () => {
               refreshSyncAccounts(this.account.userAccount, this.adminService, this.store);
@@ -321,7 +387,6 @@ export class SummaryComponent implements OnDestroy {
       `Are you sure you want to delete the ESI token?`);
     dialogRef.afterClosed().subscribe(result => {
       if (result) {
-        // TODO: error handling
         this.credsService.clearESICredential(this.account.aid)
           .subscribe(
             () => {
@@ -329,8 +394,8 @@ export class SummaryComponent implements OnDestroy {
               refreshSyncAccounts(this.account.userAccount, this.adminService, this.store);
             },
             () => {
-              this.dialogService.makeWarnDialog('Delete ESI Token Failed',
-                'Failed to delete ESI token.  Please try again.  If this problem persists, please contact the administrator.')
+              this.dialogService.displayGenericUserError('Delete ESI Token Failed',
+                'Failed to delete ESI token')
                 .afterClosed().subscribe();
             }
           );

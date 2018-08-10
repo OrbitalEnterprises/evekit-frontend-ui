@@ -1,0 +1,40 @@
+<h3 class="ek-label-primary" mat-dialog-title>
+  Create Notification
+</h3>
+<mat-dialog-content class="mat-typography">
+  <form [formGroup]="formModel" style="width: 100%;">
+    To:&nbsp;
+
+    <mat-menu #userMenu="matMenu" [overlapTrigger]="false">
+      <button *ngFor="let user of userList"
+              mat-menu-item
+              (click)="selectUser(user)">
+        {{ makeDisplayableUser(user) }}
+      </button>
+    </mat-menu>
+
+    <button mat-raised-button
+            color="primary"
+            [matMenuTriggerFor]="userMenu">
+      {{ selectedUser === null ? 'Select User' : makeDisplayableUser(selectedUser) }}
+      <mat-icon>arrow_drop_down</mat-icon>
+    </button>
+
+    &nbsp;<b>OR</b>&nbsp;
+
+    <mat-checkbox [formControl]="broadcast">
+      <i>BROADCAST</i>
+    </mat-checkbox>
+    <br>
+
+    <mat-form-field style="width: 400px;">
+      <input matInput placeholder="Enter note content" [formControl]="content">
+    </mat-form-field>
+
+  </form>
+</mat-dialog-content>
+<mat-dialog-actions style="justify-content: center;">
+  <button mat-button (click)="ok()" [disabled]="!isValid()">OK</button>
+  &nbsp;&nbsp;
+  <button mat-button (click)="cancel()">Cancel</button>
+</mat-dialog-actions>

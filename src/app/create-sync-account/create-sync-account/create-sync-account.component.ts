@@ -1,14 +1,14 @@
 import {Component} from '@angular/core';
 import {FormControl, FormGroup, Validators} from '@angular/forms';
 import {MatDialogRef} from '@angular/material';
-import {AppState} from '../../../store/store-model';
+import {AppState} from '../../store/store-model';
 import {Store} from '@ngrx/store';
-import {AccountService, EveKitUserAccount, SynchronizedEveAccount} from '../../../platform-service-api';
-import {selectSyncAccounts, selectUserAccount} from '../../selectors';
+import {AccountService, EveKitUserAccount, SynchronizedEveAccount} from '../../platform-service-api';
+import {selectSyncAccounts, selectUserAccount} from '../../platform/selectors';
 import {AccountNameUniqueValidator} from './account-name-unique-validator';
 import {first} from 'rxjs/operators';
-import {refreshSyncAccounts} from '../../version/account-tools';
-import {DialogsService} from '../../dialogs.service';
+import {refreshSyncAccounts} from '../../platform/version/account-tools';
+import {DialogsService} from '../../platform/dialogs.service';
 
 @Component({
   selector: 'app-create-sync-account',
@@ -58,9 +58,9 @@ export class CreateSyncAccountComponent {
         },
         () => {
           // Error
-          this.dialogRef.close(null``);
-          this.dialog.makeWarnDialog('Add Account Failed',
-            'Failed to add account.  Please try again.  If this problem persists, please contact the administrator.')
+          this.dialogRef.close(null);
+          this.dialog.displayGenericUserError('Add Account Failed',
+            'Failed to add account')
             .afterClosed().subscribe(
             () => {
               refreshSyncAccounts(this.userAccount, this.acctService, this.store);

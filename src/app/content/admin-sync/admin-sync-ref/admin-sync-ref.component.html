@@ -1,0 +1,70 @@
+<div class="mat-typography" style="padding: 10px;">
+  <div style="padding-top: 5px;">
+    <span style="font-family: 'Orbitron', sans-serif; font-weight: bold;">
+      Reference Sync Status
+    </span>
+  </div>
+
+  <button mat-icon-button
+          style="float: right; margin-left: 10px; margin-top: -25px;"
+          (click)="updateStats()"
+          matTooltip="Refresh">
+    <mat-icon>refresh</mat-icon>
+  </button>
+
+  <table mat-table [dataSource]="endpointDataSource"
+         matSort
+         style="background-color: #fafafa;">
+
+    <!--- column definitions -->
+    <ng-container matColumnDef="endpoint">
+      <th mat-header-cell *matHeaderCellDef>Endpoint</th>
+      <td mat-cell *matCellDef="let element" style="white-space: nowrap">{{element.displayName}}</td>
+    </ng-container>
+
+    <ng-container matColumnDef="start">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header style="white-space: nowrap">&nbsp;&nbsp;Start Time</th>
+      <td mat-cell *matCellDef="let element" style="white-space: nowrap; text-align: center;">{{element.tracker !== null ? (element.tracker.syncStart | date:'yyyy-MM-dd HH:mm:ss':'UTC') : 'N/A'}}</td>
+    </ng-container>
+
+    <ng-container matColumnDef="delay">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header style="white-space: nowrap">&nbsp;&nbsp;Elapsed</th>
+      <td mat-cell *matCellDef="let element" style="white-space: nowrap; text-align: center;">
+        <span *ngIf="element.tracker !== null">{{formatDelay(element.delay)}}</span>
+        <span *ngIf="element.tracker === null">N/A</span>
+      </td>
+    </ng-container>
+
+    <ng-container matColumnDef="tid">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header style="white-space: nowrap">&nbsp;&nbsp;TID</th>
+      <td mat-cell *matCellDef="let element" style="white-space: nowrap; text-align: center;">{{element.tracker !== null ? element.tracker.tid : 'N/A'}}</td>
+    </ng-container>
+
+    <ng-container matColumnDef="attempts">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header style="white-space: nowrap">&nbsp;&nbsp;Tries (24h)</th>
+      <td mat-cell *matCellDef="let element" style="white-space: nowrap; text-align: center;">{{element.attempts}}</td>
+    </ng-container>
+
+    <ng-container matColumnDef="failures">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header style="white-space: nowrap">&nbsp;&nbsp;Fails (24h)</th>
+      <td mat-cell *matCellDef="let element" style="white-space: nowrap; text-align: center;">{{element.failures}}</td>
+    </ng-container>
+
+    <ng-container matColumnDef="actions">
+      <th mat-header-cell *matHeaderCellDef style="white-space: nowrap">&nbsp;&nbsp;Actions</th>
+      <td mat-cell *matCellDef="let element" style="white-space: nowrap; text-align: center;">
+        <button mat-icon-button
+                *ngIf="element.tracker !== null"
+                (click)="finishTracker(element.tracker)"
+                matTooltip="Finish Tracker">
+          <mat-icon>stop</mat-icon>
+        </button>&nbsp;
+      </td>
+    </ng-container>
+
+    <!-- render rows -->
+    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+    <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+  </table>
+
+</div>

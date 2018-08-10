@@ -5,14 +5,18 @@ import {selectSyncAccounts, selectUserAccount, selectUserSource} from '../../pla
 import {MatDialog, MatVerticalStepper} from '@angular/material';
 import {
   AccountService,
+  CredentialService,
   EveKitUserAccount,
   EveKitUserAuthSource,
   SynchronizedAccountAccessKey,
   SynchronizedEveAccount
 } from '../../platform-service-api';
-import {deleteCookie, getCookie, QS_MAIN_COOKIE_NAME, setCookie} from '../../platform/cookies';
+import {deleteCookie, getCookie, QS_ACCOUNT_SELECTED, QS_MAIN_COOKIE_NAME, setCookie} from '../../platform/cookies';
 import {Router} from '@angular/router';
-import {CreateSyncAccountComponent} from '../../platform/menu/create-sync-account/create-sync-account.component';
+import {CreateSyncAccountComponent} from '../../create-sync-account/create-sync-account/create-sync-account.component';
+import {DialogsService} from '../../platform/dialogs.service';
+import {EditEsiTokenDialogComponent} from '../../edit-esi-token/edit-esi-token-dialog/edit-esi-token-dialog.component';
+import {EditAccessKeyDialogComponent} from '../../edit-access-key/edit-access-key-dialog/edit-access-key-dialog.component';
 
 @Component({
   selector: 'app-qs',
@@ -35,7 +39,10 @@ export class QsComponent implements AfterViewInit {
   constructor(private store: Store<AppState>,
               private accountService: AccountService,
               private router: Router,
-              private dialog: MatDialog) {
+              private dialog: MatDialog,
+              private dialogService: DialogsService,
+              private credsService: CredentialService,
+              private platDialogs: DialogsService) {
     // Collect logged in user
     this.store.select(selectUserAccount).subscribe(
       u => {
@@ -58,6 +65,15 @@ export class QsComponent implements AfterViewInit {
     this.store.select(selectSyncAccounts).subscribe(
       u => {
         this.syncAccounts = u;
+        // If we've already selected an account, then pull it out
+        const aid = getCookie(QS_ACCOUNT_SELECTED);
+        if (aid !== '') {
+          for (const i of this.syncAccounts) {
+            if (i.aid === parseInt(aid, 10)) {
+              this.selectAccount(i);
+            }
+          }
+        }
       },
       () => {
         this.syncAccounts = [];
@@ -98,9 +114,24 @@ export class QsComponent implements AfterViewInit {
 
   }
 
+  accountsDifferent(a: SynchronizedEveAccount, b: SynchronizedEveAccount): boolean {
+    if (a === b) {
+      return false;
+    }
+    if (a === null || b === null) {
+      return true;
+    }
+    return !(a.aid === b.aid &&
+      a.name === b.name &&
+      a.markedForDelete === b.markedForDelete &&
+      a.scopes === b.scopes &&
+      a.valid === b.valid);
+  }
+
   selectAccount(acct: SynchronizedEveAccount): void {
-    const changed = acct !== this.selectedAccount;
+    const changed = this.accountsDifferent(acct, this.selectedAccount);
     this.selectedAccount = acct;
+    setCookie(QS_ACCOUNT_SELECTED, String(acct.aid), 1);
     if (changed) {
       this.scopesAdded = false;
       this.selectedKey = null;
@@ -116,6 +147,7 @@ export class QsComponent implements AfterViewInit {
 
   cancel(): void {
     deleteCookie(QS_MAIN_COOKIE_NAME);
+    deleteCookie(QS_ACCOUNT_SELECTED);
     this.router.navigate(['/']);
   }
 
@@ -132,11 +164,15 @@ export class QsComponent implements AfterViewInit {
   fetchAccessKeys(): void {
     this.accessKeys = [];
 
-    // TODO: handle errors
     this.accountService.getAccessKey(-1, this.selectedAccount.aid, -1)
       .subscribe(keys => {
-        this.accessKeys = keys;
-      });
+          this.accessKeys = keys;
+        },
+        () => {
+          this.displayError('Unable to Load Access Keys',
+            'Failed to retrieve access key list');
+        }
+      );
   }
 
   startAuth(tp: string): void {
@@ -148,13 +184,15 @@ export class QsComponent implements AfterViewInit {
   }
 
   createSyncAccount(): void {
-    // TODO: handle error result
     this.dialog.open(CreateSyncAccountComponent)
       .afterClosed()
       .subscribe(
         result => {
           if (result !== null) {
             this.selectAccount(result);
+          } else {
+            this.displayError('Unable to Create New Sync Account',
+              'Failed to create new sync account');
           }
         }
       );
@@ -171,6 +209,64 @@ export class QsComponent implements AfterViewInit {
       default:
         return 'Unknown';
     }
+  }
+
+  reauthorizeESIToken(): void {
+    // UI should normally prevent this, but just in case...
+    if (this.selectedAccount.scopes === null || this.selectedAccount.scopes.length === 0) {
+      return;
+    }
+
+    this.credsService.setESICredential(this.selectedAccount.aid, this.selectedAccount.scopes)
+      .subscribe(
+        () => {
+          // Scope re-authorized, continue
+          this.skipChangeScopes();
+        },
+        () => {
+          // Error
+          this.platDialogs.makeWarnDialog(`Reauthorize ESI Token Failed`,
+            'Failed to reauthorize ESI token.  Please try again.  If this problem persists, please contact the administrator.');
+        }
+      );
+  }
+
+  openAddESITokenDialog(): void {
+    this.dialog.open(EditEsiTokenDialogComponent,
+      {
+        data: {
+          'editMode': 'Add',
+          'account': this.selectedAccount
+        }
+      });
+  }
+
+  openEditESITokenDialog(): void {
+    this.dialog.open(EditEsiTokenDialogComponent,
+      {
+        data: {
+          'editMode': 'Edit',
+          'account': this.selectedAccount
+        }
+      });
+  }
+
+  openCreateKeyDialog(): void {
+    this.dialog.open(EditAccessKeyDialogComponent,
+      {
+        data: {
+          'editMode': 'Add',
+          'account': this.selectedAccount,
+          'accessKeys': this.accessKeys
+        }
+      }).afterClosed().subscribe(
+      result => {
+        if (result !== null) {
+          this.fetchAccessKeys();
+          this.selectKey(result);
+        }
+      }
+    );
   }
 
 }

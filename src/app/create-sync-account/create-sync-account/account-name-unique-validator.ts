@@ -1,4 +1,4 @@
-import {SynchronizedEveAccount} from '../../../platform-service-api';
+import {SynchronizedEveAccount} from '../../platform-service-api/index';
 import {ValidatorFn} from '@angular/forms';
 import {AbstractControl} from '@angular/forms/src/model';
 

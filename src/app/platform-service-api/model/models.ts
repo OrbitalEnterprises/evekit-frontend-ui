@@ -3,6 +3,7 @@ export * from './eSIRefEndpointSyncTracker';
 export * from './eSIScopeDescription';
 export * from './eveKitUserAccount';
 export * from './eveKitUserAuthSource';
+export * from './eveKitUserNotification';
 export * from './persistentProperty';
 export * from './serviceError';
 export * from './synchronizedAccountAccessKey';

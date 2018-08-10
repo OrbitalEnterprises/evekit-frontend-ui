@@ -1,4 +1,4 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, OnDestroy, OnInit} from '@angular/core';
 import {NewsEntry} from './news-entry';
 import {HttpClient, HttpParams} from '@angular/common/http';
 import {DomSanitizer, SafeHtml} from '@angular/platform-browser';
@@ -11,9 +11,9 @@ const bloggerURL = 'https://www.googleapis.com/blogger/v3/blogs/1703723675504697
   templateUrl: './blog-list.component.html',
   styleUrls: ['./blog-list.component.css']
 })
-export class BlogListComponent implements OnInit {
-
+export class BlogListComponent implements OnInit, OnDestroy {
   blogEntries: Array<NewsEntry> = [];
+  newsTimer = 0;
 
   constructor(private httpClient: HttpClient, private sanitizer: DomSanitizer) {
   }
@@ -22,7 +22,7 @@ export class BlogListComponent implements OnInit {
     return this.sanitizer.bypassSecurityTrustHtml(detail);
   }
 
-  ngOnInit() {
+  loadNews(): void {
     const params = new HttpParams()
       .set('fetchBodies', 'true')
       .set('fetchImages', 'false')
@@ -42,6 +42,19 @@ export class BlogListComponent implements OnInit {
         },
         err => console.log('news request failed: %s', err.status)
       );
+  }
+
+  ngOnInit(): void {
+    this.loadNews();
+    this.newsTimer = setInterval(() => {
+      this.loadNews();
+    }, 300 * 1000);
+  }
+
+  ngOnDestroy(): void {
+    if (this.newsTimer > 0) {
+      clearInterval(this.newsTimer);
+    }
   }
 
 }

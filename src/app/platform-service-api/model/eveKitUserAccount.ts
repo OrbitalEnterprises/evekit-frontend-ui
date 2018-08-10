@@ -16,9 +16,9 @@
  */
 export interface EveKitUserAccount {
     id?: number;
-    disabled?: boolean;
     joinTime?: Date;
     lastSignOn?: Date;
+    disabled?: boolean;
     /**
      * Unique user ID
      */

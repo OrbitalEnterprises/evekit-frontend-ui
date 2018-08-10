@@ -1,4 +1,4 @@
-import {Component, OnInit} from '@angular/core';
+import {Component} from '@angular/core';
 import {AppState} from '../../store/store-model';
 import {select, Store} from '@ngrx/store';
 import {selectUserAccount} from '../selectors';
@@ -8,7 +8,7 @@ import {selectUserAccount} from '../selectors';
   templateUrl: './toolbar.component.html',
   styleUrls: ['./toolbar.component.css']
 })
-export class ToolbarComponent implements OnInit {
+export class ToolbarComponent {
   loggedIn: boolean;
 
   constructor(private store: Store<AppState>) {
@@ -21,9 +21,6 @@ export class ToolbarComponent implements OnInit {
         this.loggedIn = false;
       }
     );
-  }
-
-  ngOnInit() {
   }
 
 }

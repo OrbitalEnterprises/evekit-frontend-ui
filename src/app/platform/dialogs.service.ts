@@ -71,4 +71,9 @@ export class DialogsService {
     });
   }
 
+  displayGenericUserError(title: string, msg: string): MatDialogRef<StandardDialogComponent> {
+    return this.makeWarnDialog(title, msg + ', please try again.  If this problem persists, please contact site admin.');
+  }
+
+
 }

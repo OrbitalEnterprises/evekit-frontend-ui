@@ -3,11 +3,10 @@ import {Store} from '@ngrx/store';
 import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material';
 import {AccountService, EveKitUserAccount, SynchronizedEveAccount} from '../../../../platform-service-api';
 import {FormControl, FormGroup, Validators} from '@angular/forms';
-import {CreateSyncAccountComponent} from '../../../../platform/menu/create-sync-account/create-sync-account.component';
 import {AppState} from '../../../../store/store-model';
 import {selectSyncAccounts, selectUserAccount} from '../../../../platform/selectors';
 import {refreshSyncAccounts} from '../../../../platform/version/account-tools';
-import {AccountNameUniqueValidator} from '../../../../platform/menu/create-sync-account/account-name-unique-validator';
+import {AccountNameUniqueValidator} from '../../../../create-sync-account/create-sync-account/account-name-unique-validator';
 import {first} from 'rxjs/operators';
 import {DialogsService} from '../../../../platform/dialogs.service';
 
@@ -67,8 +66,8 @@ export class EditAccountNameDialogComponent {
         () => {
           // Error
           this.dialogRef.close();
-          this.dialog.makeWarnDialog('Change Account Name Failed',
-            'Failed to change account name.  Please try again.  If this problem persists, please contact the administrator.')
+          this.dialog.displayGenericUserError('Change Account Name Failed',
+            'Failed to change account name')
             .afterClosed().subscribe(
             () => {
               refreshSyncAccounts(this.userAccount, this.acctService, this.store);

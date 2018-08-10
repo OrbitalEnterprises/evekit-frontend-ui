@@ -5,7 +5,6 @@ import {AccountService, EveKitUserAccount, EveKitUserAuthSource} from '../../../
 import {ClearUser, SetLastSource, SetSources, SetUser} from '../../../store/auth-model';
 import {Observable} from 'rxjs';
 import {selectUserAccount, selectUserSource} from '../../selectors';
-import {ClearSyncAccounts, SetSyncAccounts} from '../../../store/account-model';
 import {refreshSyncAccounts} from '../../version/account-tools';
 
 const REFRESH_INTERVAL_MIN = 2;
@@ -18,7 +17,7 @@ const REFRESH_INTERVAL_MIN = 2;
 export class ToolbarAuthComponent {
   user$: Observable<EveKitUserAccount>;
   source$: Observable<EveKitUserAuthSource>;
-  loggedIn: boolean;
+  loggedIn = false;
 
   constructor(private store: Store<AppState>, private acctService: AccountService) {
     // Observe changes to user and source
@@ -47,18 +46,33 @@ export class ToolbarAuthComponent {
     }, REFRESH_INTERVAL_MIN * 60000);
   }
 
+  private refreshRoutes(logChange: boolean) {
+    if (logChange) {
+      window.location.reload();
+    }
+  }
+
   private refreshCredentials() {
     const cb = this.acctService.getUser().subscribe(
       u => {
         if (u == null) {
           this.store.dispatch(new ClearUser());
+          if (this.loggedIn) {
+            this.refreshRoutes(true);
+          }
         } else {
           this.store.dispatch(new SetUser(u));
+          this.refreshLastSource(u);
+          this.refreshAuthSources(u);
+          this.updateSyncAccounts(u);
         }
         cb.unsubscribe();
       },
       () => {
         this.store.dispatch(new ClearUser());
+        if (this.loggedIn) {
+          this.refreshRoutes(true);
+        }
         cb.unsubscribe();
       }
     );

@@ -1,0 +1,67 @@
+<h3 class="ek-label-primary" mat-dialog-title>
+  Sync Accounts for UID: {{uid}} - Name: {{name}}
+</h3>
+<mat-dialog-content class="mat-typography">
+  <table mat-table [dataSource]="syncAccounts"
+         style="background-color: #fafafa;">
+
+    <!--- column definitions -->
+    <ng-container matColumnDef="state">
+      <th mat-header-cell *matHeaderCellDef>State</th>
+      <td mat-cell *matCellDef="let element">
+        <span class="ek-label-bk-accent" style="padding: 3px;" *ngIf="isDisabled(element)">D</span>
+      </td>
+    </ng-container>
+
+    <ng-container matColumnDef="aid">
+      <th mat-header-cell *matHeaderCellDef>&nbsp;&nbsp;AID</th>
+      <td mat-cell *matCellDef="let element">&nbsp;&nbsp;{{element.aid}}</td>
+    </ng-container>
+
+    <ng-container matColumnDef="name">
+      <th mat-header-cell *matHeaderCellDef>&nbsp;&nbsp;Name</th>
+      <td mat-cell *matCellDef="let element">&nbsp;&nbsp;{{element.name}}</td>
+    </ng-container>
+
+    <ng-container matColumnDef="type">
+      <th mat-header-cell *matHeaderCellDef>&nbsp;&nbsp;Type</th>
+      <td mat-cell *matCellDef="let element">&nbsp;&nbsp;{{element.characterType ? 'CHARACTER' : 'CORPORATION'}}</td>
+    </ng-container>
+
+    <ng-container matColumnDef="lastSync">
+      <th mat-header-cell *matHeaderCellDef>&nbsp;&nbsp;Last Sync Time</th>
+      <td mat-cell *matCellDef="let element">&nbsp;&nbsp;{{element.lastSynchronized > 0 ? (element.lastSynchronized | date:'yyyy-MM-dd HH:mm:ss':'UTC') : 'N/A'}}</td>
+    </ng-container>
+
+    <ng-container matColumnDef="deleteTime">
+      <th mat-header-cell *matHeaderCellDef>&nbsp;&nbsp;Delete Time</th>
+      <td mat-cell *matCellDef="let element">&nbsp;&nbsp;{{element.markedForDelete > 0 ? (element.markedForDelete | date:'yyyy-MM-dd HH:mm:ss':'UTC') : 'N/A'}}</td>
+    </ng-container>
+
+    <ng-container matColumnDef="options">
+      <th mat-header-cell *matHeaderCellDef>&nbsp;&nbsp;Options</th>
+      <td mat-cell *matCellDef="let element">
+        &nbsp;&nbsp;
+        <button mat-icon-button
+                *ngIf="isDisabled(element)"
+                (click)="enable(element)"
+                matTooltip="Enable">
+          <mat-icon>play_arrow</mat-icon>
+        </button>
+        <button mat-icon-button
+                *ngIf="!isDisabled(element)"
+                (click)="disable(element)"
+                matTooltip="Disable">
+          <mat-icon>stop</mat-icon>
+        </button>
+      </td>
+    </ng-container>
+
+    <!-- render rows -->
+    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+    <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+  </table>
+</mat-dialog-content>
+<mat-dialog-actions style="justify-content: center;">
+  <button mat-button (click)="ok()">OK</button>
+</mat-dialog-actions>

@@ -41,36 +41,42 @@ export class MenuComponent {
     // Setup updates on menu item changes
     database.dataChange.subscribe(data => {
       this.dataSource.data = data;
+      // Changing data source will force a redraw, make sure we fix expansion after the redraw
+      setTimeout(() => { this.updateExpansion(); }, 10);
     });
 
     // Subscribe to route changes so we can properly highlight the selected menu item
     router.events.subscribe(() => {
-      if (this.location.path() !== null) {
-        this.activeRoute = this.location.path();
+      this.updateExpansion();
+    });
+  }
 
-        // Ensure selected menu item is visible based on route
-        const expandCheck: number[] = [];
-        const nodeList = this.treeControl.dataNodes;
-        for (let i = 0; i < nodeList.length; i++) {
-          const next = nodeList[i];
-          if (next.level === 0) {
-            expandCheck.push(i);
-          }
-          while (expandCheck.length > 0) {
-            const j: number = expandCheck.pop();
-            if (this.hasSelectedChild(nodeList, j)) {
-              const level = nodeList[j].level;
-              this.treeControl.expand(nodeList[j]);
-              for (let k = j + 1; k < nodeList.length && nodeList[k].level > level; k++) {
-                if (nodeList[k].level === level + 1) {
-                  expandCheck.push(k);
-                }
+  updateExpansion(): void {
+    if (this.location.path() !== null) {
+      this.activeRoute = this.location.path();
+
+      // Ensure selected menu item is visible based on route
+      const expandCheck: number[] = [];
+      const nodeList = this.treeControl.dataNodes;
+      for (let i = 0; i < nodeList.length; i++) {
+        const next = nodeList[i];
+        if (next.level === 0) {
+          expandCheck.push(i);
+        }
+        while (expandCheck.length > 0) {
+          const j: number = expandCheck.pop();
+          if (this.hasSelectedChild(nodeList, j)) {
+            const level = nodeList[j].level;
+            this.treeControl.expand(nodeList[j]);
+            for (let k = j + 1; k < nodeList.length && nodeList[k].level > level; k++) {
+              if (nodeList[k].level === level + 1) {
+                expandCheck.push(k);
               }
             }
           }
         }
       }
-    });
+    }
   }
 
   transformer = (node: MenuNode, level: number): FlatMenuNode => {

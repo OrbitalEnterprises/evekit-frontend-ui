@@ -38,8 +38,8 @@ export class ViewScopesDialogComponent {
         }
       },
       () => {
-        this.dialog.makeWarnDialog('Unable to Retrieve Scope List',
-          'Unable to retrieve scope list from server.  Please try again.  If this problem persists, please contact the administrator.')
+        this.dialog.displayGenericUserError('Unable to Retrieve Scope List',
+          'Unable to retrieve scope list from server')
           .afterClosed().subscribe(
           () => {
             this.dialogRef.close();

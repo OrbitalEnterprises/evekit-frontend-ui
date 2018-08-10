@@ -1,8 +1,8 @@
 export const environment = {
   production: true,
-  platformServiceApiBasePath: 'http://localhost:8888/api',
-  sdeServiceApiBasePath: 'http://localhost:8080/evekit-sde/api/ws/v20180713',
-  modelViewURL: '/assets/swagger-ui-3.17.2/index.html',
+  platformServiceApiBasePath: 'https://evekit.orbital.enterprises/api',
+  sdeServiceApiBasePath: 'https://evekit-sde.orbital.enterprises/20180713/api/ws/v20180713',
+  modelViewURL: 'https://evekit-model.orbital.enterprises/api/swagger.json',
   marketViewURL: 'https://evekit-market.orbital.enterprises/swagger',
-  refViewURL: 'http://localhost:8080/evekit-ref-model/api/swagger.json'
+  refViewURL: 'https://evekit-ref-model.orbital.enterprises/api/swagger.json'
 };

@@ -22,14 +22,17 @@ import {SettingsDialogComponent} from './toolbar/settings/settings-dialog.compon
 import {ReactiveFormsModule} from '@angular/forms';
 import {MenuComponent} from './menu/menu.component';
 import {RouterModule} from '@angular/router';
-import {CreateSyncAccountComponent} from './menu/create-sync-account/create-sync-account.component';
+import {CreateSyncAccountComponent} from '../create-sync-account/create-sync-account/create-sync-account.component';
+import {CreateSyncAccountModule} from '../create-sync-account/create-sync-account.module';
+import { UserNoteViewDialogComponent } from './toolbar/notifications/user-note-view-dialog/user-note-view-dialog.component';
 
 @NgModule({
   imports: [
     CommonModule,
     MaterialModule,
     ReactiveFormsModule,
-    RouterModule
+    RouterModule,
+    CreateSyncAccountModule
   ],
   declarations: [
     VersionComponent,
@@ -48,7 +51,7 @@ import {CreateSyncAccountComponent} from './menu/create-sync-account/create-sync
     ConfirmDialogComponent,
     SettingsDialogComponent,
     MenuComponent,
-    CreateSyncAccountComponent
+    UserNoteViewDialogComponent
   ],
   entryComponents: [
     UserinfoComponent,
@@ -57,7 +60,8 @@ import {CreateSyncAccountComponent} from './menu/create-sync-account/create-sync
     ConfirmDialogComponent,
     ToolbarComponent,
     SettingsDialogComponent,
-    CreateSyncAccountComponent
+    CreateSyncAccountComponent,
+    UserNoteViewDialogComponent
   ],
   exports: [
     VersionComponent,

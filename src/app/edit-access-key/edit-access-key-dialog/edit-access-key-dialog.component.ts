@@ -1,14 +1,14 @@
 import {Component, Inject} from '@angular/core';
 import {FormArray, FormControl, FormGroup, Validators} from '@angular/forms';
-import {AccountService, SynchronizedAccountAccessKey, SynchronizedEveAccount} from '../../../../platform-service-api';
-import {KeyNameUniqueValidator} from '../key-name-unique-validator';
-import {AccessKeyMask, EK_CharacterMaskConstants, EK_CorporationMaskConstants} from '../access-key-mask';
-import {AppState} from '../../../../store/store-model';
+import {AccountService, SynchronizedAccountAccessKey, SynchronizedEveAccount} from '../../platform-service-api';
+import {KeyNameUniqueValidator} from '../../content/accounts/access-keys/key-name-unique-validator';
+import {AccessKeyMask, EK_CharacterMaskConstants, EK_CorporationMaskConstants} from '../../content/accounts/access-keys/access-key-mask';
+import {AppState} from '../../store/store-model';
 import {Store} from '@ngrx/store';
-import {EditEsiTokenDialogComponent} from '../../summary/edit-esi-token-dialog/edit-esi-token-dialog.component';
-import {DialogsService} from '../../../../platform/dialogs.service';
+import {EditEsiTokenDialogComponent} from '../../edit-esi-token/edit-esi-token-dialog/edit-esi-token-dialog.component';
+import {DialogsService} from '../../platform/dialogs.service';
 import {MAT_DATE_FORMATS, MAT_DIALOG_DATA, MatDialogRef} from '@angular/material';
-import {refreshSyncAccounts} from '../../../../platform/version/account-tools';
+import {refreshSyncAccounts} from '../../platform/version/account-tools';
 
 // Special import required for moment library.  See the docs.
 import * as moment from 'moment';
@@ -23,7 +23,7 @@ export const MY_FORMATS = {
 @Component({
   selector: 'app-create-access-key-dialog',
   templateUrl: './edit-access-key-dialog.component.html',
-  styleUrls: ['./edit-access-key-dialog.component.css', '../../accounts-view.component.css'],
+  styleUrls: ['./edit-access-key-dialog.component.css'],
   providers: [
     {provide: MAT_DATE_FORMATS, useValue: MY_FORMATS}
   ]
@@ -69,8 +69,12 @@ export class EditAccessKeyDialogComponent {
     }
     this.maskList = this.account.characterType ? EK_CharacterMaskConstants : EK_CorporationMaskConstants;
     this.maskList.sort((a, b) => {
-      if (a.description < b.description) { return -1; }
-      if (a.description > b.description) { return 1; }
+      if (a.description < b.description) {
+        return -1;
+      }
+      if (a.description > b.description) {
+        return 1;
+      }
       return 0;
     });
     const setMasks: Set<string> = new Set<string>();
@@ -167,16 +171,16 @@ export class EditAccessKeyDialogComponent {
 
     this.acctService.saveAccessKey(-1, this.account.aid, keyid, newKey)
       .subscribe(
-        () => {
+        key => {
           // Close and refresh accounts to pick up change
-          this.dialogRef.close();
+          this.dialogRef.close(key);
           refreshSyncAccounts(this.account.userAccount, this.acctService, this.store);
         },
         () => {
           // Error
-          this.dialogRef.close();
-          this.dialog.makeWarnDialog(`${this.keyEditMode} Access Key Failed`,
-            'Failed to set access key.  Please try again.  If this problem persists, please contact the administrator.')
+          this.dialogRef.close(null);
+          this.dialog.displayGenericUserError(`${this.keyEditMode} Access Key Failed`,
+            'Failed to set access key')
             .afterClosed().subscribe(
             () => {
               refreshSyncAccounts(this.account.userAccount, this.acctService, this.store);
@@ -187,7 +191,7 @@ export class EditAccessKeyDialogComponent {
   }
 
   cancel(): void {
-    this.dialogRef.close();
+    this.dialogRef.close(null);
   }
 
 }

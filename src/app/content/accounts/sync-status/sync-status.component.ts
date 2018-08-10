@@ -9,6 +9,7 @@ import {map} from 'rxjs/operators';
 import {faSquare} from '@fortawesome/free-solid-svg-icons';
 import {TrackerPair} from './tracker-pair';
 import {getCharTypes, getCorpTypes, StatusElement} from './status-element';
+import {DialogsService} from '../../../platform/dialogs.service';
 
 @Component({
   selector: 'app-sync-status',
@@ -29,6 +30,7 @@ export class SyncStatusComponent implements OnDestroy {
 
   constructor(private routeInfo: ActivatedRoute,
               private store: Store<AppState>,
+              private dialogService: DialogsService,
               private accountService: AccountV2Service) {
 
     // Setup tracking of account ID from params
@@ -39,7 +41,6 @@ export class SyncStatusComponent implements OnDestroy {
     ));
 
     // Watch the account when the aid changes, then reload everything
-    // TODO: error handling
     this.aid.subscribe(
       aid => {
         if (this.account === null || aid !== this.account.aid) {
@@ -78,7 +79,6 @@ export class SyncStatusComponent implements OnDestroy {
     }
   }
 
-
   reloadInfo(): void {
     this.trackers = [];
     this.lastSyncTracker = null;
@@ -90,6 +90,10 @@ export class SyncStatusComponent implements OnDestroy {
           results => {
             this.trackers = results;
             this.assemblePairs();
+          },
+          () => {
+            this.dialogService.displayGenericUserError('Unable to Retrieve Synchronization History',
+              'Failed to retrieve synchronization history');
           }
         );
 
@@ -102,6 +106,10 @@ export class SyncStatusComponent implements OnDestroy {
             } else {
               this.lastSyncTracker = null;
             }
+          },
+          () => {
+            this.dialogService.displayGenericUserError('Unable to Retrieve Synchronization Tracker',
+              'Failed to retrieve synchronization tracker');
           }
         );
       this.accountService.requestNextSync(this.account.aid)
@@ -112,6 +120,10 @@ export class SyncStatusComponent implements OnDestroy {
             } else {
               this.nextSyncTracker = null;
             }
+          },
+          () => {
+            this.dialogService.displayGenericUserError('Unable to Retrieve Synchronization Tracker',
+              'Failed to retrieve synchronization tracker');
           }
         );
 

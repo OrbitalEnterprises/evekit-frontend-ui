@@ -32,7 +32,7 @@ export class PlatformServiceApiModule {
 
     constructor( @Optional() @SkipSelf() parentModule: PlatformServiceApiModule) {
         if (parentModule) {
-            throw new Error('ApiModule is already loaded. Import your base AppModule only.');
+            throw new Error('PlatformServiceApiModule is already loaded. Import your base AppModule only.');
         }
     }
 }

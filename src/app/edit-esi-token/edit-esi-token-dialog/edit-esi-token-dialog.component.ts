@@ -1,12 +1,11 @@
 import {Component, Inject} from '@angular/core';
-import {AccountService, CredentialService, ESIScopeDescription, SynchronizedEveAccount} from '../../../../platform-service-api';
+import {AccountService, CredentialService, ESIScopeDescription, SynchronizedEveAccount} from '../../platform-service-api';
 import {FormArray, FormControl, FormGroup} from '@angular/forms';
-import {CreateSyncAccountComponent} from '../../../../platform/menu/create-sync-account/create-sync-account.component';
-import {AppState} from '../../../../store/store-model';
+import {AppState} from '../../store/store-model';
 import {Store} from '@ngrx/store';
 import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material';
-import {refreshSyncAccounts} from '../../../../platform/version/account-tools';
-import {DialogsService} from '../../../../platform/dialogs.service';
+import {refreshSyncAccounts} from '../../platform/version/account-tools';
+import {DialogsService} from '../../platform/dialogs.service';
 
 class ESIScopePair {
   constructor(public name: string, public description: string) {
@@ -16,7 +15,7 @@ class ESIScopePair {
 @Component({
   selector: 'app-edit-esi-token-dialog',
   templateUrl: './edit-esi-token-dialog.component.html',
-  styleUrls: ['./edit-esi-token-dialog.component.css', '../../accounts-view.component.css']
+  styleUrls: ['./edit-esi-token-dialog.component.css']
 })
 export class EditEsiTokenDialogComponent {
   // Either 'Add' or 'Edit'
@@ -92,14 +91,14 @@ export class EditEsiTokenDialogComponent {
       .subscribe(
         result => {
           // Close and redirect to authorize change
-          this.dialogRef.close();
+          this.dialogRef.close(true);
           window.location.assign(result['newLocation']);
         },
         () => {
           // Error
-          this.dialogRef.close();
-          this.dialog.makeWarnDialog(`${this.esiEditMode} ESI Token Failed`,
-            'Failed to set ESI token.  Please try again.  If this problem persists, please contact the administrator.')
+          this.dialogRef.close(false);
+          this.dialog.displayGenericUserError(`${this.esiEditMode} ESI Token Failed`,
+            'Failed to set ESI token')
             .afterClosed().subscribe(
             () => {
               refreshSyncAccounts(this.account.userAccount, this.acctService, this.store);

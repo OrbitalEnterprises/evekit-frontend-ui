@@ -1,0 +1,63 @@
+<h3 class="ek-label-primary" mat-dialog-title>
+  Sync Trackers for {{endpointName}}
+</h3>
+<mat-dialog-content class="mat-typography">
+  <table mat-table [dataSource]="trackerList"
+         style="background-color: #fafafa;">
+
+    <!--- column definitions -->
+    <ng-container matColumnDef="start">
+      <th mat-header-cell *matHeaderCellDef>Start Time</th>
+      <td mat-cell *matCellDef="let element">{{element.syncStart | date:'yyyy-MM-dd HH:mm:ss':'UTC'}}</td>
+    </ng-container>
+
+    <ng-container matColumnDef="elapsed">
+      <th mat-header-cell *matHeaderCellDef>&nbsp;&nbsp;Elapsed</th>
+      <td mat-cell *matCellDef="let element">&nbsp;&nbsp;{{computeElapsed(element)}}</td>
+    </ng-container>
+
+    <ng-container matColumnDef="uid">
+      <th mat-header-cell *matHeaderCellDef>&nbsp;&nbsp;UID</th>
+      <td mat-cell *matCellDef="let element">&nbsp;&nbsp;{{element.account.userAccount.uid}}</td>
+    </ng-container>
+
+    <ng-container matColumnDef="userName">
+      <th mat-header-cell *matHeaderCellDef>&nbsp;&nbsp;User Name</th>
+      <td mat-cell *matCellDef="let element">&nbsp;&nbsp;{{getUserName(element)}}</td>
+    </ng-container>
+
+    <ng-container matColumnDef="aid">
+      <th mat-header-cell *matHeaderCellDef>&nbsp;&nbsp;AID</th>
+      <td mat-cell *matCellDef="let element">&nbsp;&nbsp;{{element.account.aid}}</td>
+    </ng-container>
+
+    <ng-container matColumnDef="accountName">
+      <th mat-header-cell *matHeaderCellDef>&nbsp;&nbsp;Account Name</th>
+      <td mat-cell *matCellDef="let element">&nbsp;&nbsp;{{element.account.name}}</td>
+    </ng-container>
+
+    <ng-container matColumnDef="tid">
+      <th mat-header-cell *matHeaderCellDef>&nbsp;&nbsp;TID</th>
+      <td mat-cell *matCellDef="let element">&nbsp;&nbsp;{{element.tid}}</td>
+    </ng-container>
+
+    <ng-container matColumnDef="actions">
+      <th mat-header-cell *matHeaderCellDef>&nbsp;&nbsp;Actions</th>
+      <td mat-cell *matCellDef="let element">
+        &nbsp;&nbsp;
+        <button mat-icon-button
+                (click)="finishTracker(element)"
+                matTooltip="Finish Tracker">
+          <mat-icon>stop</mat-icon>
+        </button>
+      </td>
+    </ng-container>
+
+    <!-- render rows -->
+    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+    <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+  </table>
+</mat-dialog-content>
+<mat-dialog-actions style="justify-content: center;">
+  <button mat-button (click)="ok()">OK</button>
+</mat-dialog-actions>

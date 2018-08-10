@@ -10,7 +10,7 @@ import {selectSyncAccounts, selectUserAccount} from '../selectors';
 import {SyncAccountMenuNode} from './sync-account-menu-node';
 import {CallbackMenuNode} from './callback-menu-node';
 import {MatDialog} from '@angular/material';
-import {CreateSyncAccountComponent} from './create-sync-account/create-sync-account.component';
+import {CreateSyncAccountComponent} from '../../create-sync-account/create-sync-account/create-sync-account.component';
 
 /**
  * Standard menu layout.  Some elements will be removed depending on login status, etc.
@@ -26,12 +26,10 @@ const MENU_STRUCTURE: MenuNode[] = [
     .addChild(new SingleMenuNode('Reference', '/sapi/ref', 'library_books', null)),
   new ExpandableMenuNode('Admin', 'build', null)
     .addGuard(MenuGuard.ADMIN)
-    .addChild(new SingleMenuNode('Sys Props', '/admin/sysprops', 'settings', null))
-    .addChild(new SingleMenuNode('User Props', '/admin/userprops', 'account_circle', null))
-    .addChild(new SingleMenuNode('Sync Status', '/admin/syncstatus', 'sync', null))
-    .addChild(new SingleMenuNode('User List', '/admin/userlist', 'list', null))
-    .addChild(new SingleMenuNode('Ref History', '/admin/refhistory', 'history', null))
-    .addChild(new SingleMenuNode('Notifications', '/admin/notifications', 'priority_high', null)),
+    .addChild(new SingleMenuNode('Properties', '/admin/props', 'settings', null))
+    .addChild(new SingleMenuNode('Sync Status', '/admin/sync', 'sync', null))
+    .addChild(new SingleMenuNode('User List', '/admin/users', 'list', null))
+    .addChild(new SingleMenuNode('Notifications', '/admin/notes', 'priority_high', null)),
   new SingleMenuNode('EVA', '/eva', 'chat', null)
     .addGuard(MenuGuard.COMING_SOON),
   new SingleMenuNode('Extension Manager', '/extadmin', 'settings_ethernet', null)

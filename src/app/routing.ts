@@ -1,31 +1,5 @@
 import {RouterModule, Routes} from '@angular/router';
-import {LoggedInActivator} from './platform/activators';
-
-// const MENU_STRUCTURE: MenuNode[] = [
-//   new SingleMenuNode('Info', '/info', 'info', null),
-//   new ExpandableMenuNode('Accounts', 'people', null)
-//     .addGuard(MenuGuard.LOGGED_IN),
-//   new ExpandableMenuNode('APIs', 'code', null)
-//     .addChild(new SingleMenuNode('Model', '/sapi/model', 'memory', null))
-//     .addChild(new SingleMenuNode('SDE', '/sapi/sde', 'language', null))
-//     .addChild(new SingleMenuNode('Market', '/sapi/market', 'bar_chart', null)),
-//   new ExpandableMenuNode('Admin', 'build', null)
-//     .addGuard(MenuGuard.ADMIN)
-//     .addChild(new SingleMenuNode('Sys Props', '/admin/sysprops', 'settings', null))
-//     .addChild(new SingleMenuNode('User Props', '/admin/userprops', 'account_circle', null))
-//     .addChild(new SingleMenuNode('Sync Status', '/admin/syncstatus', 'sync', null))
-//     .addChild(new SingleMenuNode('User List', '/admin/userlist', 'list', null))
-//     .addChild(new SingleMenuNode('Ref History', '/admin/refhistory', 'history', null))
-//     .addChild(new SingleMenuNode('Notifications', '/admin/notifications', 'priority_high', null)),
-//   new SingleMenuNode('stEVE', '/steve', 'chat', null)
-//     .addGuard(MenuGuard.COMING_SOON),
-//   new SingleMenuNode('Extension Manager', '/extadmin', 'settings_ethernet', null)
-//     .addGuard(MenuGuard.COMING_SOON)
-//     .addGuard(MenuGuard.LOGGED_IN),
-//   new ExpandableMenuNode('Extensions', 'extension', null)
-//     .addGuard(MenuGuard.COMING_SOON)
-//     .addGuard(MenuGuard.LOGGED_IN)
-// ];
+import {AdminActivator, LoggedInActivator} from './platform/activators';
 
 /*
  * Standard routes.  This array should be updated each time a new built-in tab is added.
@@ -65,13 +39,42 @@ const standardRoutes: Routes = [
     // Accounts display
     path: 'syncaccount/:aid',
     loadChildren: './content/accounts/accounts.module#AccountsModule',
-    canActivate: [LoggedInActivator]
+    canActivate: [LoggedInActivator],
+    runGuardsAndResolvers: 'always'
   },
+  {
+    // Admin properties display
+    path: 'admin/props',
+    loadChildren: './content/admin-props/admin-props.module#AdminPropsModule',
+    canActivate: [LoggedInActivator, AdminActivator],
+    runGuardsAndResolvers: 'always'
+  },
+  {
+    // Admin user list display
+    path: 'admin/users',
+    loadChildren: './content/admin-users/admin-users.module#AdminUsersModule',
+    canActivate: [LoggedInActivator, AdminActivator],
+    runGuardsAndResolvers: 'always'
+  },
+  {
+    // Admin sync display
+    path: 'admin/sync',
+    loadChildren: './content/admin-sync/admin-sync.module#AdminSyncModule',
+    canActivate: [LoggedInActivator, AdminActivator],
+    runGuardsAndResolvers: 'always'
+  },
+  {
+    // Admin notes display
+    path: 'admin/notes',
+    loadChildren: './content/notes/notes.module#NotesModule',
+    canActivate: [LoggedInActivator, AdminActivator],
+    runGuardsAndResolvers: 'always'
+  },
+
   // {
   //   // Public plugin, requires no authentication
   //   path: 'plugin/p/:id',
-  //   loadChildren: 'app/modules/plugin-tab/plugin-tab.module#PluginTabModule',
-  //   canActivate: [EveKitLoginGuard]
+  //   loadChildren: 'app/modules/plugin-tab/plugin-tab.module#PluginTabModule'
   // },
   // {
   //   // Plugin which requires a logged in user
@@ -92,4 +95,4 @@ const standardRoutes: Routes = [
   }
 ];
 
-export const standardRouteConfig = RouterModule.forRoot(standardRoutes);
+export const standardRouteConfig = RouterModule.forRoot(standardRoutes, {onSameUrlNavigation: 'reload'});

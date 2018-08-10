@@ -1,3 +1,12 @@
-<button mat-icon-button>
-  <mat-icon>notifications</mat-icon>
+<button [class]="'mat-icon-button ' + (unreadCount() > 0 ? 'ek-label-warn' : '')"
+        (click)="viewNotes()"
+        matTooltip="{{ unreadCount() > 0 ? 'You have unread notifications' : 'You have no unread notifications'}}"
+        mat-icon-button>
+  <mat-icon *ngIf="unreadCount() === 0">notifications</mat-icon>
+  <mat-icon *ngIf="unreadCount() > 0"
+            matBadgePosition="above after"
+            matBadgeSize="medium"
+            matBadge="{{unreadCount()}}">
+    notifications_active
+  </mat-icon>
 </button>

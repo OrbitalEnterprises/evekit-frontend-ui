@@ -57,19 +57,15 @@ export class SettingsDialogComponent {
               this.currentSettings[nextProp.propertyName] = nextProp.propertyValue;
             }
           },
-          error => {
-            // TODO: drop copy error to server for diagnostics
-            console.log(error);
-            dialogService.makeWarnDialog('Settings Error',
-              'Failed to load settings.  If this problem persists, please contact the administrator.');
+          () => {
+            dialogService.displayGenericUserError('Settings Error',
+              'Failed to load settings');
           }
         );
       },
-      error => {
-        // TODO: drop copy error to server for diagnostics
-        console.log(error);
-        dialogService.makeWarnDialog('Settings Error',
-          'Failed to load settings.  If this problem persists, please contact the administrator.');
+      () => {
+        dialogService.displayGenericUserError('Settings Error',
+          'Failed to load settings');
       }
     );
   }
@@ -130,13 +126,12 @@ export class SettingsDialogComponent {
     // Save changes, signal any errors
     if (save.length > 0) {
       concat(...save).subscribe(
-        () => {},
-        error => {
+        () => {
+        },
+        () => {
           // Signal error, do not exit.
-          // TODO: drop copy error to server for diagnostics
-          console.log(error);
-          this.dialogService.makeWarnDialog('Save Failed',
-            'Unable to save all changes.  Please try again.  If this problem persists, please contact the admin.');
+          this.dialogService.displayGenericUserError('Save Failed',
+            'Unable to save all changes');
         },
         () => {
           // Finished, exit

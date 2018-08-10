@@ -124,17 +124,32 @@
         <ng-template matStepLabel>
           Set ESI Token
           <span *ngIf="tokenStep.completed">
-        <b>- Token Set</b>
-      </span>
+            <b>- Token Set</b>
+          </span>
         </ng-template>
         <button mat-raised-button
-                *ngIf="selectedAccount !== null"
+                *ngIf="selectedAccount !== null && selectedAccount.accessToken === null"
+                (click)="openAddESITokenDialog()"
                 color="accent">
-          {{selectedAccount.valid ? 'Change Scopes' : 'Add Token'}}
+          Add Token
         </button>
-        <b *ngIf="selectedAccount !== null && selectedAccount.valid">&nbsp;OR&nbsp;</b>
         <button mat-raised-button
-                *ngIf="selectedAccount !== null && selectedAccount.valid"
+                *ngIf="selectedAccount !== null && selectedAccount.accessToken !== null && !selectedAccount.valid"
+                (click)="reauthorizeESIToken()"
+                color="accent">
+          Re-Authorize Token
+        </button>
+        <button mat-raised-button
+                *ngIf="selectedAccount !== null && selectedAccount.accessToken != null && selectedAccount.valid"
+                (click)="openEditESITokenDialog()"
+                color="accent">
+          Change Scopes
+        </button>
+        <b *ngIf="selectedAccount !== null && selectedAccount.accessToken != null && selectedAccount.valid">
+          &nbsp;OR&nbsp;
+        </b>
+        <button mat-raised-button
+                *ngIf="selectedAccount !== null && selectedAccount.accessToken != null && selectedAccount.valid"
                 (click)="skipChangeScopes()"
                 color="primary">
           Skip
@@ -157,6 +172,7 @@
       </span>
         </ng-template>
         <button mat-raised-button
+                (click)="openCreateKeyDialog()"
                 color="accent">
           Create New Data Access Key
         </button>

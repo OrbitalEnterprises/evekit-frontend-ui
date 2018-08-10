@@ -9,7 +9,7 @@ import {map} from 'rxjs/operators';
 import {faCalendarAlt, faDoorOpen, faHistory, faKey, faShieldAlt, faUnlock} from '@fortawesome/free-solid-svg-icons';
 import {SetSyncKeys} from '../../../store/access-key-model';
 import {MatDialog} from '@angular/material';
-import {EditAccessKeyDialogComponent} from './edit-access-key-dialog/edit-access-key-dialog.component';
+import {EditAccessKeyDialogComponent} from '../../../edit-access-key/edit-access-key-dialog/edit-access-key-dialog.component';
 import {refreshSyncAccounts} from '../../../platform/version/account-tools';
 import {DialogsService} from '../../../platform/dialogs.service';
 import {ViewPermissionsDialogComponent} from './view-permissions-dialog/view-permissions-dialog.component';
@@ -47,7 +47,6 @@ export class AccessKeysComponent implements OnDestroy {
     ));
 
     // Match the account when the aid changes, then reload everything
-    // TODO: error handling
     this.aid.subscribe(
       aid => {
         if (this.account === null || aid !== this.account.aid) {
@@ -91,9 +90,14 @@ export class AccessKeysComponent implements OnDestroy {
 
     this.accountService.getAccessKey(-1, this.account.aid, -1)
       .subscribe(keys => {
-        this.accessKeys = keys;
-        this.store.dispatch(new SetSyncKeys(keys));
-      });
+          this.accessKeys = keys;
+          this.store.dispatch(new SetSyncKeys(keys));
+        },
+        () => {
+          this.dialogService.displayGenericUserError('Unable to Load Access Keys',
+            'Failed to retrieve access key list');
+        }
+      );
   }
 
   openCreateKeyDialog(): void {
@@ -142,8 +146,8 @@ export class AccessKeysComponent implements OnDestroy {
               refreshSyncAccounts(this.account.userAccount, this.accountService, this.store);
             },
             () => {
-              this.dialogService.makeWarnDialog('Delete Access Key Failed',
-                'Failed to delete access key.  Please try again.  If this problem persists, please contact the administrator.')
+              this.dialogService.displayGenericUserError('Delete Access Key Failed',
+                'Failed to delete access key')
                 .afterClosed().subscribe();
             }
           );

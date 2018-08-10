@@ -1,0 +1,101 @@
+<div style="position: relative; margin: 10px;">
+  <div class="light-corner-upper-left"></div>
+  <div class="mat-typography" style="padding: 10px;">
+    <div style="padding-top: 5px;">
+      <span style="font-family: 'Orbitron', sans-serif; font-weight: bold;">
+        User List
+      </span>
+
+      <button mat-icon-button
+              (click)="loadUsers()"
+              style="float: right; margin-left: 10px; margin-top: -5px;"
+              matTooltip="Refresh list">
+        <mat-icon>refresh</mat-icon>
+      </button>
+
+      <span class="ek-label ek-label-bk-accent" style="float: right; margin-left: 10px;">
+        {{ activeSyncAccountCount }} active sync accounts
+      </span>
+
+      <span class="ek-label ek-label-bk-primary" style="float: right;">
+        {{ activeUserCount }} active users
+      </span>
+
+    </div>
+
+    <table mat-table [dataSource]="dataSource"
+           style="background-color: #fafafa;">
+
+      <!--- column definitions -->
+      <ng-container matColumnDef="state">
+        <th mat-header-cell *matHeaderCellDef>State</th>
+        <td mat-cell *matCellDef="let element">
+          <span class="ek-label-bk-primary" style="padding: 3px;" *ngIf="element.admin">A</span>
+          <span class="ek-label-bk-accent" style="padding: 3px;" *ngIf="!element.active">D</span>
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="uid">
+        <th mat-header-cell *matHeaderCellDef>&nbsp;&nbsp;UID</th>
+        <td mat-cell *matCellDef="let element" style="white-space: nowrap">&nbsp;&nbsp;{{element.uid}}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="name">
+        <th mat-header-cell *matHeaderCellDef>&nbsp;&nbsp;Sign-On Name</th>
+        <td mat-cell *matCellDef="let element" style="white-space: nowrap">&nbsp;&nbsp;{{loginName(element.uid)}}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="signonDate">
+        <th mat-header-cell *matHeaderCellDef>&nbsp;&nbsp;Sign-On Date</th>
+        <td mat-cell *matCellDef="let element" style="white-space: nowrap">&nbsp;&nbsp;{{loginDate(element.uid) > -1 ? (loginDate(element.uid) | date:'yyyy-MM-dd HH:mm:ss':'UTC') : 'UNKNOWN'}}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="source">
+        <th mat-header-cell *matHeaderCellDef>&nbsp;&nbsp;Source</th>
+        <td mat-cell *matCellDef="let element" style="white-space: nowrap">&nbsp;&nbsp;{{loginSource(element.uid)}}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="joinDate">
+        <th mat-header-cell *matHeaderCellDef>&nbsp;&nbsp;Join Date</th>
+        <td mat-cell *matCellDef="let element" style="white-space: nowrap">&nbsp;&nbsp;{{element.created > -1 ? (element.created | date:'yyyy-MM-dd':'UTC') : 'UNKNOWN'}}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="options">
+        <th mat-header-cell *matHeaderCellDef>&nbsp;&nbsp;Options</th>
+        <td mat-cell *matCellDef="let element" style="white-space: nowrap">
+          &nbsp;&nbsp;
+          <button mat-icon-button
+                  (click)="showSyncAccounts(element)"
+                  matTooltip="View Sync Accounts">
+            <mat-icon>account_box</mat-icon>
+          </button>
+          &nbsp;
+          <button mat-icon-button
+                  *ngIf="!element.active"
+                  (click)="activateUser(element)"
+                  matTooltip="Activate">
+            <mat-icon>play_arrow</mat-icon>
+          </button>
+          <button mat-icon-button
+                  *ngIf="element.active"
+                  (click)="deactivateUser(element)"
+                  matTooltip="Deactivate">
+            <mat-icon>stop</mat-icon>
+          </button>
+          &nbsp;
+          <button mat-icon-button
+                  (click)="becomeUser(element)"
+                  matTooltip="Become User">
+            <mat-icon>supervisor_account</mat-icon>
+          </button>
+        </td>
+      </ng-container>
+
+      <!-- render rows -->
+      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+    </table>
+
+  </div>
+  <div class="light-corner-upper-right"></div>
+</div>

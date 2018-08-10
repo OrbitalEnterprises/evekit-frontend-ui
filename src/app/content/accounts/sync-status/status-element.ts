@@ -1,7 +1,7 @@
-import {ESIEndpointSyncTracker, ESIRefEndpointSyncTracker} from '../../../platform-service-api';
+import {ESIEndpointSyncTracker} from '../../../platform-service-api';
+import {formatDate} from '@angular/common';
 import EndpointEnum = ESIEndpointSyncTracker.EndpointEnum;
 import StatusEnum = ESIEndpointSyncTracker.StatusEnum;
-import {formatDate} from '@angular/common';
 
 function translateEndpoint(ep: EndpointEnum): string {
   switch (ep) {

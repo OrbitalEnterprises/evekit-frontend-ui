@@ -1,10 +1,20 @@
-import { NgModule } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import {NgModule} from '@angular/core';
+import {CommonModule} from '@angular/common';
+import {CreateSyncAccountComponent} from './create-sync-account/create-sync-account.component';
+import {ReactiveFormsModule} from '@angular/forms';
+import {MaterialModule} from '../material/material.module';
 
 @NgModule({
   imports: [
-    CommonModule
+    CommonModule,
+    MaterialModule,
+    ReactiveFormsModule
   ],
-  declarations: []
+  declarations: [
+    CreateSyncAccountComponent
+  ],
+  exports: [
+    CreateSyncAccountComponent
+  ]
 })
 export class CreateSyncAccountModule { }

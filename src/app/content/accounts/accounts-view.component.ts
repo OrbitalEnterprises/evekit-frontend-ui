@@ -1,4 +1,4 @@
-import {Component, OnInit} from '@angular/core';
+import {Component} from '@angular/core';
 import {ActivatedRoute} from '@angular/router';
 
 @Component({
@@ -6,7 +6,7 @@ import {ActivatedRoute} from '@angular/router';
   templateUrl: './accounts-view.component.html',
   styleUrls: ['./accounts-view.component.css']
 })
-export class AccountsViewComponent implements OnInit {
+export class AccountsViewComponent {
   aid: number;
 
   constructor(private routeInfo: ActivatedRoute) {
@@ -15,9 +15,6 @@ export class AccountsViewComponent implements OnInit {
         this.aid = parseInt(next.get('aid'), 10);
       }
     );
-  }
-
-  ngOnInit() {
   }
 
 }

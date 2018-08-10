@@ -1,7 +1,7 @@
 import {Component, Inject} from '@angular/core';
 import {AccessKeyMask, EK_CharacterMaskConstants, EK_CorporationMaskConstants} from '../access-key-mask';
 import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material';
-import {EditEsiTokenDialogComponent} from '../../summary/edit-esi-token-dialog/edit-esi-token-dialog.component';
+import {EditEsiTokenDialogComponent} from '../../../../edit-esi-token/edit-esi-token-dialog/edit-esi-token-dialog.component';
 import {SynchronizedAccountAccessKey, SynchronizedEveAccount} from '../../../../platform-service-api';
 
 @Component({

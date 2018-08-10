@@ -1,0 +1,73 @@
+<div class="mat-typography" style="padding: 10px;">
+  <div style="padding-top: 5px;">
+    <span style="font-family: 'Orbitron', sans-serif; font-weight: bold;">
+      System Properties
+    </span>
+  </div>
+
+  <form [formGroup]="formModel">
+    <div class="ek-tbl" style="width: 100%">
+      <div class="ek-tbl-row">
+        <div class="ek-tbl-cell" style="white-space: nowrap; text-align: left; width: 100%;">
+          <mat-form-field style="width: 100%">
+            <input matInput [formControl]="newKeyControl" placeholder="New property key name">
+          </mat-form-field>
+        </div>
+        <div class="ek-tbl-cell">
+        </div>
+      </div>
+      <div class="ek-tbl-row">
+        <div class="ek-tbl-cell" style="white-space: nowrap; text-align: left;">
+          <mat-form-field style="width: 100%">
+            <input matInput [formControl]="newValueControl" placeholder="New property value">
+          </mat-form-field>
+        </div>
+        <div class="ek-tbl-cell">
+          <button mat-icon-button
+                  [disabled]="!newKeyControl.valid"
+                  (click)="saveProperty()"
+                  matTooltip="Save new property">
+            <fa-icon [icon]="icSave" size="lg"></fa-icon>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <span><b>Existing Properties</b></span>
+
+    <div class="ek-tbl" style="width: 100%; margin-top: 20px;" *ngIf="props.length > 0">
+      <div *ngFor="let prop of props; index as i" style="position: relative; margin-bottom: 10px; padding: 5px;">
+        <div class="list-corner-upper-left"></div>
+        <div class="ek-tbl-row">
+          <div class="ek-tbl-cell" style="width: 100%; white-space: nowrap; text-align: left;">
+          <span class="ek-label-accent">
+            {{prop.propertyName}}
+          </span>
+          </div>
+          <div class="ek-tbl-cell">
+            <button mat-icon-button
+                    (click)="saveChange(i)"
+                    matTooltip="Save change">
+              <fa-icon [icon]="icSave" size="lg"></fa-icon>
+            </button>
+          </div>
+        </div>
+        <div class="ek-tbl-row">
+          <div class="ek-tbl-cell" style="width: 100%; white-space: nowrap; text-align: left;">
+            <mat-form-field style="width: 100%;">
+              <input matInput title="property value" [formControl]="propControls.controls[i]">
+            </mat-form-field>
+          </div>
+          <div class="ek-tbl-cell">
+            <button mat-icon-button
+                    (click)="deleteProp(i)"
+                    matTooltip="Delete property (no confirmation)">
+              <fa-icon [icon]="icDelete" size="lg"></fa-icon>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </form>
+
+</div>

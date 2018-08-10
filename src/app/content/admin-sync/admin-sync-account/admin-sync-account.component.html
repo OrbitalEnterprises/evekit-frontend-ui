@@ -1,0 +1,61 @@
+<div class="mat-typography" style="padding: 10px;">
+  <div style="padding-top: 5px;">
+    <span style="font-family: 'Orbitron', sans-serif; font-weight: bold;">
+      Account Sync Status
+    </span>
+  </div>
+
+  <button mat-icon-button
+          style="float: right; margin-left: 10px; margin-top: -25px;"
+          (click)="updateStats()"
+          matTooltip="Refresh">
+    <mat-icon>refresh</mat-icon>
+  </button>
+
+  <table mat-table [dataSource]="endpointDataSource"
+         matSort
+         style="background-color: #fafafa;">
+
+    <!--- column definitions -->
+    <ng-container matColumnDef="endpoint">
+      <th mat-header-cell *matHeaderCellDef>Endpoint</th>
+      <td mat-cell *matCellDef="let element" style="white-space: nowrap">{{element.displayName}}</td>
+    </ng-container>
+
+    <ng-container matColumnDef="active">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header style="white-space: nowrap">&nbsp;&nbsp;Active</th>
+      <td mat-cell *matCellDef="let element" style="white-space: nowrap; text-align: center;">{{element.active}}</td>
+    </ng-container>
+
+    <ng-container matColumnDef="delay">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header style="white-space: nowrap">&nbsp;&nbsp;Longest</th>
+      <td mat-cell *matCellDef="let element" style="white-space: nowrap; text-align: center;">{{formatDelay(element)}}</td>
+    </ng-container>
+
+    <ng-container matColumnDef="attempts">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header style="white-space: nowrap">&nbsp;&nbsp;Tries (24h)</th>
+      <td mat-cell *matCellDef="let element" style="white-space: nowrap; text-align: center;">{{element.attempts}}</td>
+    </ng-container>
+
+    <ng-container matColumnDef="failures">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header style="white-space: nowrap">&nbsp;&nbsp;Fails (24h)</th>
+      <td mat-cell *matCellDef="let element" style="white-space: nowrap; text-align: center;">{{element.failures}}</td>
+    </ng-container>
+
+    <ng-container matColumnDef="actions">
+      <th mat-header-cell *matHeaderCellDef style="white-space: nowrap">&nbsp;&nbsp;Actions</th>
+      <td mat-cell *matCellDef="let element" style="white-space: nowrap; text-align: center;">
+        <button mat-icon-button
+                (click)="showTrackers(element.endpoint)"
+                matTooltip="View Active">
+          <mat-icon>account_box</mat-icon>
+        </button>&nbsp;
+      </td>
+    </ng-container>
+
+    <!-- render rows -->
+    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+    <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+  </table>
+
+</div>

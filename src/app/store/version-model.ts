@@ -1,4 +1,3 @@
-import {EveKitUserAccount, EveKitUserAuthSource} from '../platform-service-api';
 import {Action} from '@ngrx/store';
 
 /**
@@ -13,7 +12,7 @@ export interface VersionInfo {
 const defaultState: VersionInfo = {
   version: null,
   buildDate: null
-}
+};
 
 // Action configuration
 export const VERSION_SET_VERSION = 'VERSION_SET_VERSION';
