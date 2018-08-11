@@ -14,6 +14,14 @@ import {Configuration, PlatformServiceApiModule} from './platform-service-api';
 import {SdeServiceApiModule} from './sde-service-api';
 import {environment} from '../environments/environment';
 
+export function setPlatformBasePath(): any {
+  return new Configuration({ basePath: environment.platformServiceApiBasePath});
+}
+
+export function setSDEBasePath(): any {
+  return new Configuration({ basePath: environment.sdeServiceApiBasePath});
+}
+
 @NgModule({
   declarations: [
     AppComponent
@@ -26,8 +34,8 @@ import {environment} from '../environments/environment';
     appStoreModel,
     RouterModule,
     standardRouteConfig,
-    PlatformServiceApiModule.forRoot(() => new Configuration({ basePath: environment.platformServiceApiBasePath})),
-    SdeServiceApiModule.forRoot(() => new Configuration({ basePath: environment.sdeServiceApiBasePath}))
+    PlatformServiceApiModule.forRoot(setPlatformBasePath),
+    SdeServiceApiModule.forRoot(setSDEBasePath)
   ],
   providers: [
     {provide: LocationStrategy, useClass: HashLocationStrategy},
