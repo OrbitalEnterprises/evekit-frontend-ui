@@ -169,7 +169,7 @@ export class QsComponent implements AfterViewInit {
           this.accessKeys = keys;
         },
         () => {
-          this.displayError('Unable to Load Access Keys',
+          this.dialogService.displayGenericUserError('Unable to Load Access Keys',
             'Failed to retrieve access key list');
         }
       );
@@ -191,7 +191,7 @@ export class QsComponent implements AfterViewInit {
           if (result !== null) {
             this.selectAccount(result);
           } else {
-            this.displayError('Unable to Create New Sync Account',
+            this.dialogService.displayGenericUserError('Unable to Create New Sync Account',
               'Failed to create new sync account');
           }
         }
