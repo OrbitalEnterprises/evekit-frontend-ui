@@ -68,7 +68,7 @@ export class AdminPropsUserComponent {
   makeDisplayableUser(user: EveKitUserAccount): string {
     const uid = parseInt(user.uid, 10);
     let display = `UID: ${user.uid} LOGIN: `;
-    if (this.userSourceMap.has(uid)) {
+    if (this.userSourceMap.has(uid) && this.userSourceMap.get(uid) !== null) {
       const mp = this.userSourceMap.get(uid);
       display = display + `${mp.screenName} (${mp.source})`;
     } else {
