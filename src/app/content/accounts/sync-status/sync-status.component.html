@@ -21,16 +21,16 @@
   <div class="ek-tbl" style="width: 100%; padding-top: 10px; padding-bottom: 10px;">
     <div class="ek-tbl-row">
       <div class="ek-tbl-cell" style="white-space: nowrap;">
-        <b>Last Synch:</b>
+        <b>Last Synch TIme:</b>
       </div>
       <div class="ek-tbl-cell" style="white-space: nowrap; padding-left: 10px;">
         {{ lastSyncTracker === null ? 'N/A' : (lastSyncTracker.syncEnd | date:'yyyy-MM-dd HH:mm:ss':'UTC') }}
       </div>
       <div class="ek-tbl-cell" style="white-space: nowrap;">
-        <b>Next Synch:</b>
+        <b>Next Synch Endpoint:</b>
       </div>
       <div class="ek-tbl-cell" style="white-space: nowrap; padding-left: 10px;">
-        {{ nextSyncTracker === null ? 'N/A' : (nextSyncTracker.scheduled | date:'yyyy-MM-dd HH:mm:ss':'UTC') }}
+        {{ nextSyncTracker === null ? 'N/A' : endpointToString(nextSyncTracker) }}
       </div>
     </div>
   </div>

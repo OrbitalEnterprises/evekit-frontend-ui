@@ -1,0 +1,115 @@
+// Style settings independent of theme
+.ek-label {
+  padding: 5px;
+  border-radius: 5px;
+}
+
+.ek-small-label {
+  padding: 2px;
+  border-radius: 4px;
+}
+
+.ek-label-ok {
+  color: green;
+}
+
+.light-corner-upper-left {
+  border-top: #b9b9b9 2px solid;
+  border-left: #b9b9b9 2px solid;
+  height: 100px;
+  width: 100px;
+  position: absolute;
+  left: 0;
+  top: 0;
+  z-index: -10;
+}
+
+.light-corner-upper-right {
+  border-top: #b9b9b9 2px solid;
+  border-right: #b9b9b9 2px solid;
+  height: 100px;
+  width: 100px;
+  position: absolute;
+  right: 0;
+  top: 0;
+  z-index: -10;
+}
+
+.light-corner-lower-left {
+  border-bottom: #b9b9b9 2px solid;
+  border-left: #b9b9b9 2px solid;
+  height: 100px;
+  width: 100px;
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  z-index: -10;
+}
+
+.light-corner-lower-right {
+  border-bottom: #b9b9b9 2px solid;
+  border-right: #b9b9b9 2px solid;
+  height: 100px;
+  width: 100px;
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  z-index: -10;
+}
+
+// List corner decoration
+.list-corner-upper-left {
+  border-top: #b9b9b9 1px solid;
+  border-left: #b9b9b9 1px solid;
+  height: 30px;
+  width: 200px;
+  position: absolute;
+  left: 0;
+  top: 0;
+  z-index: -10;
+}
+
+.list-corner-upper-right {
+  border-top: #b9b9b9 1px solid;
+  border-right: #b9b9b9 1px solid;
+  height: 30px;
+  width: 200px;
+  position: absolute;
+  right: 0;
+  top: 0;
+  z-index: -10;
+}
+
+.list-corner-lower-right {
+  border-bottom: #b9b9b9 1px solid;
+  border-right: #b9b9b9 1px solid;
+  height: 30px;
+  width: 200px;
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  z-index: -10;
+}
+
+.list-corner-lower-left {
+  border-bottom: #b9b9b9 1px solid;
+  border-left: #b9b9b9 1px solid;
+  height: 30px;
+  width: 200px;
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  z-index: -10;
+}
+
+.ek-tbl {
+  display: table;
+}
+
+.ek-tbl-row {
+  display: table-row;
+}
+
+.ek-tbl-cell {
+  display: table-cell;
+}

@@ -8,7 +8,7 @@ import {selectSyncAccounts} from '../../../platform/selectors';
 import {map} from 'rxjs/operators';
 import {faSquare} from '@fortawesome/free-solid-svg-icons';
 import {TrackerPair} from './tracker-pair';
-import {getCharTypes, getCorpTypes, StatusElement} from './status-element';
+import {getCharTypes, getCorpTypes, StatusElement, translateEndpoint} from './status-element';
 import {DialogsService} from '../../../platform/dialogs.service';
 
 @Component({
@@ -70,6 +70,10 @@ export class SyncStatusComponent implements OnDestroy {
         }
       }
     );
+  }
+
+  endpointToString(ep: ESIEndpointSyncTracker): string {
+    return translateEndpoint(ep.endpoint);
   }
 
   ngOnDestroy(): void {

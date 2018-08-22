@@ -1,0 +1,16 @@
+// The normal tree theme uses a slightly lighter background for the tree elements.
+// We replace with the background color so that the tree menu blends in seamlessly
+// with the rest of the page.
+@mixin mat-tree-theme-custom($theme) {
+  $background: map-get($theme, background);
+  $foreground: map-get($theme, foreground);
+
+  .mat-tree {
+    background: mat-color($background, background);
+    cursor: default;
+  }
+
+  .mat-tree-node {
+    color: mat-color($foreground, text);
+  }
+}

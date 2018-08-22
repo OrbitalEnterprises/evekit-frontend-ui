@@ -13,6 +13,7 @@ import {AdminActivator, LoggedInActivator} from './platform/activators';
 import {Configuration, PlatformServiceApiModule} from './platform-service-api';
 import {SdeServiceApiModule} from './sde-service-api';
 import {environment} from '../environments/environment';
+import {FontAwesomeModule} from '@fortawesome/angular-fontawesome';
 
 export function setPlatformBasePath(): any {
   return new Configuration({ basePath: environment.platformServiceApiBasePath});
@@ -30,6 +31,7 @@ export function setSDEBasePath(): any {
     BrowserModule,
     MaterialModule,
     BrowserAnimationsModule,
+    FontAwesomeModule,
     PlatformModule,
     appStoreModel,
     RouterModule,

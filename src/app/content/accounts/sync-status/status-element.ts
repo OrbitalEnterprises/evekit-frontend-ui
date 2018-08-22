@@ -3,7 +3,7 @@ import {formatDate} from '@angular/common';
 import EndpointEnum = ESIEndpointSyncTracker.EndpointEnum;
 import StatusEnum = ESIEndpointSyncTracker.StatusEnum;
 
-function translateEndpoint(ep: EndpointEnum): string {
+export function translateEndpoint(ep: EndpointEnum): string {
   switch (ep) {
     case EndpointEnum.CORPASSETS:
     case EndpointEnum.CHARASSETS:

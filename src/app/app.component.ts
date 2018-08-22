@@ -2,6 +2,7 @@ import {Component, OnInit} from '@angular/core';
 import {Router} from '@angular/router';
 import {getCookie, QS_MAIN_COOKIE_NAME} from './platform/cookies';
 import {DialogsService} from './platform/dialogs.service';
+import {faMoon, faSun} from '@fortawesome/free-solid-svg-icons';
 
 @Component({
   selector: 'app-root',
@@ -10,6 +11,11 @@ import {DialogsService} from './platform/dialogs.service';
 })
 export class AppComponent implements OnInit {
   authError: string = null;
+  isLightTheme = true;
+
+  // icons
+  icLightTheme = faSun;
+  icDarkTheme = faMoon;
 
   constructor(private router: Router,
               private dialogService: DialogsService) {

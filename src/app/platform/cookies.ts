@@ -30,3 +30,8 @@ export function setCookie(name: string, value: string, expireDays: number, path:
   const cpath = path ? `; path=${path}` : '';
   document.cookie = `${name}=${value}; ${expires}${cpath}`;
 }
+
+export function setCookieNoExpire(name: string, value: string, path: string = ''): void {
+  const cpath = path ? `; path=${path}` : '';
+  document.cookie = `${name}=${value}${cpath}`;
+}

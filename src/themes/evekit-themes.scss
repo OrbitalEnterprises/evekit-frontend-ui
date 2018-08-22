@@ -1,0 +1,332 @@
+@import '~@angular/material/theming';
+@import 'mat-tree-theme-custom';
+@import 'mat-table-theme-custom';
+
+// If we want to change the font, we need to change it here, then include it in mat-core.
+$general-typography: mat-typography-config(
+  $font-family: '"Open Sans", sans-serif'
+);
+
+// Include the common styles for Angular Material. We include this here so that you only
+// have to load a single css file for Angular Material in your app.
+// Be sure that you only ever include this mixin once!
+@include mat-core($general-typography);
+
+// Include styles which don't change with the theme
+@import 'theme-independent-styles';
+
+// EveKit Dark Theme
+.evekit-dark-theme {
+  // Dark theme palletes
+  $evekit-default-primary: mat-palette($mat-blue-gray, 500);
+  $evekit-default-accent: mat-palette($mat-amber, 700);
+  $evekit-default-warn: mat-palette($mat-red);
+  $evekit-second-accent: mat-palette($mat-brown);
+
+  // Overall theme pallete settings
+  $evekit-theme: mat-dark-theme($evekit-default-primary, $evekit-default-accent, $evekit-default-warn);
+
+  @include mat-core-theme($evekit-theme);
+  @include mat-autocomplete-theme($evekit-theme);
+  @include mat-badge-theme($evekit-theme);
+  @include mat-bottom-sheet-theme($evekit-theme);
+  @include mat-button-theme($evekit-theme);
+  @include mat-button-toggle-theme($evekit-theme);
+  @include mat-card-theme($evekit-theme);
+  @include mat-checkbox-theme($evekit-theme);
+  @include mat-chips-theme($evekit-theme);
+  @include mat-table-theme-custom($evekit-theme);
+  @include mat-datepicker-theme($evekit-theme);
+  @include mat-dialog-theme($evekit-theme);
+  @include mat-divider-theme($evekit-theme);
+  @include mat-expansion-panel-theme($evekit-theme);
+  @include mat-form-field-theme($evekit-theme);
+  @include mat-grid-list-theme($evekit-theme);
+  @include mat-icon-theme($evekit-theme);
+  @include mat-input-theme($evekit-theme);
+  @include mat-list-theme($evekit-theme);
+  @include mat-menu-theme($evekit-theme);
+  @include mat-paginator-theme($evekit-theme);
+  @include mat-progress-bar-theme($evekit-theme);
+  @include mat-progress-spinner-theme($evekit-theme);
+  @include mat-radio-theme($evekit-theme);
+  @include mat-select-theme($evekit-theme);
+  @include mat-sidenav-theme($evekit-theme);
+  @include mat-slide-toggle-theme($evekit-theme);
+  @include mat-slider-theme($evekit-theme);
+  @include mat-stepper-theme($evekit-theme);
+  @include mat-sort-theme($evekit-theme);
+  @include mat-tabs-theme($evekit-theme);
+  @include mat-toolbar-theme($evekit-theme);
+  @include mat-tooltip-theme($evekit-theme);
+  @include mat-tree-theme-custom($evekit-theme);
+  @include mat-snack-bar-theme($evekit-theme);
+
+  // Logo image styling
+  a.ek-logo-link:visited {
+    text-decoration: none;
+    color: mat-color(map-get($evekit-theme, foreground), text);
+  }
+
+  .ek-logo-link {
+    text-decoration: none;
+  }
+
+  .ek-logo-img {
+    vertical-align: middle;
+    width: 58px;
+    height: 58px;
+    box-sizing: border-box;
+    padding-left: 58px;
+    background: url(../assets/logo_128_128.png) left top no-repeat;
+    background-size: 58px 58px;
+  }
+
+  .ek-yt-logo-img {
+    vertical-align: middle;
+    margin-top: 10px;
+    margin-right: 15px;
+    margin-bottom: 5px;
+    width: 89.2px;
+    height: 20px;
+    box-sizing: border-box;
+    padding-left: 89.2px;
+    background: url(../assets/yt_logo_rgb_dark.png) left top no-repeat;
+    background-size: 89.2px 20px;
+  }
+
+  // Menu selection styling
+  .selected-menu {
+    background-color: mat-color($evekit-default-primary, 400);
+    color: mat-contrast($evekit-default-primary, 500);
+    border-radius: 0 30px 30px 0;
+  }
+
+  .hover-menu:hover {
+    background-color: mat-color($evekit-default-accent, 400);
+    color: mat-contrast($evekit-default-accent, 500);
+    border-radius: 0 30px 30px 0;
+  }
+
+  .status-blank {
+    color: mat-color(map-get($evekit-theme, background), background);
+  }
+
+  // Styling for various types of labels
+  .ek-label-primary {
+    color: mat-color($evekit-default-primary);
+  }
+
+  .ek-label-bk-primary {
+    color: mat-color($evekit-default-primary, default-contrast);
+    background: mat-color($evekit-default-primary);
+  }
+
+  .ek-label-accent {
+    color: mat-color($evekit-default-accent);
+  }
+
+  .ek-label-bk-accent {
+    color: mat-color($evekit-default-accent, default-contrast);
+    background: mat-color($evekit-default-accent);
+  }
+
+  .ek-label-warn {
+    color: mat-color($evekit-default-warn);
+  }
+
+  .ek-label-bk-warn {
+    color: mat-color($evekit-default-warn, default-contrast);
+    background: mat-color($evekit-default-warn);
+  }
+
+  .ek-label-accent2 {
+    color: mat-color($evekit-second-accent);
+  }
+
+  .ek-label-bk-accent2 {
+    color: mat-color($evekit-second-accent, default-contrast);
+    background: mat-color($evekit-second-accent);
+  }
+
+  // Link styling
+  a {
+    color: mat-color($evekit-default-primary, lighter);
+  }
+
+  a:visited {
+    color: mat-color($evekit-default-accent, lighter);
+  }
+
+  a.tab-menu {
+    color: mat-color($evekit-default-primary, default-contrast);
+  }
+
+  // Card customizations
+  .mat-card-isolated {
+    margin: 10px;
+    .mat-card-header {
+      color: mat-color($evekit-default-primary, default-contrast);
+      background: mat-color($evekit-default-primary);
+    }
+  }
+
+}
+
+// EveKit Light Theme
+.evekit-light-theme {
+  // Light theme palletes
+  $evekit-default-primary: mat-palette($mat-blue-gray, 600);
+  $evekit-default-accent: mat-palette($mat-cyan, 600);
+  $evekit-default-warn: mat-palette($mat-red);
+  $evekit-second-accent: mat-palette($mat-brown);
+
+  // Overall theme pallete settings
+  $evekit-theme: mat-light-theme($evekit-default-primary, $evekit-default-accent, $evekit-default-warn);
+
+  @include mat-core-theme($evekit-theme);
+  @include mat-autocomplete-theme($evekit-theme);
+  @include mat-badge-theme($evekit-theme);
+  @include mat-bottom-sheet-theme($evekit-theme);
+  @include mat-button-theme($evekit-theme);
+  @include mat-button-toggle-theme($evekit-theme);
+  @include mat-card-theme($evekit-theme);
+  @include mat-checkbox-theme($evekit-theme);
+  @include mat-chips-theme($evekit-theme);
+  @include mat-table-theme-custom($evekit-theme);
+  @include mat-datepicker-theme($evekit-theme);
+  @include mat-dialog-theme($evekit-theme);
+  @include mat-divider-theme($evekit-theme);
+  @include mat-expansion-panel-theme($evekit-theme);
+  @include mat-form-field-theme($evekit-theme);
+  @include mat-grid-list-theme($evekit-theme);
+  @include mat-icon-theme($evekit-theme);
+  @include mat-input-theme($evekit-theme);
+  @include mat-list-theme($evekit-theme);
+  @include mat-menu-theme($evekit-theme);
+  @include mat-paginator-theme($evekit-theme);
+  @include mat-progress-bar-theme($evekit-theme);
+  @include mat-progress-spinner-theme($evekit-theme);
+  @include mat-radio-theme($evekit-theme);
+  @include mat-select-theme($evekit-theme);
+  @include mat-sidenav-theme($evekit-theme);
+  @include mat-slide-toggle-theme($evekit-theme);
+  @include mat-slider-theme($evekit-theme);
+  @include mat-stepper-theme($evekit-theme);
+  @include mat-sort-theme($evekit-theme);
+  @include mat-tabs-theme($evekit-theme);
+  @include mat-toolbar-theme($evekit-theme);
+  @include mat-tooltip-theme($evekit-theme);
+  @include mat-tree-theme-custom($evekit-theme);
+  @include mat-snack-bar-theme($evekit-theme);
+
+  // Logo image styling
+  a.ek-logo-link:visited {
+    text-decoration: none;
+    color: mat-color(map-get($evekit-theme, foreground), text);
+  }
+
+  .ek-logo-link {
+    text-decoration: none;
+  }
+
+  .ek-yt-logo-img {
+    vertical-align: middle;
+    margin-top: 10px;
+    margin-right: 15px;
+    margin-bottom: 5px;
+    width: 89.2px;
+    height: 20px;
+    box-sizing: border-box;
+    padding-left: 89.2px;
+    background: url(../assets/yt_logo_rgb_light.png) left top no-repeat;
+    background-size: 89.2px 20px;
+  }
+
+  .ek-logo-img {
+    vertical-align: middle;
+    width: 58px;
+    height: 58px;
+    box-sizing: border-box;
+    padding-left: 58px;
+    background: url(../assets/logo_black_128_128.png) left top no-repeat;
+    background-size: 58px 58px;
+  }
+
+  // Menu selection styling
+  .selected-menu {
+    background-color: mat-color($evekit-default-primary, 200);
+    color: mat-contrast($evekit-default-primary, 500);
+    border-radius: 0 30px 30px 0;
+  }
+
+  .hover-menu:hover {
+    color: mat-contrast($evekit-default-accent, 400);
+    background-color: mat-color($evekit-default-accent, 300);
+    border-radius: 0 30px 30px 0;
+  }
+
+  .status-blank {
+    color: mat-color(map-get($evekit-theme, background), background);
+  }
+
+  // Styling for various types of labels
+  .ek-label-primary {
+    color: mat-color($evekit-default-primary);
+  }
+
+  .ek-label-bk-primary {
+    color: mat-color($evekit-default-primary, default-contrast);
+    background: mat-color($evekit-default-primary);
+  }
+
+  .ek-label-accent {
+    color: mat-color($evekit-default-accent);
+  }
+
+  .ek-label-bk-accent {
+    color: mat-color($evekit-default-accent, default-contrast);
+    background: mat-color($evekit-default-accent);
+  }
+
+  .ek-label-warn {
+    color: mat-color($evekit-default-warn);
+  }
+
+  .ek-label-bk-warn {
+    color: mat-color($evekit-default-warn, default-contrast);
+    background: mat-color($evekit-default-warn);
+  }
+
+  .ek-label-accent2 {
+    color: mat-color($evekit-second-accent);
+  }
+
+  .ek-label-bk-accent2 {
+    color: mat-color($evekit-second-accent, default-contrast);
+    background: mat-color($evekit-second-accent);
+  }
+
+  // Link styling
+  a {
+    color: mat-color($evekit-default-primary, darker);
+  }
+
+  a:visited {
+    color: mat-color($evekit-default-accent, darker);
+  }
+
+  a.tab-menu {
+    color: mat-color($evekit-default-primary, default-contrast);
+  }
+
+  // Card customizations
+  .mat-card-isolated {
+    margin: 10px;
+    .mat-card-header {
+      color: mat-color($evekit-default-primary, default-contrast);
+      background: mat-color($evekit-default-primary);
+    }
+  }
+
+}

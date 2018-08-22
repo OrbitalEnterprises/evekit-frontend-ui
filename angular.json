@@ -24,7 +24,7 @@
             ],
             "styles": [
               "src/styles.css",
-              "src/themes/evekit-default-theme.scss"
+              "src/themes/evekit-themes.scss"
             ],
             "scripts": []
           },

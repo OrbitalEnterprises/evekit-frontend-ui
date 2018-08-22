@@ -24,7 +24,9 @@ import {MenuComponent} from './menu/menu.component';
 import {RouterModule} from '@angular/router';
 import {CreateSyncAccountComponent} from '../create-sync-account/create-sync-account/create-sync-account.component';
 import {CreateSyncAccountModule} from '../create-sync-account/create-sync-account.module';
-import { UserNoteViewDialogComponent } from './toolbar/notifications/user-note-view-dialog/user-note-view-dialog.component';
+import {UserNoteViewDialogComponent} from './toolbar/notifications/user-note-view-dialog/user-note-view-dialog.component';
+import {ToolbarThemeComponent} from './toolbar/theme/toolbar-theme.component';
+import {FontAwesomeModule} from '@fortawesome/angular-fontawesome';
 
 @NgModule({
   imports: [
@@ -32,6 +34,7 @@ import { UserNoteViewDialogComponent } from './toolbar/notifications/user-note-v
     MaterialModule,
     ReactiveFormsModule,
     RouterModule,
+    FontAwesomeModule,
     CreateSyncAccountModule
   ],
   declarations: [
@@ -51,7 +54,8 @@ import { UserNoteViewDialogComponent } from './toolbar/notifications/user-note-v
     ConfirmDialogComponent,
     SettingsDialogComponent,
     MenuComponent,
-    UserNoteViewDialogComponent
+    UserNoteViewDialogComponent,
+    ToolbarThemeComponent
   ],
   entryComponents: [
     UserinfoComponent,

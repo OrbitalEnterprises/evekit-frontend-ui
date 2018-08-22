@@ -1,0 +1,31 @@
+// The normal table theme uses a slightly lighter background.
+// We replace with the background color so that the table blends in seamlessly
+// with the rest of the page.
+@mixin mat-table-theme-custom($theme) {
+  $background: map-get($theme, background);
+  $foreground: map-get($theme, foreground);
+
+  .mat-table {
+    background: mat-color($background, background);
+  }
+
+  .mat-table thead, .mat-table tbody, .mat-table tfoot,
+  mat-header-row, mat-row, mat-footer-row,
+  [mat-header-row], [mat-row], [mat-footer-row],
+  .mat-table-sticky {
+    background: inherit;
+  }
+
+  mat-row, mat-header-row, mat-footer-row,
+  th.mat-header-cell, td.mat-cell, td.mat-footer-cell {
+    border-bottom-color: mat-color($foreground, divider);
+  }
+
+  .mat-header-cell {
+    color: mat-color($foreground, secondary-text);
+  }
+
+  .mat-cell, .mat-footer-cell {
+    color: mat-color($foreground, text);
+  }
+}
