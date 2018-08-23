@@ -76,6 +76,17 @@ export class AdminUsersViewComponent implements OnInit {
     this.usersDataSource.data = this.dataSource;
   }
 
+  updateDisplayedUser(acct: EveKitUserAccount) {
+    const newItem = this.makeItem(acct);
+    for (let i = 0; i < this.dataSource.length; i++) {
+      if (this.dataSource[i].uid === acct.uid) {
+        this.dataSource[i] = newItem;
+        return;
+      }
+    }
+    this.refreshDataSource();
+  }
+
   loadUsers(): void {
     this.dataSource = [];
     this.activeUserCount = 0;
@@ -96,7 +107,7 @@ export class AdminUsersViewComponent implements OnInit {
                 lastSource => {
                   if (lastSource !== null) {
                     this.userSourceMap.set(uid, lastSource);
-                    this.refreshDataSource();
+                    this.updateDisplayedUser(next);
                   }
                 }
               );
