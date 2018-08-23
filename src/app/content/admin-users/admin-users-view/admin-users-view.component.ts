@@ -81,6 +81,7 @@ export class AdminUsersViewComponent implements OnInit {
     for (let i = 0; i < this.dataSource.length; i++) {
       if (this.dataSource[i].uid === acct.uid) {
         this.dataSource[i] = newItem;
+        this.usersDataSource.data = this.dataSource;
         return;
       }
     }
