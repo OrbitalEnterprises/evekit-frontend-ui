@@ -2,7 +2,7 @@ import {Component, OnInit, ViewChild} from '@angular/core';
 import {AccountService, AdminService, AuthenticationService, EveKitUserAccount, EveKitUserAuthSource} from '../../../platform-service-api';
 import {DialogsService} from '../../../platform/dialogs.service';
 import {extractRemoteErrorMsg} from '../../../platform/utilities';
-import {MatDialog, MatSort, MatTableDataSource} from '@angular/material';
+import {MatDialog, MatPaginator, MatSort, MatTableDataSource} from '@angular/material';
 import {AdminUsersViewAccountsDialogComponent} from '../admin-users-view-accounts-dialog/admin-users-view-accounts-dialog.component';
 import {formatDate} from '@angular/common';
 
@@ -42,6 +42,7 @@ export class AdminUsersViewComponent implements OnInit {
   usersDataSource = new MatTableDataSource<UserData>(this.dataSource);
 
   @ViewChild(MatSort) sort: MatSort;
+  @ViewChild(MatPaginator) paginator: MatPaginator;
 
   constructor(private accountService: AccountService,
               private adminService: AdminService,
@@ -53,6 +54,7 @@ export class AdminUsersViewComponent implements OnInit {
 
   ngOnInit() {
     this.usersDataSource.sort = this.sort;
+    this.usersDataSource.paginator = this.paginator;
   }
 
   makeItem(acct: EveKitUserAccount): UserData {
@@ -226,12 +228,7 @@ export class AdminUsersViewComponent implements OnInit {
           'uid': uid,
           'name': this.loginName(user.uid)
         }
-      }).afterClosed().subscribe(
-      () => {
-        this.loadUsers();
-        this.refreshDisabledAccounts();
-      }
-    );
+      });
   }
 
 }

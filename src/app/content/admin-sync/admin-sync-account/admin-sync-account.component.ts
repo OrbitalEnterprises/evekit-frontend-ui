@@ -1,11 +1,10 @@
 import {Component, OnInit, ViewChild} from '@angular/core';
 import {EndpointStatus} from './endpoint-status';
-import {AccountV2Service, ESIEndpointSyncTracker, ESIRefEndpointSyncTracker} from '../../../platform-service-api';
+import {AccountV2Service, ESIEndpointSyncTracker} from '../../../platform-service-api';
 import {MatDialog, MatSort, MatTableDataSource} from '@angular/material';
 import {AdminSyncViewDialogComponent} from '../admin-sync-view-dialog/admin-sync-view-dialog.component';
-import EndpointEnum = ESIEndpointSyncTracker.EndpointEnum;
-import StatusEnum = ESIRefEndpointSyncTracker.StatusEnum;
 import {DialogsService} from '../../../platform/dialogs.service';
+import EndpointEnum = ESIEndpointSyncTracker.EndpointEnum;
 
 const EndpointList = [
   EndpointEnum.CORPASSETS,
@@ -313,41 +312,18 @@ export class AdminSyncAccountComponent implements OnInit {
       this.ensureStatsEntry(ec, stats).attempts = 0;
       this.ensureStatsEntry(ec, stats).failures = 0;
     }
-    this.updateHistoricHelper(terminalTime, stats);
+    for (const ec of EndpointList) {
+      this.updateHistoricHelper(terminalTime, stats, ec);
+    }
   }
 
-  updateHistoricHelper(terminal: number, stats: Map<EndpointEnum, EndpointStatus>, contid = -1, maxresults = 1000): void {
-    this.accountService.requestSyncSiteHistory(contid, maxresults)
+  updateHistoricHelper(terminal: number, stats: Map<EndpointEnum, EndpointStatus>, endpoint: EndpointEnum): void {
+    this.accountService.requestSyncSiteStats(endpoint, terminal)
       .subscribe(
         rl => {
-          let done = false;
-          for (const nt of rl) {
-            contid = nt.syncStart;
-            if (contid < terminal) {
-              done = true;
-              break;
-            }
-            stats.get(nt.endpoint).attempts += 1;
-            if (nt.status !== StatusEnum.FINISHED) {
-              stats.get(nt.endpoint).failures += 1;
-            }
-          }
-          if (!done) {
-            setTimeout(() => {
-              this.updateHistoricHelper(terminal, stats, contid);
-            }, 0);
-          } else {
-            const vals = stats.values();
-            let next = vals.next();
-            while (!next.done) {
-              const ep = next.value;
-              const statToUpdate = this.endpointStats.get(ep.endpoint);
-              statToUpdate.attempts = ep.attempts;
-              statToUpdate.failures = ep.failures;
-              next = vals.next();
-            }
-            this.createDataList();
-          }
+          const statToUpdate = this.endpointStats.get(endpoint);
+          statToUpdate.attempts = rl.attempts;
+          statToUpdate.failures = rl.failures;
         },
         err => {
           this.dialogService.makeWarnDialog('Failed to Retrieve Sync Site History',

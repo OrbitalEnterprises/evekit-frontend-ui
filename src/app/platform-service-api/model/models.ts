@@ -6,5 +6,6 @@ export * from './eveKitUserAuthSource';
 export * from './eveKitUserNotification';
 export * from './persistentProperty';
 export * from './serviceError';
+export * from './syncEndpointStats';
 export * from './synchronizedAccountAccessKey';
 export * from './synchronizedEveAccount';

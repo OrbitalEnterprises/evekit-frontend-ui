@@ -21,6 +21,7 @@ import { Observable }                                        from 'rxjs';
 import { ESIEndpointSyncTracker } from '../model/eSIEndpointSyncTracker';
 import { ESIRefEndpointSyncTracker } from '../model/eSIRefEndpointSyncTracker';
 import { ServiceError } from '../model/serviceError';
+import { SyncEndpointStats } from '../model/syncEndpointStats';
 
 import { BASE_PATH, COLLECTION_FORMATS }                     from '../variables';
 import { Configuration }                                     from '../configuration';
@@ -393,6 +394,59 @@ export class AccountV2Service {
         ];
 
         return this.httpClient.get<Array<ESIEndpointSyncTracker>>(`${this.basePath}/ws/v2/tracker/sync_site_history`,
+            {
+                params: queryParameters,
+                withCredentials: this.configuration.withCredentials,
+                headers: headers,
+                observe: observe,
+                reportProgress: reportProgress
+            }
+        );
+    }
+
+    /**
+     * Retrieve endpoint synchronization stats (attemps and failures) since a given time
+     * 
+     * @param endpoint endpoint for which stats are requested
+     * @param since timestamp from which stats should be calculated
+     * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
+     * @param reportProgress flag to report request and response progress.
+     */
+    public requestSyncSiteStats(endpoint: string, since: number, observe?: 'body', reportProgress?: boolean): Observable<SyncEndpointStats>;
+    public requestSyncSiteStats(endpoint: string, since: number, observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<SyncEndpointStats>>;
+    public requestSyncSiteStats(endpoint: string, since: number, observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<SyncEndpointStats>>;
+    public requestSyncSiteStats(endpoint: string, since: number, observe: any = 'body', reportProgress: boolean = false ): Observable<any> {
+        if (endpoint === null || endpoint === undefined) {
+            throw new Error('Required parameter endpoint was null or undefined when calling requestSyncSiteStats.');
+        }
+        if (since === null || since === undefined) {
+            throw new Error('Required parameter since was null or undefined when calling requestSyncSiteStats.');
+        }
+
+        let queryParameters = new HttpParams({encoder: new CustomHttpUrlEncodingCodec()});
+        if (endpoint !== undefined) {
+            queryParameters = queryParameters.set('endpoint', <any>endpoint);
+        }
+        if (since !== undefined) {
+            queryParameters = queryParameters.set('since', <any>since);
+        }
+
+        let headers = this.defaultHeaders;
+
+        // to determine the Accept header
+        let httpHeaderAccepts: string[] = [
+            'application/json'
+        ];
+        let httpHeaderAcceptSelected: string | undefined = this.configuration.selectHeaderAccept(httpHeaderAccepts);
+        if (httpHeaderAcceptSelected != undefined) {
+            headers = headers.set("Accept", httpHeaderAcceptSelected);
+        }
+
+        // to determine the Content-Type header
+        let consumes: string[] = [
+        ];
+
+        return this.httpClient.get<SyncEndpointStats>(`${this.basePath}/ws/v2/tracker/sync_site_stats`,
             {
                 params: queryParameters,
                 withCredentials: this.configuration.withCredentials,
