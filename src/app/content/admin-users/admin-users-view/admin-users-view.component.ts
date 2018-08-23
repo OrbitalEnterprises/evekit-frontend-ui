@@ -1,22 +1,47 @@
-import {Component} from '@angular/core';
+import {Component, OnInit, ViewChild} from '@angular/core';
 import {AccountService, AdminService, AuthenticationService, EveKitUserAccount, EveKitUserAuthSource} from '../../../platform-service-api';
 import {DialogsService} from '../../../platform/dialogs.service';
 import {extractRemoteErrorMsg} from '../../../platform/utilities';
-import {MatDialog} from '@angular/material';
+import {MatDialog, MatSort, MatTableDataSource} from '@angular/material';
 import {AdminUsersViewAccountsDialogComponent} from '../admin-users-view-accounts-dialog/admin-users-view-accounts-dialog.component';
+import {formatDate} from '@angular/common';
+
+class UserData {
+  public admin: boolean;
+  public active: boolean;
+  public uid: string;
+  public name: string;
+  public signonDate: string;
+  public loginSource: string;
+  public joinDate: string;
+
+  constructor(admin: boolean, active: boolean, uid: string, name: string, loginDate: string, loginSource: string, joinDate: string) {
+    this.admin = admin;
+    this.active = active;
+    this.uid = uid;
+    this.name = name;
+    this.signonDate = loginDate;
+    this.loginSource = loginSource;
+    this.joinDate = joinDate;
+  }
+}
 
 @Component({
   selector: 'app-admin-users-view',
   templateUrl: './admin-users-view.component.html',
   styleUrls: ['./admin-users-view.component.css']
 })
-export class AdminUsersViewComponent {
+export class AdminUsersViewComponent implements OnInit {
   displayedColumns: string[] = ['state', 'uid', 'name', 'signonDate', 'source', 'joinDate', 'options'];
-  dataSource: EveKitUserAccount[] = [];
+  dataSource: UserData[] = [];
+  userList: EveKitUserAccount[] = [];
   userSourceMap: Map<number, EveKitUserAuthSource> = new Map<number, EveKitUserAuthSource>();
   activeUserCount = 0;
   activeSyncAccountCount = 0;
   disabledAccounts: Map<number, number> = new Map<number, number>();
+  usersDataSource = new MatTableDataSource<UserData>(this.dataSource);
+
+  @ViewChild(MatSort) sort: MatSort;
 
   constructor(private accountService: AccountService,
               private adminService: AdminService,
@@ -24,6 +49,31 @@ export class AdminUsersViewComponent {
               private dialog: MatDialog,
               private dialogService: DialogsService) {
     this.loadUsers();
+  }
+
+  ngOnInit() {
+    this.usersDataSource.sort = this.sort;
+  }
+
+  makeItem(acct: EveKitUserAccount): UserData {
+    const ld = this.loginDate(acct.uid) > -1 ? formatDate(this.loginDate(acct.uid),
+      'yyyy-MM-dd HH:mm:ss', 'en-us', 'UTC') : '1970-01-01 00:00:00';
+    const jd = acct.created > -1 ? formatDate(acct.created,
+      'yyyy-MM-dd HH:mm:ss', 'en-us', 'UTC') : '1970-01-01 00:00:00';
+    return new UserData(acct.admin, acct.active, acct.uid,
+      this.loginName(acct.uid),
+      ld,
+      this.loginSource(acct.uid),
+      jd
+    );
+  }
+
+  refreshDataSource(): void {
+    this.dataSource = [];
+    for (const el of this.userList) {
+      this.dataSource.push(this.makeItem(el));
+    }
+    this.usersDataSource.data = this.dataSource;
   }
 
   loadUsers(): void {
@@ -34,7 +84,8 @@ export class AdminUsersViewComponent {
     this.accountService.listUsers()
       .subscribe(
         ul => {
-          this.dataSource = ul;
+          this.userList = ul;
+          this.refreshDataSource();
           for (const next of ul) {
             const uid = parseInt(next.uid, 10);
             if (next.active) {
@@ -45,6 +96,7 @@ export class AdminUsersViewComponent {
                 lastSource => {
                   if (lastSource !== null) {
                     this.userSourceMap.set(uid, lastSource);
+                    this.refreshDataSource();
                   }
                 }
               );

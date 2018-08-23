@@ -80,96 +80,112 @@
           <div class="ek-tbl-row">
             <div class="ek-tbl-cell attr-left">
               <fa-icon [icon]="attrGender" size="lg" matTooltip="Gender"></fa-icon>
-              &nbsp;
+            </div>
+            <div class="ek-tbl-cell attr-left">
               {{ charInfo ? charInfo.gender : "" }}
             </div>
             <div class="ek-tbl-cell attr-right">
               {{ ceo ? ceo : "" }}
-              &nbsp;
+            </div>
+            <div class="ek-tbl-cell attr-right">
               <fa-icon [icon]="attrCEO" size="lg" matTooltip="CEO"></fa-icon>
             </div>
           </div>
           <div class="ek-tbl-row">
             <div class="ek-tbl-cell attr-left">
               <fa-icon [icon]="attrRace" size="lg" matTooltip="Race"></fa-icon>
-              &nbsp;
+            </div>
+            <div class="ek-tbl-cell attr-left">
               {{ race ? race : ""}}
             </div>
             <div class="ek-tbl-cell attr-right">
               {{ corpInfo ? corpInfo.ticker : "" }}
-              &nbsp;
+            </div>
+            <div class="ek-tbl-cell attr-right">
               <fa-icon [icon]="attrTicker" size="lg" matTooltip="Ticker"></fa-icon>
             </div>
           </div>
           <div class="ek-tbl-row">
             <div class="ek-tbl-cell attr-left">
               <fa-icon [icon]="attrBloodline" size="lg" matTooltip="Bloodline"></fa-icon>
-              &nbsp;
+            </div>
+            <div class="ek-tbl-cell attr-left">
               {{ bloodline ? bloodline : "" }}
             </div>
             <div class="ek-tbl-cell attr-right">
               {{ corpInfo ? (corpInfo.date_founded ? (corpInfo.date_founded | date:'yyyy-MM-dd') : "N/A") : "" }}
-              &nbsp;
+            </div>
+            <div class="ek-tbl-cell attr-right">
               <fa-icon [icon]="attrBirthday" size="lg" matTooltip="Founded"></fa-icon>
             </div>
           </div>
           <div class="ek-tbl-row">
             <div class="ek-tbl-cell attr-left">
               <fa-icon [icon]="attrAncestry" size="lg" matTooltip="Ancestry"></fa-icon>
-              &nbsp;
+            </div>
+            <div class="ek-tbl-cell attr-left">
               {{ ancestry ? ancestry : "" }}
             </div>
             <div class="ek-tbl-cell attr-right">
               {{ corpInfo ? corpInfo.member_count : "" }}
-              &nbsp;
+            </div>
+            <div class="ek-tbl-cell attr-right">
               <fa-icon [icon]="attrMembers" size="lg" matTooltip="Member Count"></fa-icon>
             </div>
           </div>
           <div class="ek-tbl-row">
             <div class="ek-tbl-cell attr-left">
               <fa-icon [icon]="attrBirthday" size="lg" matTooltip="Birthday"></fa-icon>
-              &nbsp;
+            </div>
+            <div class="ek-tbl-cell attr-left">
               {{ charInfo ? (charInfo.birthday | date:'yyyy-MM-dd') : "" }}
             </div>
             <div class="ek-tbl-cell attr-right">
               {{ corpInfo ? (corpInfo.shares ? corpInfo.shares : "") : "" }}
-              &nbsp;
+            </div>
+            <div class="ek-tbl-cell attr-right">
               <fa-icon [icon]="attrShares" size="lg" matTooltip="Share Count"></fa-icon>
             </div>
           </div>
           <div class="ek-tbl-row">
             <div class="ek-tbl-cell attr-left">
               <fa-icon [icon]="attrSecStatus" size="lg" matTooltip="Security Status"></fa-icon>
-              &nbsp;
+            </div>
+            <div class="ek-tbl-cell attr-left">
               {{ charInfo ? (charInfo.security_status | number:'1.1-2') : "" }}
             </div>
             <div class="ek-tbl-cell attr-right">
               {{ corpInfo ? (corpInfo.tax_rate | percent) : "" }}
-              &nbsp;
+            </div>
+            <div class="ek-tbl-cell attr-right">
               <fa-icon [icon]="attrTaxes" size="lg" matTooltip="Tax Rate"></fa-icon>
             </div>
           </div>
           <div class="ek-tbl-row">
             <div class="ek-tbl-cell attr-left">
               <fa-icon [icon]="attrAlliance" size="lg" matTooltip="Alliance"></fa-icon>
-              &nbsp;
+            </div>
+            <div class="ek-tbl-cell attr-left">
               {{ charAlliance ? charAlliance : "" }}
             </div>
             <div class="ek-tbl-cell attr-right">
               {{ corpAlliance ? corpAlliance : "" }}
-              &nbsp;
+            </div>
+            <div class="ek-tbl-cell attr-right">
               <fa-icon [icon]="attrAlliance" size="lg" matTooltip="Alliance"></fa-icon>
             </div>
           </div>
           <div class="ek-tbl-row">
             <div class="ek-tbl-cell attr-left">
               <fa-icon [icon]="attrFaction" size="lg" matTooltip="Faction"></fa-icon>
-              &nbsp;
+            </div>
+            <div class="ek-tbl-cell attr-left">
               {{ charFaction ? charFaction : "" }}
             </div>
             <div class="ek-tbl-cell attr-right">
               {{ corpFaction ? corpFaction : "" }}
-              &nbsp;
+            </div>
+            <div class="ek-tbl-cell attr-right">
               <fa-icon [icon]="attrFaction" size="lg" matTooltip="Faction"></fa-icon>
             </div>
           </div>

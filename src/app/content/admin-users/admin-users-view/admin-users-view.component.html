@@ -23,7 +23,7 @@
 
     </div>
 
-    <table mat-table [dataSource]="dataSource">
+    <mat-table #table [dataSource]="usersDataSource" matSort>
 
       <!--- column definitions -->
       <ng-container matColumnDef="state">
@@ -40,23 +40,23 @@
       </ng-container>
 
       <ng-container matColumnDef="name">
-        <th mat-header-cell *matHeaderCellDef>&nbsp;&nbsp;Sign-On Name</th>
-        <td mat-cell *matCellDef="let element" style="white-space: nowrap">&nbsp;&nbsp;{{loginName(element.uid)}}</td>
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>&nbsp;&nbsp;Sign-On Name</th>
+        <td mat-cell *matCellDef="let element" style="white-space: nowrap">&nbsp;&nbsp;{{element.name}}</td>
       </ng-container>
 
       <ng-container matColumnDef="signonDate">
-        <th mat-header-cell *matHeaderCellDef>&nbsp;&nbsp;Sign-On Date</th>
-        <td mat-cell *matCellDef="let element" style="white-space: nowrap">&nbsp;&nbsp;{{loginDate(element.uid) > -1 ? (loginDate(element.uid) | date:'yyyy-MM-dd HH:mm:ss':'UTC') : 'UNKNOWN'}}</td>
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>&nbsp;&nbsp;Sign-On Date</th>
+        <td mat-cell *matCellDef="let element" style="white-space: nowrap">&nbsp;&nbsp;{{element.signonDate}}</td>
       </ng-container>
 
       <ng-container matColumnDef="source">
         <th mat-header-cell *matHeaderCellDef>&nbsp;&nbsp;Source</th>
-        <td mat-cell *matCellDef="let element" style="white-space: nowrap">&nbsp;&nbsp;{{loginSource(element.uid)}}</td>
+        <td mat-cell *matCellDef="let element" style="white-space: nowrap">&nbsp;&nbsp;{{element.loginSource}}</td>
       </ng-container>
 
       <ng-container matColumnDef="joinDate">
-        <th mat-header-cell *matHeaderCellDef>&nbsp;&nbsp;Join Date</th>
-        <td mat-cell *matCellDef="let element" style="white-space: nowrap">&nbsp;&nbsp;{{element.created > -1 ? (element.created | date:'yyyy-MM-dd':'UTC') : 'UNKNOWN'}}</td>
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>&nbsp;&nbsp;Join Date</th>
+        <td mat-cell *matCellDef="let element" style="white-space: nowrap">&nbsp;&nbsp;{{element.joinDate}}</td>
       </ng-container>
 
       <ng-container matColumnDef="options">
@@ -93,7 +93,14 @@
       <!-- render rows -->
       <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
       <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
-    </table>
+    </mat-table>
+
+    <mat-paginator #paginator
+                   style="margin-top: 10px;"
+                   [pageSize]="20"
+                   [pageSizeOptions]="[10, 20, 50, 100]"
+                   [showFirstLastButtons]="true">
+    </mat-paginator>
 
   </div>
   <div class="light-corner-upper-right"></div>
