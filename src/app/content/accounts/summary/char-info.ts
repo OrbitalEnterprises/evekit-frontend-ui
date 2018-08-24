@@ -32,7 +32,7 @@ export function fetchCharacterInfo(http: HttpClient, charID: number): Observable
       cinfo.gender = info['gender'];
       cinfo.name = info['name'];
       cinfo.race_id = info['race_id'];
-      cinfo.security_status = info['security_status'] || -100;
+      cinfo.security_status = info['security_status'] || 0;
       return cinfo;
     }));
 }

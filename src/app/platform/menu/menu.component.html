@@ -62,6 +62,7 @@
 
   <mat-tree-node *matTreeNodeDef="let node;when: hasChild"
                  matTreeNodePadding
+                 [ngClass]="'hover-menu'"
                  matTreeNodeToggle>
     <button mat-icon-button>
       <mat-icon class="mat-icon-rtl-mirror">

@@ -73,15 +73,31 @@ export class MenuConstructor {
   };
 
   syncAccountUpdate = next => {
+    const existing = this.syncAccounts;
     this.syncAccounts = next;
-    const accountNode: ExpandableMenuNode = this.findAccountMenu();
-    accountNode.children = [];
-    for (const acct of this.syncAccounts) {
-      const img = acct.characterType ? '/assets/member.png' : '/assets/corporation.png';
-      accountNode.children.push(new SyncAccountMenuNode(acct.name, '/syncaccount', img, acct.aid, acct.characterType));
+    let changed = next.length !== existing.length;
+    if (!changed) {
+      // We should also update if an account name has changed
+      outer:
+      for (const acct of next) {
+        for (const ext of existing) {
+          if (acct.aid === ext.aid && acct.name !== ext.name) {
+            changed = true;
+            break outer;
+          }
+        }
+      }
     }
-    accountNode.children.push(new CallbackMenuNode('Add New...', this.curryAddNewAccount(), 'add', null));
-    this.dataChange.next(this.assembleMenu(MENU_STRUCTURE));
+    if (changed) {
+      const accountNode: ExpandableMenuNode = this.findAccountMenu();
+      accountNode.children = [];
+      for (const acct of this.syncAccounts) {
+        const img = acct.characterType ? '/assets/member.png' : '/assets/corporation.png';
+        accountNode.children.push(new SyncAccountMenuNode(acct.name, '/syncaccount', img, acct.aid, acct.characterType));
+      }
+      accountNode.children.push(new CallbackMenuNode('Add New...', this.curryAddNewAccount(), 'add', null));
+      this.dataChange.next(this.assembleMenu(MENU_STRUCTURE));
+    }
   };
 
   findAccountMenu(): ExpandableMenuNode {
