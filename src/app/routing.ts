@@ -89,10 +89,13 @@ const standardRoutes: Routes = [
   //   canActivate: [EveKitLoginGuard, EveKitAdminGuard]
   // },
   {
-    path: '**',
+    path: '',
     redirectTo: '/info',
     pathMatch: 'full'
   }
 ];
 
-export const standardRouteConfig = RouterModule.forRoot(standardRoutes, {onSameUrlNavigation: 'reload'});
+export const standardRouteConfig = RouterModule.forRoot(standardRoutes,
+  {
+    onSameUrlNavigation: 'reload'
+  });

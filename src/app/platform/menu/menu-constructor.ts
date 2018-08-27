@@ -70,7 +70,7 @@ export class MenuConstructor {
   accountUpdate = next => {
     this.account = next;
     this.dataChange.next(this.assembleMenu(MENU_STRUCTURE));
-  };
+  }
 
   syncAccountUpdate = next => {
     const existing = this.syncAccounts;
@@ -98,7 +98,7 @@ export class MenuConstructor {
       accountNode.children.push(new CallbackMenuNode('Add New...', this.curryAddNewAccount(), 'add', null));
       this.dataChange.next(this.assembleMenu(MENU_STRUCTURE));
     }
-  };
+  }
 
   findAccountMenu(): ExpandableMenuNode {
     for (const node of MENU_STRUCTURE) {
