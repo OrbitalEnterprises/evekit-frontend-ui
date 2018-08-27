@@ -97,5 +97,6 @@ const standardRoutes: Routes = [
 
 export const standardRouteConfig = RouterModule.forRoot(standardRoutes,
   {
-    onSameUrlNavigation: 'reload'
+    onSameUrlNavigation: 'reload',
+    urlUpdateStrategy: 'eager'
   });
