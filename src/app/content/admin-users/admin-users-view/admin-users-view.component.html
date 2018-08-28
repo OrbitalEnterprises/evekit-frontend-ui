@@ -75,6 +75,7 @@
                   matTooltip="Activate">
             <mat-icon>play_arrow</mat-icon>
           </button>
+          &nbsp;
           <button mat-icon-button
                   *ngIf="element.active"
                   (click)="deactivateUser(element)"
@@ -86,6 +87,12 @@
                   (click)="becomeUser(element)"
                   matTooltip="Become User">
             <mat-icon>supervisor_account</mat-icon>
+          </button>
+          &nbsp;
+          <button mat-icon-button
+                  (click)="removeUser(element)"
+                  matTooltip="Remove User">
+            <mat-icon>delete</mat-icon>
           </button>
         </td>
       </ng-container>

@@ -220,6 +220,28 @@ export class AdminUsersViewComponent implements OnInit {
       );
   }
 
+  removeUser(user: EveKitUserAccount) {
+    const uid = parseInt(user.uid, 10);
+    this.dialogService.makeConfirmDialog('Verify Removal',
+      `Really remove UID ${uid}?`)
+      .afterClosed()
+      .subscribe(
+        result => {
+          if (result) {
+            this.authService.removeUser(uid).subscribe(
+              () => {
+                this.loadUsers();
+              },
+              err => {
+                this.dialogService.makeWarnDialog('Remove User Failed',
+                  `Remove user failed with error message: ${extractRemoteErrorMsg(err)}`);
+              }
+            );
+          }
+        }
+      );
+  }
+
   showSyncAccounts(user: EveKitUserAccount): void {
     const uid = parseInt(user.uid, 10);
     this.dialog.open(AdminUsersViewAccountsDialogComponent,
