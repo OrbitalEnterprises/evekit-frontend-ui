@@ -41,12 +41,14 @@ export class MenuComponent {
     // Setup updates on menu item changes
     database.dataChange.subscribe(data => {
       this.dataSource.data = data;
+      console.log('Menu change');
       // Changing data source will force a redraw, make sure we fix expansion after the redraw
       setTimeout(() => { this.updateExpansion(); }, 10);
     });
 
     // Subscribe to route changes so we can properly highlight the selected menu item
     router.events.subscribe(routeEvent => {
+      console.log(`Route update: ${routeEvent}`);
       if (routeEvent instanceof NavigationEnd) {
         this.updateExpansion();
       }
