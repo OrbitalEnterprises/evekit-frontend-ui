@@ -190,9 +190,6 @@ export class QsComponent implements AfterViewInit {
         result => {
           if (result !== null) {
             this.selectAccount(result);
-          } else {
-            this.dialogService.displayGenericUserError('Unable to Create New Sync Account',
-              'Failed to create new sync account');
           }
         }
       );

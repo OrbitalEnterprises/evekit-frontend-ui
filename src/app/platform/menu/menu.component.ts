@@ -13,7 +13,7 @@ import {FlatExpandableMenuNode} from './flat-expandable-menu-node';
 import {FlatComingSoonMenuNode} from './flat-comingsoon-menu-node';
 import {SyncAccountMenuNode} from './sync-account-menu-node';
 import {FlatSyncAccountMenuNode} from './flat-sync-account-menu-node';
-import {Router} from '@angular/router';
+import {NavigationEnd, Router} from '@angular/router';
 import {CallbackMenuNode} from './callback-menu-node';
 import {FlatCallbackMenuNode} from './flat-callback-menu-node';
 
@@ -46,8 +46,10 @@ export class MenuComponent {
     });
 
     // Subscribe to route changes so we can properly highlight the selected menu item
-    router.events.subscribe(() => {
-      this.updateExpansion();
+    router.events.subscribe(routeEvent => {
+      if (routeEvent instanceof NavigationEnd) {
+        this.updateExpansion();
+      }
     });
   }
 
@@ -120,6 +122,10 @@ export class MenuComponent {
     if (node instanceof FlatSyncAccountMenuNode) {
       return node.route + '/' + String(node.aid);
     } else if (node instanceof FlatSingleMenuNode) {
+      // Handle model api specially since selected key routes borrow the same menu entry.
+      if (node.route.startsWith('/sapi/model/') && this.activeRoute.startsWith('/sapi/model/')) {
+        return this.activeRoute;
+      }
       return node.route;
     } else {
       throw new Error('Route name not supported for menu node: ' + String(node));
@@ -142,7 +148,8 @@ export class MenuComponent {
     }
     // If this is a leaf, check the route.
     if (check instanceof FlatSyncAccountMenuNode || check instanceof FlatSingleMenuNode) {
-      return this.getRouteName(check) === this.activeRoute;
+      const routeName = this.getRouteName(check);
+      return routeName === this.activeRoute;
     }
     // If this node is not expandable or is the last node, then can't have a selected child.
     if (!check.expandable || index + 1 >= node.length) {
