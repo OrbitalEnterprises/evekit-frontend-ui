@@ -123,7 +123,7 @@ export class SyncModelViewerComponent implements OnDestroy {
       url += '&key=' + key + '&hash=' + hash;
     }
     if (this.trustedURL === null || this.trustedURL.toString() !== url) {
-      console.log(`changing frame from ${this.trustedURL.toString()} to ${url}`);
+      console.log(`changing frame from ${this.trustedURL} to ${url}`);
       this.trustedURL = this.sanitizer.bypassSecurityTrustResourceUrl(url);
     }
   }
