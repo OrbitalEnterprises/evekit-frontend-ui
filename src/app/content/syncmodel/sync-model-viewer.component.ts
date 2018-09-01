@@ -106,7 +106,11 @@ export class SyncModelViewerComponent implements OnDestroy {
                   key = String(akey.accessKey);
                   hash = akey.credential;
                   this.isChar = acct.characterType;
-                  this.location.go('/sapi/model/' + String(acct.aid) + '/' + String(akey.kid));
+                  const curLoc = this.location.path();
+                  const newLoc = `/sapi/model/${acct.aid}/${akey.kid}`;
+                  if (curLoc !== newLoc) {
+                    this.location.go(newLoc);
+                  }
                   break keyFound;
                 }
               }
