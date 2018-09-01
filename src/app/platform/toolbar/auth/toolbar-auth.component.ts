@@ -48,6 +48,7 @@ export class ToolbarAuthComponent {
 
   private refreshRoutes(logChange: boolean) {
     if (logChange) {
+      console.log('log change, reloading location');
       window.location.reload();
     }
   }

@@ -1,4 +1,4 @@
-import {Component} from '@angular/core';
+import {Component, OnDestroy} from '@angular/core';
 import {DomSanitizer, SafeResourceUrl} from '@angular/platform-browser';
 import {ActivatedRoute} from '@angular/router';
 import {environment} from '../../../environments/environment';
@@ -18,7 +18,7 @@ class KeyMenuEntry {
   templateUrl: './sync-model-viewer.component.html',
   styleUrls: ['./sync-model-viewer.component.css']
 })
-export class SyncModelViewerComponent {
+export class SyncModelViewerComponent implements OnDestroy {
   accountList: SynchronizedEveAccount[] = [];
   keyMap: Map<number, SynchronizedAccountAccessKey[]> = new Map<number, SynchronizedAccountAccessKey[]>();
   viewAID = -1;
@@ -27,6 +27,8 @@ export class SyncModelViewerComponent {
   title: string = null;
   isChar = false;
   trustedURL: SafeResourceUrl = null;
+  syncAccountSub = null;
+  routeSub = null;
 
   constructor(private routeInfo: ActivatedRoute,
               private sanitizer: DomSanitizer,
@@ -34,25 +36,24 @@ export class SyncModelViewerComponent {
               private acctService: AccountService,
               private location: Location) {
     this.updateSource();
-    this.store.select(selectSyncAccounts)
-      .subscribe(
-        next => {
-          this.accountList = [];
-          this.keyMap.clear();
-          for (const acct of next) {
-            this.accountList.push(acct);
-            this.acctService.getAccessKey(-1, acct.aid, -1)
-              .subscribe(
-                keyList => {
-                  this.keyMap.set(acct.aid, keyList);
-                  this.updateSource();
-                  this.updateKeyMenu();
-                }
-              );
-          }
+    this.syncAccountSub = this.store.select(selectSyncAccounts).subscribe(
+      next => {
+        this.accountList = [];
+        this.keyMap.clear();
+        for (const acct of next) {
+          this.accountList.push(acct);
+          this.acctService.getAccessKey(-1, acct.aid, -1)
+            .subscribe(
+              keyList => {
+                this.keyMap.set(acct.aid, keyList);
+                this.updateSource();
+                this.updateKeyMenu();
+              }
+            );
         }
-      );
-    this.routeInfo.paramMap.subscribe(
+      }
+    );
+    this.routeSub = this.routeInfo.paramMap.subscribe(
       next => {
         let dirty = false;
         if (next.has('aid')) {
@@ -117,5 +118,14 @@ export class SyncModelViewerComponent {
       url += '&key=' + key + '&hash=' + hash;
     }
     this.trustedURL = this.sanitizer.bypassSecurityTrustResourceUrl(url);
+  }
+
+  ngOnDestroy(): void {
+    if (this.syncAccountSub !== null) {
+      this.syncAccountSub.unsubscribe();
+    }
+    if (this.routeSub !== null) {
+      this.routeSub.unsubscribe();
+    }
   }
 }
