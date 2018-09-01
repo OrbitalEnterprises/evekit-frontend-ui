@@ -121,7 +121,9 @@ export class SyncModelViewerComponent implements OnDestroy {
     if (key !== null && hash !== null) {
       url += '&key=' + key + '&hash=' + hash;
     }
-    this.trustedURL = this.sanitizer.bypassSecurityTrustResourceUrl(url);
+    if (this.trustedURL !== url) {
+      this.trustedURL = this.sanitizer.bypassSecurityTrustResourceUrl(url);
+    }
   }
 
   ngOnDestroy(): void {
