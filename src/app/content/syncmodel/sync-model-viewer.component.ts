@@ -109,6 +109,7 @@ export class SyncModelViewerComponent implements OnDestroy {
                   const curLoc = this.location.path();
                   const newLoc = `/sapi/model/${acct.aid}/${akey.kid}`;
                   if (curLoc !== newLoc) {
+                    console.log(`changing loc from ${curLoc} to ${newLoc}`);
                     this.location.go(newLoc);
                   }
                   break keyFound;
@@ -121,7 +122,8 @@ export class SyncModelViewerComponent implements OnDestroy {
     if (key !== null && hash !== null) {
       url += '&key=' + key + '&hash=' + hash;
     }
-    if (this.trustedURL !== url) {
+    if (this.trustedURL.toString() !== url) {
+      console.log(`changing frame from ${this.trustedURL.toString()} to ${url}`);
       this.trustedURL = this.sanitizer.bypassSecurityTrustResourceUrl(url);
     }
   }
