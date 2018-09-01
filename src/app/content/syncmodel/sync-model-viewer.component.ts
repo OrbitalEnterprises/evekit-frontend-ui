@@ -41,14 +41,27 @@ export class SyncModelViewerComponent implements OnDestroy {
       next => {
         this.accountList = [];
         this.keyMap.clear();
+        let count = next.length;
         for (const acct of next) {
           this.accountList.push(acct);
           this.acctService.getAccessKey(-1, acct.aid, -1)
             .subscribe(
               keyList => {
                 this.keyMap.set(acct.aid, keyList);
-                this.updateSource();
-                this.updateKeyMenu();
+                count--;
+                if (count === 0) {
+                  // Only update the display when all accounts have been processed
+                  this.updateSource();
+                  this.updateKeyMenu();
+                }
+              },
+              () => {
+                count--;
+                if (count === 0) {
+                  // Only update the display when all accounts have been processed
+                  this.updateSource();
+                  this.updateKeyMenu();
+                }
               }
             );
         }
@@ -122,7 +135,7 @@ export class SyncModelViewerComponent implements OnDestroy {
     if (key !== null && hash !== null) {
       url += '&key=' + key + '&hash=' + hash;
     }
-    if (this.trustedURLString === null || this.trustedURLString !== url) {
+    if (this.trustedURLString !== url) {
       this.trustedURLString = url;
       this.trustedURL = this.sanitizer.bypassSecurityTrustResourceUrl(url);
     }
