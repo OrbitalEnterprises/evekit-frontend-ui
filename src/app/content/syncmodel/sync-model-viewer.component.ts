@@ -40,30 +40,39 @@ export class SyncModelViewerComponent implements OnDestroy {
     this.syncAccountSub = this.store.select(selectSyncAccounts).subscribe(
       next => {
         this.accountList = [];
-        this.keyMap.clear();
-        let count = next.length;
+
+        // Look for map keys which are no longer in the account list
+        // These should be removed.  We do things this way to avoid
+        // a gratuitous frame reload because of map updates.
+        const prevKeys = this.keyMap.keys();
+        const toRemove = [];
+        for (let i = prevKeys.next(); !i.done; i = prevKeys.next()) {
+          let old = true;
+          for (const acct of next) {
+            if (acct.aid === i.value) {
+              old = false;
+              break;
+            }
+          }
+          if (old) {
+            toRemove.push(i);
+          }
+        }
+        for (const i of toRemove) {
+          this.keyMap.delete(i);
+        }
+
+        // Retrieve the access key list for each sync account
+        // and store it in the map.
         for (const acct of next) {
           this.accountList.push(acct);
           this.acctService.getAccessKey(-1, acct.aid, -1)
             .subscribe(
               keyList => {
                 this.keyMap.set(acct.aid, keyList);
-                count--;
-                if (count === 0) {
-                  // Only update the display when all accounts have been processed
-                  this.updateSource();
-                  this.updateKeyMenu();
-                }
-              },
-              () => {
-                count--;
-                if (count === 0) {
-                  // Only update the display when all accounts have been processed
-                  this.updateSource();
-                  this.updateKeyMenu();
-                }
-              }
-            );
+                this.updateSource();
+                this.updateKeyMenu();
+              });
         }
       }
     );
