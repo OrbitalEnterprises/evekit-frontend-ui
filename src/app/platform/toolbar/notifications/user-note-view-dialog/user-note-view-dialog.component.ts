@@ -47,26 +47,52 @@ export class UserNoteViewDialogComponent {
     return '';
   }
 
+  deleteAll(): void {
+    this.dialogService.makeConfirmDialog('Confirm Delete All',
+      'Are you sure you want to delete all notifications?')
+      .afterClosed().subscribe(
+      answer => {
+        if (answer) {
+          for (const next of this.notesData) {
+            this.deleteAux(next);
+          }
+        }
+      }
+    );
+  }
+
+  deleteAux(el: EveKitUserNotification): void {
+    const uid = parseInt(el.account.uid, 10);
+    this.accountService.markNoteDeleted(uid, el.nid)
+      .subscribe(
+        () => {
+          this.loadNotifications();
+        },
+        () => {
+          this.dialogService.displayGenericUserError('Failed to Delete Notification',
+            `Failed to delete notification`);
+        }
+      );
+  }
+
   delete(el: EveKitUserNotification): void {
     this.dialogService.makeConfirmDialog('Confirm Delete',
       'Are you sure you want to delete this notification?')
       .afterClosed().subscribe(
       answer => {
         if (answer) {
-          const uid = parseInt(el.account.uid, 10);
-          this.accountService.markNoteDeleted(uid, el.nid)
-            .subscribe(
-              () => {
-                this.loadNotifications();
-              },
-              () => {
-                this.dialogService.displayGenericUserError('Failed to Delete Notification',
-                  `Failed to delete notification`);
-              }
-            );
+          this.deleteAux(el);
         }
       }
     );
+  }
+
+  readAll(): void {
+    for (const next of this.notesData) {
+      if (!next.read) {
+        this.toggleRead(next);
+      }
+    }
   }
 
   toggleRead(el: EveKitUserNotification): void {
