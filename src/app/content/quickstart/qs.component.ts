@@ -5,14 +5,15 @@ import {selectSyncAccounts, selectUserAccount, selectUserSource} from '../../pla
 import {MatDialog, MatVerticalStepper} from '@angular/material';
 import {
   AccountService,
+  AdminService,
   CredentialService,
   EveKitUserAccount,
   EveKitUserAuthSource,
   SynchronizedAccountAccessKey,
   SynchronizedEveAccount
 } from '../../platform-service-api';
-import {deleteCookie, getCookie, QS_ACCOUNT_SELECTED, QS_MAIN_COOKIE_NAME, setCookie} from '../../platform/cookies';
-import {Router} from '@angular/router';
+import {deleteCookie, getCookie, QS_ACCOUNT_SELECTED, QS_MAIN_COOKIE_NAME, QS_REQUEST_ID, setCookie} from '../../platform/cookies';
+import {ActivatedRoute, Params, Router} from '@angular/router';
 import {CreateSyncAccountComponent} from '../../create-sync-account/create-sync-account/create-sync-account.component';
 import {DialogsService} from '../../platform/dialogs.service';
 import {EditEsiTokenDialogComponent} from '../../edit-esi-token/edit-esi-token-dialog/edit-esi-token-dialog.component';
@@ -35,14 +36,35 @@ export class QsComponent implements AfterViewInit {
   selectedAccount: SynchronizedEveAccount = null;
   accessKeys: SynchronizedAccountAccessKey[] = [];
   selectedKey: SynchronizedAccountAccessKey = null;
+  requestID = -1;
+  requestor: string = null;
 
   constructor(private store: Store<AppState>,
               private accountService: AccountService,
+              private adminService: AdminService,
               private router: Router,
+              private activeRoute: ActivatedRoute,
               private dialog: MatDialog,
               private dialogService: DialogsService,
               private credsService: CredentialService,
               private platDialogs: DialogsService) {
+    // Check whether there is a request associated with this quickstart
+    const existingReqID = getCookie(QS_REQUEST_ID);
+    if (existingReqID !== '') {
+      // Any cookie based request ID takes precendence
+      this.requestID = parseInt(existingReqID, 10);
+      this.retrieveRequestor();
+    } else {
+      // If no cookie set, then check for a param
+      this.activeRoute.queryParams.subscribe((params: Params) => {
+        const reqID = params['id'];
+        if (undefined !== reqID) {
+          this.requestID = parseInt(reqID, 10);
+          setCookie(QS_REQUEST_ID, String(reqID), 1);
+          this.retrieveRequestor();
+        }
+      });
+    }
     // Collect logged in user
     this.store.select(selectUserAccount).subscribe(
       u => {
@@ -80,6 +102,23 @@ export class QsComponent implements AfterViewInit {
       }
     );
 
+  }
+
+  retrieveRequestor(): void {
+    this.adminService.quickStartSelectionRequestor(this.requestID).subscribe(
+      name => {
+        this.requestor = name.requestor;
+      },
+      msg => {
+        console.log(msg);
+        this.dialogService.makeWarnDialog('Quickstart Request Error',
+          'Failed to retrieve name of quickstart requestor.  ' +
+          'The third party application making this request may not be able to retrieve ' +
+          'your selection. You may wish to cancel and restart from the third party application.');
+        this.requestID = -1;
+        deleteCookie(QS_REQUEST_ID);
+      }
+    );
   }
 
   ngAfterViewInit(): void {
@@ -148,11 +187,42 @@ export class QsComponent implements AfterViewInit {
   cancel(): void {
     deleteCookie(QS_MAIN_COOKIE_NAME);
     deleteCookie(QS_ACCOUNT_SELECTED);
+    deleteCookie(QS_REQUEST_ID);
     this.router.navigate(['/']);
   }
 
   finish(): void {
-    // TODO: for third party apps, store the resulting choices before routing away
+    if (this.requestID > 0) {
+      if (this.selectedKey === null) {
+        const dialogRef = this.dialogService.makeConfirmDialog('Third Party Requesting Access Key',
+          'A third party is expecting you to select a valid access key but it ' +
+          'appears you have not done so.  If you continue without selecting a key, ' +
+          'then the requesting third party application may experience an error. ' +
+          'Do you wish to continue anyway?');
+        dialogRef.afterClosed().subscribe(result => {
+          if (result) {
+            this.cancel();
+          }
+        });
+      } else {
+        // Save selected credentials.
+        this.adminService.storeQuickStartSelection(this.requestID, this.selectedKey.accessKey, this.selectedKey.credential)
+          .subscribe(
+            () => {
+              this.cancel();
+            },
+            () => {
+              // Error
+              this.platDialogs.makeWarnDialog(`Storing Key Selection Failed`,
+                'Failed to store your access key selection.  This may cause the third party application awaiting your' +
+                'selection to fail.  Please cancel and initiate the selection process again from your third party application. ' +
+                'If this problem persists, please contact the administrator.');
+            }
+          );
+      }
+      // Let dialogs decide whether to really cancel.
+      return;
+    }
     this.cancel();
   }
 

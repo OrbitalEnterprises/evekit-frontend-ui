@@ -16,10 +16,10 @@ import { EveKitUserAccount } from './eveKitUserAccount';
  * Authentication source for a user
  */
 export interface EveKitUserAuthSource {
+    lastSignOn?: Date;
     owner?: EveKitUserAccount;
     userAccount?: EveKitUserAccount;
     body?: string;
-    lastSignOn?: Date;
     /**
      * Unique source ID
      */

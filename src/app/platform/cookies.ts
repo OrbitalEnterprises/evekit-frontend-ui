@@ -3,6 +3,7 @@
 // Cookie name registry
 export const QS_MAIN_COOKIE_NAME = 'ek_qs';
 export const QS_ACCOUNT_SELECTED = 'ek_qs_aid';
+export const QS_REQUEST_ID = 'ek_qs_rid';
 
 export function getCookie(name: string): string {
   const ca: Array<string> = document.cookie.split(';');

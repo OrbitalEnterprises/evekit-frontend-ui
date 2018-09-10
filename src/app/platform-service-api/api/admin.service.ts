@@ -19,6 +19,9 @@ import { CustomHttpUrlEncodingCodec }                        from '../encoder';
 import { Observable }                                        from 'rxjs';
 
 import { PersistentProperty } from '../model/persistentProperty';
+import { QuickStartRequestor } from '../model/quickStartRequestor';
+import { QuickStartResponse } from '../model/quickStartResponse';
+import { QuickStartSelection } from '../model/quickStartSelection';
 import { ServiceError } from '../model/serviceError';
 
 import { BASE_PATH, COLLECTION_FORMATS }                     from '../variables';
@@ -345,6 +348,88 @@ export class AdminService {
     }
 
     /**
+     * Get the name of the requestor for a given qs request ID.
+     * 
+     * @param sid Quickstart request ID
+     * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
+     * @param reportProgress flag to report request and response progress.
+     */
+    public quickStartSelectionRequestor(sid: number, observe?: 'body', reportProgress?: boolean): Observable<QuickStartRequestor>;
+    public quickStartSelectionRequestor(sid: number, observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<QuickStartRequestor>>;
+    public quickStartSelectionRequestor(sid: number, observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<QuickStartRequestor>>;
+    public quickStartSelectionRequestor(sid: number, observe: any = 'body', reportProgress: boolean = false ): Observable<any> {
+        if (sid === null || sid === undefined) {
+            throw new Error('Required parameter sid was null or undefined when calling quickStartSelectionRequestor.');
+        }
+
+        let headers = this.defaultHeaders;
+
+        // to determine the Accept header
+        let httpHeaderAccepts: string[] = [
+            'application/json'
+        ];
+        let httpHeaderAcceptSelected: string | undefined = this.configuration.selectHeaderAccept(httpHeaderAccepts);
+        if (httpHeaderAcceptSelected != undefined) {
+            headers = headers.set("Accept", httpHeaderAcceptSelected);
+        }
+
+        // to determine the Content-Type header
+        let consumes: string[] = [
+            'application/json'
+        ];
+
+        return this.httpClient.get<QuickStartRequestor>(`${this.basePath}/ws/v1/admin/qs_get_requestor/${encodeURIComponent(String(sid))}`,
+            {
+                withCredentials: this.configuration.withCredentials,
+                headers: headers,
+                observe: observe,
+                reportProgress: reportProgress
+            }
+        );
+    }
+
+    /**
+     * Retrieve a quickstart access key selection
+     * 
+     * @param token Quickstart retrieval token
+     * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
+     * @param reportProgress flag to report request and response progress.
+     */
+    public retrieveQuickStartSelection(token: string, observe?: 'body', reportProgress?: boolean): Observable<QuickStartSelection>;
+    public retrieveQuickStartSelection(token: string, observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<QuickStartSelection>>;
+    public retrieveQuickStartSelection(token: string, observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<QuickStartSelection>>;
+    public retrieveQuickStartSelection(token: string, observe: any = 'body', reportProgress: boolean = false ): Observable<any> {
+        if (token === null || token === undefined) {
+            throw new Error('Required parameter token was null or undefined when calling retrieveQuickStartSelection.');
+        }
+
+        let headers = this.defaultHeaders;
+
+        // to determine the Accept header
+        let httpHeaderAccepts: string[] = [
+            'application/json'
+        ];
+        let httpHeaderAcceptSelected: string | undefined = this.configuration.selectHeaderAccept(httpHeaderAccepts);
+        if (httpHeaderAcceptSelected != undefined) {
+            headers = headers.set("Accept", httpHeaderAcceptSelected);
+        }
+
+        // to determine the Content-Type header
+        let consumes: string[] = [
+            'application/json'
+        ];
+
+        return this.httpClient.get<QuickStartSelection>(`${this.basePath}/ws/v1/admin/qs_retrieve_selection/${encodeURIComponent(String(token))}`,
+            {
+                withCredentials: this.configuration.withCredentials,
+                headers: headers,
+                observe: observe,
+                reportProgress: reportProgress
+            }
+        );
+    }
+
+    /**
      * Store system property
      * 
      * @param key System property key
@@ -440,6 +525,112 @@ export class AdminService {
         return this.httpClient.put<any>(`${this.basePath}/ws/v1/admin/userprop/${encodeURIComponent(String(uid))}/${encodeURIComponent(String(key))}`,
             value,
             {
+                withCredentials: this.configuration.withCredentials,
+                headers: headers,
+                observe: observe,
+                reportProgress: reportProgress
+            }
+        );
+    }
+
+    /**
+     * Request a quickstart access key selection
+     * 
+     * @param requestor Access key requestor
+     * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
+     * @param reportProgress flag to report request and response progress.
+     */
+    public startQuickStartRequest(requestor: string, observe?: 'body', reportProgress?: boolean): Observable<QuickStartResponse>;
+    public startQuickStartRequest(requestor: string, observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<QuickStartResponse>>;
+    public startQuickStartRequest(requestor: string, observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<QuickStartResponse>>;
+    public startQuickStartRequest(requestor: string, observe: any = 'body', reportProgress: boolean = false ): Observable<any> {
+        if (requestor === null || requestor === undefined) {
+            throw new Error('Required parameter requestor was null or undefined when calling startQuickStartRequest.');
+        }
+
+        let queryParameters = new HttpParams({encoder: new CustomHttpUrlEncodingCodec()});
+        if (requestor !== undefined) {
+            queryParameters = queryParameters.set('requestor', <any>requestor);
+        }
+
+        let headers = this.defaultHeaders;
+
+        // to determine the Accept header
+        let httpHeaderAccepts: string[] = [
+            'application/json'
+        ];
+        let httpHeaderAcceptSelected: string | undefined = this.configuration.selectHeaderAccept(httpHeaderAccepts);
+        if (httpHeaderAcceptSelected != undefined) {
+            headers = headers.set("Accept", httpHeaderAcceptSelected);
+        }
+
+        // to determine the Content-Type header
+        let consumes: string[] = [
+            'application/json'
+        ];
+
+        return this.httpClient.get<QuickStartResponse>(`${this.basePath}/ws/v1/admin/qs_request`,
+            {
+                params: queryParameters,
+                withCredentials: this.configuration.withCredentials,
+                headers: headers,
+                observe: observe,
+                reportProgress: reportProgress
+            }
+        );
+    }
+
+    /**
+     * Request a quickstart access key selection
+     * 
+     * @param sid Quickstart request ID
+     * @param accessKey Selected access key ID
+     * @param accessHash Selected access key hash
+     * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
+     * @param reportProgress flag to report request and response progress.
+     */
+    public storeQuickStartSelection(sid: number, accessKey: number, accessHash: string, observe?: 'body', reportProgress?: boolean): Observable<any>;
+    public storeQuickStartSelection(sid: number, accessKey: number, accessHash: string, observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<any>>;
+    public storeQuickStartSelection(sid: number, accessKey: number, accessHash: string, observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<any>>;
+    public storeQuickStartSelection(sid: number, accessKey: number, accessHash: string, observe: any = 'body', reportProgress: boolean = false ): Observable<any> {
+        if (sid === null || sid === undefined) {
+            throw new Error('Required parameter sid was null or undefined when calling storeQuickStartSelection.');
+        }
+        if (accessKey === null || accessKey === undefined) {
+            throw new Error('Required parameter accessKey was null or undefined when calling storeQuickStartSelection.');
+        }
+        if (accessHash === null || accessHash === undefined) {
+            throw new Error('Required parameter accessHash was null or undefined when calling storeQuickStartSelection.');
+        }
+
+        let queryParameters = new HttpParams({encoder: new CustomHttpUrlEncodingCodec()});
+        if (accessKey !== undefined) {
+            queryParameters = queryParameters.set('accessKey', <any>accessKey);
+        }
+        if (accessHash !== undefined) {
+            queryParameters = queryParameters.set('accessHash', <any>accessHash);
+        }
+
+        let headers = this.defaultHeaders;
+
+        // to determine the Accept header
+        let httpHeaderAccepts: string[] = [
+            'application/json'
+        ];
+        let httpHeaderAcceptSelected: string | undefined = this.configuration.selectHeaderAccept(httpHeaderAccepts);
+        if (httpHeaderAcceptSelected != undefined) {
+            headers = headers.set("Accept", httpHeaderAcceptSelected);
+        }
+
+        // to determine the Content-Type header
+        let consumes: string[] = [
+            'application/json'
+        ];
+
+        return this.httpClient.put<any>(`${this.basePath}/ws/v1/admin/qs_store_selection/${encodeURIComponent(String(sid))}`,
+            null,
+            {
+                params: queryParameters,
                 withCredentials: this.configuration.withCredentials,
                 headers: headers,
                 observe: observe,

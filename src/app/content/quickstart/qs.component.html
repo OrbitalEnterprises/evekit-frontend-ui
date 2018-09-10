@@ -14,6 +14,10 @@
     </button>
   </div>
   <div style="padding: 20px;">
+    <p *ngIf="requestor !== null">
+      A third party application (<b>{{requestor}}</b>) has requested that you select an EveKit Access Key.
+      Please complete the following workflow and be sure to select or create an access key in step 4.
+    </p>
     <p>
       EveKit tracks your EVE Online player data using a "synchronized account",
       which consists of a character or corporation you designate,

@@ -36,6 +36,7 @@ export class BlogListComponent implements OnInit, OnDestroy {
     this.httpClient.jsonp(`${bloggerURL}?${params.toString()}`, 'callback')
       .subscribe(
         data => {
+          this.blogEntries = [];
           for (const item of data['items']) {
             this.blogEntries.push(new NewsEntry(item));
           }
