@@ -13,7 +13,7 @@ import {
   SynchronizedEveAccount
 } from '../../platform-service-api';
 import {deleteCookie, getCookie, QS_ACCOUNT_SELECTED, QS_MAIN_COOKIE_NAME, QS_REQUEST_ID, setCookie} from '../../platform/cookies';
-import {ActivatedRoute, Params, Router} from '@angular/router';
+import {ActivatedRoute, ParamMap, Params, Router} from '@angular/router';
 import {CreateSyncAccountComponent} from '../../create-sync-account/create-sync-account/create-sync-account.component';
 import {DialogsService} from '../../platform/dialogs.service';
 import {EditEsiTokenDialogComponent} from '../../edit-esi-token/edit-esi-token-dialog/edit-esi-token-dialog.component';
@@ -64,6 +64,15 @@ export class QsComponent implements AfterViewInit {
           this.retrieveRequestor();
         }
       });
+      // Param could also be a route param
+      this.activeRoute.paramMap.subscribe((params: ParamMap) => {
+        if (params.has('id')) {
+          this.requestID = parseInt(params.get('id'), 10);
+          setCookie(QS_REQUEST_ID, String(this.requestID), 1);
+          this.retrieveRequestor();
+        }
+      });
+
     }
     // Collect logged in user
     this.store.select(selectUserAccount).subscribe(
