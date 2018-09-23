@@ -69,8 +69,6 @@ export const EK_CharacterMaskConstants: AccessKeyMask[] = [
     'Notifications Access', 'Allows view of charater\'s notifications.'),
   new AccessKeyMask('ACCESS_RESEARCH', 'Research Access',
     'Allows view of character\'s research.'),
-  new AccessKeyMask('ACCESS_SKILL_IN_TRAINING',
-    'Skill In Training Access', 'Allows view of character\'s current skill in training.'),
   new AccessKeyMask('ACCESS_SKILL_QUEUE', 'Skill Queue Access',
     'Allows view of character\'s skill queue.'),
   new AccessKeyMask(

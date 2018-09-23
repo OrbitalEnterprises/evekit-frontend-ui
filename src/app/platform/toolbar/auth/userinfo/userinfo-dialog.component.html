@@ -53,6 +53,7 @@
         <div style="display: table-cell; padding-left: 10px; padding-bottom: 5px;">
           <button mat-raised-button
                   color="warn"
+                  [disabled]="signonCount() === 1"
                   (click)="removeSource(st)"
                   *ngIf="hasSignOn(st)">
             Remove

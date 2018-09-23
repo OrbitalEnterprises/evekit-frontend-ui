@@ -52,6 +52,16 @@ export class UserinfoDialogComponent {
     }
   }
 
+  signonCount(): number {
+    let count = 0;
+    for (const src of this.sourceTypes) {
+      if (this.hasSignOn(src)) {
+        count++;
+      }
+    }
+    return count;
+  }
+
   hasSignOn(sourceName: string): boolean {
     for (const src of this.lastSourceList) {
       if (src.source === sourceName) {
@@ -82,11 +92,11 @@ export class UserinfoDialogComponent {
   removeSource(sourceName: string): void {
     const dialogRef = this.dialogService.makeConfirmDialog('Remove Source',
       `Are you sure you want to remove source '${sourceName}'?  (This will log you out)`);
-        dialogRef.afterClosed().subscribe(result => {
-          if (result) {
-            window.location.assign('/api/ws/v1/auth/remove/' + sourceName);
-          }
-        });
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        window.location.assign('/api/ws/v1/auth/remove/' + sourceName);
+      }
+    });
   }
 
   addSource(sourceName: string): void {
