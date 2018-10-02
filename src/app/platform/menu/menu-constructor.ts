@@ -11,12 +11,15 @@ import {SyncAccountMenuNode} from './sync-account-menu-node';
 import {CallbackMenuNode} from './callback-menu-node';
 import {MatDialog} from '@angular/material';
 import {CreateSyncAccountComponent} from '../../create-sync-account/create-sync-account/create-sync-account.component';
+import {environment} from '../../../environments/environment';
 
 /**
  * Standard menu layout.  Some elements will be removed depending on login status, etc.
  */
 const MENU_STRUCTURE: MenuNode[] = [
   new SingleMenuNode('Info', '/info', 'info', null),
+  new SingleMenuNode('Documentation', environment.externalDocsURL, 'help', null)
+    .addGuard(MenuGuard.EXTERNAL),
   new ExpandableMenuNode('Accounts', 'people', null)
     .addGuard(MenuGuard.LOGGED_IN),
   new ExpandableMenuNode('APIs', 'code', null)
@@ -125,6 +128,7 @@ export class MenuConstructor {
           break;
 
         case MenuGuard.COMING_SOON:
+        case MenuGuard.EXTERNAL:
         default:
           break;
       }

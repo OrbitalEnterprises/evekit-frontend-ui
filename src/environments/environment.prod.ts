@@ -4,5 +4,6 @@ export const environment = {
   sdeServiceApiBasePath: 'https://evekit-sde.orbital.enterprises/20180917/api/ws/v20180917',
   modelViewURL: 'https://evekit-model.orbital.enterprises/api/swagger.json',
   marketViewURL: 'https://evekit-market.orbital.enterprises/swagger',
-  refViewURL: 'https://evekit-ref-model.orbital.enterprises/api/swagger.json'
+  refViewURL: 'https://evekit-ref-model.orbital.enterprises/api/swagger.json',
+  externalDocsURL: 'https://evekit-documentation.readthedocs.io/en/latest/index.html'
 };

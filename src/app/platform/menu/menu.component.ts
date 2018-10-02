@@ -16,6 +16,7 @@ import {FlatSyncAccountMenuNode} from './flat-sync-account-menu-node';
 import {NavigationEnd, Router} from '@angular/router';
 import {CallbackMenuNode} from './callback-menu-node';
 import {FlatCallbackMenuNode} from './flat-callback-menu-node';
+import {FlatExternalMenuNode} from './flat-external-menu-node';
 
 // noinspection UnterminatedStatementJS
 @Component({
@@ -85,9 +86,12 @@ export class MenuComponent {
 
   transformer = (node: MenuNode, level: number): FlatMenuNode => {
     const comingSoon = node.guards.indexOf(MenuGuard.COMING_SOON) > -1;
+    const external = node.guards.indexOf(MenuGuard.EXTERNAL) > -1;
     if (node instanceof SingleMenuNode) {
       if (comingSoon) {
         return new FlatComingSoonMenuNode(level, node.name, node.icon, node.img);
+      } else if (external) {
+        return new FlatExternalMenuNode(level, node.name, node.icon, node.img, node.route);
       } else {
         return new FlatSingleMenuNode(level, node.name, node.route, node.icon, node.img);
       }
@@ -110,6 +114,10 @@ export class MenuComponent {
     }
   };
 
+  openExternal(node: FlatExternalMenuNode): void {
+    window.open(node.url, '_blank');
+  }
+
   generateRoute(node: FlatMenuNode): any[] {
     if (node instanceof FlatSyncAccountMenuNode) {
       return [node.route, node.aid];
@@ -123,6 +131,8 @@ export class MenuComponent {
   getRouteName(node: FlatMenuNode): string {
     if (node instanceof FlatSyncAccountMenuNode) {
       return node.route + '/' + String(node.aid);
+    } else if (node instanceof FlatExternalMenuNode) {
+      return 'not_needed';
     } else if (node instanceof FlatSingleMenuNode) {
       // Handle model api specially since selected key routes borrow the same menu entry.
       if (node.route.startsWith('/sapi/model/') && this.activeRoute.startsWith('/sapi/model/')) {
@@ -177,6 +187,8 @@ export class MenuComponent {
   isFlatSingleMenuNode = (_: number, _nodeData: FlatMenuNode) => _nodeData instanceof FlatSingleMenuNode;
 
   isFlatComingSoonMenuNode = (_: number, _nodeData: FlatMenuNode) => _nodeData instanceof FlatComingSoonMenuNode;
+
+  isFlatExternalMenuNode = (_: number, _nodeData: FlatMenuNode) => _nodeData instanceof FlatExternalMenuNode;
 
   isFlatSyncAccountMenuNode = (_: number, _nodeData: FlatMenuNode) => _nodeData instanceof FlatSyncAccountMenuNode;
 

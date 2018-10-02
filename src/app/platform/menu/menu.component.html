@@ -18,6 +18,26 @@
     </span>
   </mat-tree-node>
 
+  <mat-tree-node *matTreeNodeDef="let node;when: isFlatExternalMenuNode"
+                 matTreeNodePadding
+                 [ngClass]="generateRouteClass(node)"
+                 (click)="openExternal(node)">
+    <button mat-icon-button [disableRipple]="true"></button>
+    <div *ngIf="node.icon != null">
+      <mat-icon style="vertical-align: middle">{{node.icon}}</mat-icon>
+    </div>
+    <div *ngIf="node.img != null">
+      <img [src]="node.img" [width]="24" [height]="24">
+    </div>
+    <span style="padding-left: 10px; position: relative">
+      <span
+        style="color: #00acc1; font-size: 8pt; font-weight: bold; white-space: nowrap; z-index: 10; display: block; position: absolute; top: -10px; left: 0;">
+        External
+      </span>
+      {{node.name}}
+    </span>
+  </mat-tree-node>
+
   <mat-tree-node *matTreeNodeDef="let node;when: isFlatSingleMenuNode"
                  matTreeNodePadding
                  [ngClass]="generateRouteClass(node)"

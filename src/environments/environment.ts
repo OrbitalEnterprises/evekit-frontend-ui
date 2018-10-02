@@ -8,7 +8,8 @@ export const environment = {
   sdeServiceApiBasePath: 'http://localhost:8080/evekit-sde/api/ws/v20180917',
   modelViewURL: 'http://localhost:8080/evekit-model/api/swagger.json',
   marketViewURL: 'https://evekit-market.orbital.enterprises/swagger',
-  refViewURL: 'http://localhost:8080/evekit-ref-model/api/swagger.json'
+  refViewURL: 'http://localhost:8080/evekit-ref-model/api/swagger.json',
+  externalDocsURL: 'https://evekit-documentation.readthedocs.io/en/latest/index.html'
 };
 
 /*

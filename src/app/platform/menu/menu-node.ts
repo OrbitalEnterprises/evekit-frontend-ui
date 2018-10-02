@@ -4,7 +4,8 @@
 export enum MenuGuard {
   LOGGED_IN,
   ADMIN,
-  COMING_SOON
+  COMING_SOON,
+  EXTERNAL
 }
 
 /**
