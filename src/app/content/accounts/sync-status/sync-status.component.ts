@@ -25,6 +25,9 @@ export class SyncStatusComponent implements OnDestroy {
   lastSyncTracker: ESIEndpointSyncTracker = null;
   nextSyncTracker: ESIEndpointSyncTracker = null;
 
+  // Control progress spinner
+  trackersLoaded = false;
+
   // icons
   icSquare = faSquare;
 
@@ -85,6 +88,7 @@ export class SyncStatusComponent implements OnDestroy {
 
   reloadInfo(): void {
     this.trackers = [];
+    this.trackersLoaded = false;
     this.lastSyncTracker = null;
     this.nextSyncTracker = null;
 
@@ -93,6 +97,7 @@ export class SyncStatusComponent implements OnDestroy {
         .subscribe(
           results => {
             this.trackers = results;
+            this.trackersLoaded = true;
             this.assemblePairs();
           },
           () => {
