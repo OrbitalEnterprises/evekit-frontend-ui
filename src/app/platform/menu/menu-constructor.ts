@@ -34,13 +34,7 @@ const MENU_STRUCTURE: MenuNode[] = [
     .addChild(new SingleMenuNode('User List', '/admin/users', 'list', null))
     .addChild(new SingleMenuNode('Notifications', '/admin/notes', 'priority_high', null)),
   new SingleMenuNode('EVA', '/eva', 'chat', null)
-    .addGuard(MenuGuard.COMING_SOON),
-  new SingleMenuNode('Extension Manager', '/extadmin', 'settings_ethernet', null)
     .addGuard(MenuGuard.COMING_SOON)
-    .addGuard(MenuGuard.LOGGED_IN),
-  new ExpandableMenuNode('Extensions', 'extension', null)
-    .addGuard(MenuGuard.COMING_SOON)
-    .addGuard(MenuGuard.LOGGED_IN)
 ];
 
 /**
