@@ -32,9 +32,7 @@ const MENU_STRUCTURE: MenuNode[] = [
     .addChild(new SingleMenuNode('Properties', '/admin/props', 'settings', null))
     .addChild(new SingleMenuNode('Sync Status', '/admin/sync', 'sync', null))
     .addChild(new SingleMenuNode('User List', '/admin/users', 'list', null))
-    .addChild(new SingleMenuNode('Notifications', '/admin/notes', 'priority_high', null)),
-  new SingleMenuNode('EVA', '/eva', 'chat', null)
-    .addGuard(MenuGuard.COMING_SOON)
+    .addChild(new SingleMenuNode('Notifications', '/admin/notes', 'priority_high', null))
 ];
 
 /**

@@ -9,7 +9,7 @@ import {PlatformModule} from './platform/platform.module';
 import {RouterModule} from '@angular/router';
 import {HashLocationStrategy, LocationStrategy} from '@angular/common';
 import {standardRouteConfig} from './routing';
-import {AdminActivator, LoggedInActivator} from './platform/activators';
+import {AdminActivator, LoggedInActivator, RedirectToInfoGuard} from './platform/activators';
 import {Configuration, PlatformServiceApiModule} from './platform-service-api';
 import {SdeServiceApiModule} from './sde-service-api';
 import {environment} from '../environments/environment';
@@ -42,6 +42,7 @@ export function setSDEBasePath(): any {
   providers: [
     {provide: LocationStrategy, useClass: HashLocationStrategy},
     AdminActivator,
+    RedirectToInfoGuard,
     LoggedInActivator
   ],
   bootstrap: [AppComponent]

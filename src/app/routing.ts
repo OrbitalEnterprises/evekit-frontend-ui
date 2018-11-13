@@ -1,5 +1,5 @@
 import {RouterModule, Routes} from '@angular/router';
-import {AdminActivator, LoggedInActivator} from './platform/activators';
+import {AdminActivator, LoggedInActivator, RedirectToInfoGuard} from './platform/activators';
 
 /*
  * Standard routes.  This array should be updated each time a new built-in tab is added.
@@ -70,28 +70,12 @@ const standardRoutes: Routes = [
     canActivate: [LoggedInActivator, AdminActivator],
     runGuardsAndResolvers: 'always'
   },
-
-  // {
-  //   // Public plugin, requires no authentication
-  //   path: 'plugin/p/:id',
-  //   loadChildren: 'app/modules/plugin-tab/plugin-tab.module#PluginTabModule'
-  // },
-  // {
-  //   // Plugin which requires a logged in user
-  //   path: 'plugin/l/:id',
-  //   loadChildren: 'app/modules/plugin-tab/plugin-tab.module#PluginTabModule',
-  //   canActivate: [EveKitLoginGuard]
-  // },
-  // {
-  //   // Plugin which requires an admin user
-  //   path: 'plugin/a/:id',
-  //   loadChildren: 'app/modules/plugin-tab/plugin-tab.module#PluginTabModule',
-  //   canActivate: [EveKitLoginGuard, EveKitAdminGuard]
-  // },
   {
-    path: '',
-    redirectTo: '/info',
-    pathMatch: 'full'
+    // When all else fails...
+    path: '**',
+    canActivate: [RedirectToInfoGuard],
+    runGuardsAndResolvers: 'always',
+    loadChildren: './content/info/info-content.module#InfoContentModule'
   }
 ];
 
