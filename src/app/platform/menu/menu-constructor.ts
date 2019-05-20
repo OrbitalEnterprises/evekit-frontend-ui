@@ -58,10 +58,6 @@ export class MenuConstructor {
     })(this.dialog);
   }
 
-  addNewAccount(): void {
-    this.dialog.open(CreateSyncAccountComponent);
-  }
-
   accountUpdate = next => {
     this.account = next;
     this.dataChange.next(this.assembleMenu(MENU_STRUCTURE));
@@ -90,6 +86,13 @@ export class MenuConstructor {
         const img = acct.characterType ? '/assets/member.png' : '/assets/corporation.png';
         accountNode.children.push(new SyncAccountMenuNode(acct.name, '/syncaccount', img, acct.aid, acct.characterType));
       }
+      accountNode.children.push(new CallbackMenuNode('Add New...', this.curryAddNewAccount(), 'add', null));
+      this.dataChange.next(this.assembleMenu(MENU_STRUCTURE));
+    }
+    // Ensure that the last entry in the account list is a callback to add a new account
+    if (this.syncAccounts.length === 0) {
+      const accountNode: ExpandableMenuNode = this.findAccountMenu();
+      accountNode.children = [];
       accountNode.children.push(new CallbackMenuNode('Add New...', this.curryAddNewAccount(), 'add', null));
       this.dataChange.next(this.assembleMenu(MENU_STRUCTURE));
     }
