@@ -1,0 +1,25 @@
+<h3 class="ek-label-primary" mat-dialog-title>Select Character(s) to Add</h3>
+<mat-dialog-content class="mat-typography">
+  <p>
+    Only characters with the appropriate ESI information and at least one appropriate access key are shown.
+    If the character you wish to monitor is not shown, please verify that the corresponding synchronized
+    account authorizes the "esi-clones.read_implants.v1", "esi-skills.read_skills.v1", "esi-skills.read_skillqueue.v1",
+    and "esi-wallet.read_character_wallet.v1" scopes; and, that at least one access key is defined for the
+    account which allows access to the account balance, character sheet, and skills.
+  </p>
+  <form [formGroup]="formModel" style="width: 100%;">
+    <div class="ek-tbl" style="width: 100%;">
+      <div class="ek-tbl-row" *ngFor="let scope of eligible; let i = index">
+        <div class="ek-tbl-cell" style="white-space: nowrap;">
+          <mat-checkbox [formControl]="selectedChars.controls[i]">
+            <b>{{scope.account.eveCharacterName}}</b> [from account "<b>{{scope.account.name}}</b>" using key "<b>{{scope.access.keyName}}</b>"]
+          </mat-checkbox>
+        </div>
+      </div>
+    </div>
+  </form>
+</mat-dialog-content>
+<mat-dialog-actions style="justify-content: center;">
+  <button mat-button (click)="cancel()">Cancel</button>
+  <button mat-button (click)="save()">Save</button>
+</mat-dialog-actions>

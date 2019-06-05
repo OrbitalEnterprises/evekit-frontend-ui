@@ -43,6 +43,19 @@ const standardRoutes: Routes = [
     runGuardsAndResolvers: 'always'
   },
   {
+    // Applications - SkillMon display
+    path: 'apps/skillmon',
+    loadChildren: './content/skillmon/skillmon.module#SkillmonModule',
+    canActivate: [LoggedInActivator, AdminActivator],
+    runGuardsAndResolvers: 'always'
+  },
+  {
+    path: 'apps/skillmon/:tab',
+    loadChildren: './content/skillmon/skillmon.module#SkillmonModule',
+    canActivate: [LoggedInActivator, AdminActivator],
+    runGuardsAndResolvers: 'always'
+  },
+  {
     // Admin properties display
     path: 'admin/props',
     loadChildren: './content/admin-props/admin-props.module#AdminPropsModule',
@@ -81,6 +94,6 @@ const standardRoutes: Routes = [
 
 export const standardRouteConfig = RouterModule.forRoot(standardRoutes,
   {
-    onSameUrlNavigation: 'reload',
+    // onSameUrlNavigation: 'reload',
     urlUpdateStrategy: 'eager'
   });

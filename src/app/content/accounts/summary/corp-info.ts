@@ -1,7 +1,7 @@
 import {Observable} from 'rxjs';
 import {HttpClient} from '@angular/common/http';
 import {map} from 'rxjs/operators';
-import {CharacterService, StationService} from '../../../sde-service-api';
+import {SDECharacterService, SDEStationService} from '../../../sde-service-api';
 
 export class CorporationInfo {
   alliance_id?: number;
@@ -42,7 +42,7 @@ export function fetchCorporationInfo(http: HttpClient, corpID: number): Observab
   ));
 }
 
-export function mapStation(stationID: number, sde: StationService): Observable<string> {
+export function mapStation(stationID: number, sde: SDEStationService): Observable<string> {
   return sde.getStations(undefined, undefined, '{values:[' + String(stationID) + ']}')
     .pipe(map(
       results => {

@@ -1,0 +1,205 @@
+<!--
+Layout:
+
++-------------+ <name>                                        <refresh btn>
+| Photo       | <gender> <race> <bloodline>              <time til refresh>
+|             | Corporation: <corpName>
+|             | Balance: <balance> ISK
+|             |
+|             | Intelligence: <#>
+|             | Perception: <#>
+|             | Charisma: <#>                             Known Skills: <#>
+|             | Willpower: <#>                       Skills at Level V: <#>
++-------------+ Memory: <#>                                   Total SP: <#>
+
+| Skills | Queue |
+
+!SKILL VIEW!
+
+<category>, <#> of <#> skills, <#> Points             <exp panel ctrl>
+<skill name> (Rank <#>)                                Level <#> XXOOO
+SP: <#>/<#>                                            <#>% Done +-00+
+
+<skill name> (Rank <#>)                                Level <#> XXOOO
+SP: <#>/<#>                                            <#>% Done +-00+
+
+etc.
+
+!QUEUE VIEW!
+
+<skill name> (Rank <#>)                               Level <#> XXOOO
+SP: <current>/<target>                                <#>% Done +-00+
++++++++--------------------------------------------------------------
+
+<skill name> (Rank <#>)                               Level <#> XXOOO
+SP: <current>/<target>                                <#>% Done +-00+
+-------+++++++++++++++++++++++---------------------------------------
+
+etc.
+
+!FOOTER!
+<#>d, <#>h, <#>m, <#>s         <day> <YYYY-MM-DD> <HH:MM:SS> <AM> UTC
++++++++======================+++++++++++++++===================++++++
+
+Currently Training   <skill name> <#>
+<#> SP/Hour          <#>d, <#>h, <#>m, <#>s
+                     <day> <YYYY-MM-DD> <HH:MM:SS> <AM> UTC
+-->
+<div class="ek-tbl" style="padding-top: 10px;">
+  <div class="ek-tbl"
+       style="height: 100%; position: relative; padding-left: 10px; padding-bottom: 5px; padding-right: 10px;">
+    <div class="ek-tbl-row">
+      <div class="ek-tbl-cell" style="vertical-align: top;">
+        <img src="{{'https://image.eveonline.com/character/' + (account ? account.eveCharacterID : 0) + '_128.jpg'}}"
+             alt="character image">
+      </div>
+      <div class="ek-tbl-cell" style="padding-left: 10px; vertical-align: top">
+        <div class="ek-tbl">
+          <div class="ek-tbl-row">
+            <div class="ek-tbl-cell" style="white-space: nowrap;">
+              <b>{{account ? account.eveCharacterName : ''}}</b>
+            </div>
+          </div>
+          <div class="ek-tbl-row">
+            <div class="ek-tbl-cell skill-mon-details" style="white-space: nowrap;">
+              {{gender}} {{race}} {{bloodline}}
+            </div>
+          </div>
+          <div class="ek-tbl-row">
+            <div class="ek-tbl-cell skill-mon-details" style="white-space: nowrap;">
+              Corporation: {{account ? account.eveCorporationName : ''}}
+            </div>
+          </div>
+          <div class="ek-tbl-row">
+            <div class="ek-tbl-cell skill-mon-details" style="white-space: nowrap; padding-top: 10px;">
+              Balance: {{balance | currency : 'ISK' : '' : '1.2'}} ISK
+            </div>
+          </div>
+          <div class="ek-tbl-row">
+            <div class="ek-tbl-cell skill-mon-details" style="white-space: nowrap;">
+              Intelligence: {{intelligence !== -1 ? intelligence : ''}}
+            </div>
+          </div>
+          <div class="ek-tbl-row">
+            <div class="ek-tbl-cell skill-mon-details" style="white-space: nowrap;">
+              Perception: {{perception !== -1 ? perception : ''}}
+            </div>
+          </div>
+          <div class="ek-tbl-row">
+            <div class="ek-tbl-cell skill-mon-details" style="white-space: nowrap;">
+              Charisma: {{charisma !== -1 ? charisma : ''}}
+            </div>
+          </div>
+          <div class="ek-tbl-row">
+            <div class="ek-tbl-cell skill-mon-details" style="white-space: nowrap;">
+              Willpower: {{willpower !== -1 ? willpower : ''}}
+            </div>
+          </div>
+          <div class="ek-tbl-row">
+            <div class="ek-tbl-cell skill-mon-details" style="white-space: nowrap;">
+              Memory: {{memory !== -1 ? memory : ''}}
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="ek-tbl-cell" style="padding-left: 2in;">
+        <div class="ek-tbl" style="height: 100%;">
+          <div class="ek-tbl-row">
+            <div class="ek-tbl-cell" style="height: 100%;">
+              <mat-checkbox [(ngModel)]="hideUntrained" style="font-size: 10px;">Hide untrained skills</mat-checkbox>
+            </div>
+          </div>
+          <div class="ek-tbl-row">
+            <div class="ek-tbl" style="width: 100%;">
+              <div class="ek-tbl-row">
+                <div class="ek-tb-cell">
+                  <div class="ek-tbl" style="width: 100%; text-align: right;">
+                    <div class="ek-tbl-row">
+                      <div class="ek-tbl-cell skill-mon-details" style="white-space: nowrap;">
+                        Known Skills: {{ knownSkills.length }}
+                      </div>
+                    </div>
+                    <div class="ek-tbl-row">
+                      <div class="ek-tbl-cell skill-mon-details" style="white-space: nowrap;">
+                        Skills at Level V: {{ skillsAtLevelV() }}
+                      </div>
+                    </div>
+                    <div class="ek-tbl-row">
+                      <div class="ek-tbl-cell skill-mon-details" style="white-space: nowrap;">
+                        Total SP: {{ totalSP !== -1 ? (totalSP | currency : 'ISK' : '' : '1.0-0') : ''}}
+                      </div>
+                    </div>
+                    <div class="ek-tbl-row">
+                      <div class="ek-tbl-cell skill-mon-details" style="white-space: nowrap;">
+                        <span *ngIf="unallocatedSP > 0" class="ek-label-warn">
+                          <b>Unallocated SP: {{ unallocatedSP !== -1 ? (unallocatedSP | currency : 'ISK' : '' : '1.0-0') : ''}}</b>
+                        </span>
+                        <span *ngIf="unallocatedSP <= 0">
+                          Unallocated SP: {{ unallocatedSP !== -1 ? (unallocatedSP | currency : 'ISK' : '' : '1.0-0') : ''}}
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="list-corner-lower-left"></div>
+  </div>
+  <div style="margin-bottom: 8px; margin-top: 8px; padding-right: 5px; position: relative;">
+    <div class="list-corner-upper-right"></div>
+    <app-skill-mon-current-training [empty]="currentQueue.length === 0"
+                                    [paused]="currentQueue.length > 0 && currentQueue[0].endTime === 0"
+                                    [skillTree]="skillTree"
+                                    [first]="currentQueue.length > 0 ? currentQueue[0] : null"
+                                    [last]="currentQueue.length > 0 ? currentQueue[currentQueue.length - 1] : null"
+                                    [secondTimer]="secondTimer"
+                                    [divisions]="queueToAlternateDivisions()">
+    </app-skill-mon-current-training>
+    <div class="list-corner-lower-right"></div>
+  </div>
+  <div style="position: relative;">
+    <div class="list-corner-upper-left"></div>
+    <mat-tab-group [selectedIndex]="0" style="padding-top: 5px;">
+      <mat-tab label="Skills">
+        <mat-accordion multi="true">
+          <ng-container *ngFor="let ng of skillGroupList">
+            <mat-expansion-panel *ngIf="hideUntrained ? (countSkillsInGroup(ng) > 1) : true">
+              <mat-expansion-panel-header>
+                <b>{{ng.groupName}}</b> - {{countSkillsInGroup(ng)}} of {{ng.skillList.length}} skills
+                - {{countPointsInGroup(ng) | currency : 'ISK' : '' : '1.0-0'}} points
+              </mat-expansion-panel-header>
+              <ng-template matExpansionPanelContent>
+                <app-skill-mon-skill-row *ngFor="let sr of skillsInGroup(ng, hideUntrained); let i=index"
+                                         [skillName]="sr.typeName"
+                                         [alternate]="i % 2 === 0"
+                                         [rank]="sr['rank']"
+                                         [trainedLevel]="levelForSkill(sr)"
+                                         [skillPoints]="spForSkill(sr)">
+                </app-skill-mon-skill-row>
+              </ng-template>
+            </mat-expansion-panel>
+          </ng-container>
+        </mat-accordion>
+      </mat-tab>
+      <mat-tab label="Queue">
+        <div class="skill-queue-details" style="width: 95%; padding-top: 5px; padding-left: 10px;">
+          <app-skill-mon-skill-row *ngFor="let iq of currentQueue; let i=index"
+                                   [skillName]="skillTree.skillList.get(iq.typeID).typeName"
+                                   [alternate]="i % 2 === 0"
+                                   [rank]="skillTree.skillList.get(iq.typeID)['rank']"
+                                   [trainedLevel]="iq.level - 1"
+                                   [skillPoints]="spForSkill(skillTree.skillList.get(iq.typeID))"
+                                   [active]="i === 0"
+                                   [pending]="i > 0"
+                                   [divisions]="queueToDivisions(i)">
+          </app-skill-mon-skill-row>
+        </div>
+      </mat-tab>
+    </mat-tab-group>
+  </div>
+</div>
+

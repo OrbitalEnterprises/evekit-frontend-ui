@@ -1,7 +1,7 @@
 import {Observable} from 'rxjs';
 import {HttpClient} from '@angular/common/http';
 import {map} from 'rxjs/operators';
-import {CharacterService} from '../../../sde-service-api';
+import {SDECharacterService} from '../../../sde-service-api';
 
 export class CharacterInfo {
   alliance_id?: number;
@@ -37,7 +37,7 @@ export function fetchCharacterInfo(http: HttpClient, charID: number): Observable
     }));
 }
 
-export function mapRace(raceID: number, sde: CharacterService): Observable<string> {
+export function mapRace(raceID: number, sde: SDECharacterService): Observable<string> {
   return sde.getRaces(undefined, undefined, '{values:[' + String(raceID) + ']}')
     .pipe(map(
       results => {
@@ -51,7 +51,7 @@ export function mapRace(raceID: number, sde: CharacterService): Observable<strin
     ));
 }
 
-export function mapBloodline(bloodlineID: number, sde: CharacterService): Observable<string> {
+export function mapBloodline(bloodlineID: number, sde: SDECharacterService): Observable<string> {
   return sde.getBloodlines(undefined, undefined, '{values:[' + String(bloodlineID) + ']}')
     .pipe(map(
       results => {
@@ -65,7 +65,7 @@ export function mapBloodline(bloodlineID: number, sde: CharacterService): Observ
     ));
 }
 
-export function mapAncestry(ancestryID: number, sde: CharacterService): Observable<string> {
+export function mapAncestry(ancestryID: number, sde: SDECharacterService): Observable<string> {
   return sde.getAncestries(undefined, undefined, '{values:[' + String(ancestryID) + ']}')
     .pipe(map(
       results => {
@@ -79,7 +79,7 @@ export function mapAncestry(ancestryID: number, sde: CharacterService): Observab
     ));
 }
 
-export function mapFaction(factionID: number, sde: CharacterService): Observable<string> {
+export function mapFaction(factionID: number, sde: SDECharacterService): Observable<string> {
   return sde.getFactions(undefined, undefined, '{values:[' + String(factionID) + ']}')
     .pipe(map(
       results => {

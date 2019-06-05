@@ -1,0 +1,37 @@
+<div class="ek-tbl skill-mon-details" style="width: 100%; padding-top: 5px;" *ngIf="!(empty || paused)">
+  <div class="ek-tbl-row" style="width: 100%;">
+    <div class="ek-tbl-cell" style="text-align: left; white-space: nowrap;">{{lastFinishTimeText}}</div>
+    <div class="ek-tbl-cell" style="text-align: right; white-space: nowrap;">{{(last.endTime | date : 'E yyyy-MM-dd hh:mm:ss aa' : 'UTC') + ' UTC'}}</div>
+  </div>
+</div>
+<div class="ek-tbl" style="width: 100%; padding-top: 5px; font-size: 8px;" *ngIf="divisions.length > 0">
+  <div class="ek-tbl-row" style="width: 100%;">
+    <div *ngFor="let td of divisions;" [ngClass]="{'ek-tbl-cell': true, 'ek-label-bk-accent-lighter': !td.primary, 'ek-label-bk-accent': td.primary}" [style]="sanitizer.bypassSecurityTrustStyle('width: ' + td.size + '%;')">&nbsp;</div>
+  </div>
+</div>
+<div class="ek-tbl" style="padding-top: 3px; padding-left: 10px; padding-bottom: 10px;">
+  <div class="ek-tbl-row">
+    <div class="ek-tbl-cell skill-mon-details" style="white-space: nowrap;">
+      <b>Currently Training:</b>
+    </div>
+    <div class="ek-tbl-cell skill-mon-details" style="white-space: nowrap; padding-left: 5px;">
+      <span class="ek-label-warn" *ngIf="empty"><b>No skill currently training</b></span>
+      <span *ngIf="!empty">{{getSkillName() + ' ' + getLevelName()}}</span>
+      <span class="ek-label-warn" *ngIf="paused">&nbsp;<b>(paused)</b></span>
+    </div>
+  </div>
+  <div class="ek-tbl-row">
+    <div class="ek-tbl-cell skill-mon-details" style="white-space: nowrap;">
+      {{ (empty || paused) ? '' : getSPPerHour() + ' SP/Hour'}}
+    </div>
+    <div class="ek-tbl-cell skill-mon-details" style="white-space: nowrap; padding-left: 5px;">
+      {{finishTimeText}}
+    </div>
+  </div>
+  <div class="ek-tbl-row">
+    <div class="ek-tbl-cell"></div>
+    <div class="ek-tbl-cell skill-mon-details" style="white-space: nowrap; padding-left: 5px;">
+      {{ (empty || paused) ? '' : (first.endTime | date : 'E yyyy-MM-dd hh:mm:ss aa' : 'UTC') + ' UTC' }}
+    </div>
+  </div>
+</div>

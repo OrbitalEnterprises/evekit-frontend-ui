@@ -1,0 +1,53 @@
+<div class="ek-tbl" style="width: 100%;">
+  <div class="ek-tbl-row">
+    <div class="ek-tbl-cell">
+      <button mat-icon-button matTooltip="Add Character" (click)="addCharactersDialog()">
+        <mat-icon>add</mat-icon>
+      </button>
+      <button mat-icon-button matTooltip="Refresh Skills" (click)="refreshMonitorList()">
+        <mat-icon>refresh</mat-icon>
+      </button>
+      <div class="refresh-timer mat-typography">
+        {{refreshTimer}}
+      </div>
+    </div>
+    <div class="ek-tbl-cell" style="width: 100%;">
+      <mat-tab-group [selectedIndex]="selectedTab"
+                     (selectedTabChange)="updateRoute($event)">
+        <mat-tab label="Overview">
+          <p>
+            This application allows you to monitor the skill queues of one or more characters.
+            To get started, click on '+' to add a character from one of your synchronized accounts.
+            Monitored characters will be removed from this application if an assigned access key is no longer
+            available or has incorrect permissions.
+          </p>
+          <mat-grid-list cols="2" rowHeight="3:1" style="padding-top: 10px;">
+            <mat-grid-tile *ngFor="let mm of monitorList" style="justify-content: flex-start;">
+              <div class="list-corner-upper-left"></div>
+              <app-skill-mon-character-summary
+                style="padding-top: 10px; padding-left: 10px;"
+                [account]="monitoredNames.get(mm.aid)"
+                [kid]="mm.kid"
+                [secondTimer]="secondTimer"
+                [skillTree]="finalSkillTree">
+              </app-skill-mon-character-summary>
+            </mat-grid-tile>
+          </mat-grid-list>
+        </mat-tab>
+        <mat-tab *ngFor="let mm of monitorList">
+          <ng-template mat-tab-label>
+            <b>{{monitoredNames.get(mm.aid) ? monitoredNames.get(mm.aid).eveCharacterName : ''}}</b>
+          </ng-template>
+          <ng-template matTabContent>
+            <app-skill-mon-character-view
+              [account]="monitoredNames.get(mm.aid)"
+              [kid]="mm.kid"
+              [secondTimer]="secondTimer"
+              [skillTree]="finalSkillTree">
+            </app-skill-mon-character-view>
+          </ng-template>
+        </mat-tab>
+      </mat-tab-group>
+    </div>
+  </div>
+</div>

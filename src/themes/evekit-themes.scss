@@ -131,6 +131,11 @@ $general-typography: mat-typography-config(
     background: mat-color($evekit-default-accent);
   }
 
+  .ek-label-bk-accent-lighter {
+    color: mat-color($evekit-default-accent, default-contrast);
+    background: mat-color($evekit-default-accent, lighter);
+  }
+
   .ek-label-warn {
     color: mat-color($evekit-default-warn);
   }
@@ -287,6 +292,11 @@ $general-typography: mat-typography-config(
   .ek-label-bk-accent {
     color: mat-color($evekit-default-accent, default-contrast);
     background: mat-color($evekit-default-accent);
+  }
+
+  .ek-label-bk-accent-lighter {
+    color: mat-color($evekit-default-accent, default-contrast);
+    background: mat-color($evekit-default-accent, lighter);
   }
 
   .ek-label-warn {

@@ -1,0 +1,11 @@
+export * from './model-access-key.service';
+import { ModelAccessKeyService } from './model-access-key.service';
+export * from './model-character.service';
+import { ModelCharacterService } from './model-character.service';
+export * from './model-common.service';
+import { ModelCommonService } from './model-common.service';
+export * from './model-corporation.service';
+import { ModelCorporationService } from './model-corporation.service';
+export * from './model-meta.service';
+import { ModelMetaService } from './model-meta.service';
+export const APIS = [ModelAccessKeyService, ModelCharacterService, ModelCommonService, ModelCorporationService, ModelMetaService];

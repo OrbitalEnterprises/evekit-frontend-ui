@@ -8,7 +8,7 @@ import {HttpClient} from '@angular/common/http';
 import {CorporationInfo, fetchCorporationInfo, mapStation} from './corp-info';
 import {Observable, Subscription} from 'rxjs';
 import {map} from 'rxjs/operators';
-import {CharacterService, StationService} from '../../../sde-service-api';
+import {SDECharacterService, SDEStationService} from '../../../sde-service-api';
 import {selectSyncAccounts} from '../../../platform/selectors';
 import {
   faBirthdayCake,
@@ -75,8 +75,8 @@ export class SummaryComponent implements OnDestroy {
   constructor(private routeInfo: ActivatedRoute,
               private store: Store<AppState>,
               private httpClient: HttpClient,
-              private charService: CharacterService,
-              private stationService: StationService,
+              private charService: SDECharacterService,
+              private stationService: SDEStationService,
               private acctService: AccountV2Service,
               private adminService: AccountService,
               private router: Router,
@@ -103,7 +103,7 @@ export class SummaryComponent implements OnDestroy {
         }
 
         if (this.aidWatcher === null) {
-          // Setup our aid watcher.  This subscription will observer every sync
+          // Setup our aid watcher.  This subscription will observe every sync
           // account change and trigger reloads on appropriate actions.
           this.aidWatcher = this.store.select(selectSyncAccounts)
             .subscribe(

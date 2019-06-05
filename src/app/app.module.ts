@@ -14,6 +14,7 @@ import {Configuration, PlatformServiceApiModule} from './platform-service-api';
 import {SdeServiceApiModule} from './sde-service-api';
 import {environment} from '../environments/environment';
 import {FontAwesomeModule} from '@fortawesome/angular-fontawesome';
+import {ModelServiceApiModule} from './model-service-api';
 
 export function setPlatformBasePath(): any {
   return new Configuration({ basePath: environment.platformServiceApiBasePath});
@@ -21,6 +22,10 @@ export function setPlatformBasePath(): any {
 
 export function setSDEBasePath(): any {
   return new Configuration({ basePath: environment.sdeServiceApiBasePath});
+}
+
+export function setModelBasePath(): any {
+  return new Configuration({ basePath: environment.modelServiceApiBasePath});
 }
 
 @NgModule({
@@ -37,7 +42,8 @@ export function setSDEBasePath(): any {
     RouterModule,
     standardRouteConfig,
     PlatformServiceApiModule.forRoot(setPlatformBasePath),
-    SdeServiceApiModule.forRoot(setSDEBasePath)
+    SdeServiceApiModule.forRoot(setSDEBasePath),
+    ModelServiceApiModule.forRoot(setModelBasePath)
   ],
   providers: [
     {provide: LocationStrategy, useClass: HashLocationStrategy},

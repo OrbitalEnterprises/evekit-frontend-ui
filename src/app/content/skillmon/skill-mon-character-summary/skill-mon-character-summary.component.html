@@ -1,0 +1,51 @@
+<div class="ek-tbl">
+  <div class="ek-tbl-row">
+    <div class="ek-tbl-cell" style="vertical-align: middle;">
+      <img src="{{'https://image.eveonline.com/character/' + (account ? account.eveCharacterID : 0) + '_128.jpg'}}">
+    </div>
+    <div class="ek-tbl-cell" style="padding-left: 20px;">
+      <div class="ek-tbl">
+        <div class="ek-tbl-row">
+          <div class="ek-tbl-cell" style="white-space: nowrap;">
+            <b>{{account ? account.eveCharacterName : ''}}</b>
+          </div>
+        </div>
+        <div class="ek-tbl-row">
+          <div class="ek-tbl-cell" style="white-space: nowrap;">
+            <b>{{balance | currency : 'ISK' : '' : '1.2'}} ISK</b>
+          </div>
+        </div>
+        <div class="ek-tbl-row skill-mon-details">
+          <div class="ek-tbl-cell" style="white-space: nowrap; padding-top: 10px;">
+            <span *ngIf="paused" class="ek-label-warn" style="font-weight: bold;">
+              QUEUE PAUSED
+            </span>
+            <span *ngIf="empty" class="ek-label-warn" style="font-weight: bold;">
+              QUEUE EMPTY
+            </span>
+            <span *ngIf="!paused && !empty">
+              {{ formattedFinish ? formattedFinish : ''}}
+            </span>
+          </div>
+        </div>
+        <div class="ek-tbl-row skill-mon-details">
+          <div class="ek-tbl-cell" style="white-space: nowrap;">
+            {{skillTrainingName ? skillTrainingName : ''}}
+          </div>
+        </div>
+        <div class="ek-tbl-row skill-mon-details">
+          <div class="ek-tbl-cell" style="white-space: nowrap;">
+            {{skillTrainingDoneTime > -1 ? (skillTrainingDoneTime | date : 'E yyyy-MM-dd hh:mm:ss aa' : 'UTC') + ' UTC' : ''}}
+          </div>
+        </div>
+        <div class="ek-tbl-row skill-mon-details">
+          <div class="ek-tbl-cell" style="white-space: nowrap;">
+            <span *ngIf="!paused && !empty">
+              Queue finishes in {{ formattedQueueFinish }}
+            </span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
