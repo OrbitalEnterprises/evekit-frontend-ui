@@ -1,6 +1,6 @@
-import {Component, Input, OnChanges} from '@angular/core';
+import {Component, Input, OnChanges, OnDestroy} from '@angular/core';
 import {AccountService, SynchronizedAccountAccessKey, SynchronizedEveAccount} from '../../../platform-service-api';
-import {forkJoin, Observable} from 'rxjs';
+import {forkJoin, Observable, Subscription} from 'rxjs';
 import {CharacterSheet, CharacterSkill, ModelCharacterService, ModelCommonService, SkillInQueue} from '../../../model-service-api';
 import {InvType, SDECharacterService} from '../../../sde-service-api';
 import {SkillGroup} from './skill-group';
@@ -9,13 +9,14 @@ import {TrainingDivision} from '../skill-mon-skill-row/training-division';
 import {ActivatedRoute, Router} from '@angular/router';
 import {MatCheckboxChange, MatTabChangeEvent} from '@angular/material';
 import {Location} from '@angular/common';
+import {DialogsService} from '../../../platform/dialogs.service';
 
 @Component({
   selector: 'app-skill-mon-character-view',
   templateUrl: './skill-mon-character-view.component.html',
   styleUrls: ['./skill-mon-character-view.component.css']
 })
-export class SkillMonCharacterViewComponent implements OnChanges {
+export class SkillMonCharacterViewComponent implements OnChanges, OnDestroy {
   // Input parameters
   @Input()
   account: SynchronizedEveAccount;
@@ -47,10 +48,13 @@ export class SkillMonCharacterViewComponent implements OnChanges {
   knownSkills: Array<CharacterSkill> = [];
   currentQueue: Array<SkillInQueue> = [];
   tabView = 0;
+  secondWatcher: Subscription = null;
+  toggle = false;
 
   constructor(private router: Router,
               private location: Location,
               private routeInfo: ActivatedRoute,
+              private dialog: DialogsService,
               private accountService: AccountService,
               private commonModelService: ModelCommonService,
               private charModelService: ModelCharacterService,
@@ -58,7 +62,20 @@ export class SkillMonCharacterViewComponent implements OnChanges {
     this.setTabFromRoute();
   }
 
+  ngOnDestroy(): void {
+    if (this.secondWatcher != null) {
+      this.secondWatcher.unsubscribe();
+    }
+  }
+
   ngOnChanges(): void {
+    if (this.secondWatcher === null) {
+      this.secondWatcher = this.secondTimer.subscribe(
+        () => {
+          this.toggle = !this.toggle;
+        }
+      );
+    }
     if (!this.account) {
       return;
     }
@@ -69,11 +86,13 @@ export class SkillMonCharacterViewComponent implements OnChanges {
             this.access = keyList[0];
             this.update();
           } else {
-            // TODO - key list should have length of exactly 1
+            this.dialog.makeWarnDialog('Access Key Error', 'Error retrieving access key for \'' +
+              this.account.eveCharacterName + '\'.  Please reload page to try again.  If problems persist, please contact the site admin.');
           }
         },
         () => {
-          // TODO
+          this.dialog.makeWarnDialog('Access Key Error', 'Error retrieving access key for \'' +
+            this.account.eveCharacterName + '\'.  Please reload page to try again.  If problems persist, please contact the site admin.');
         }
       );
     // Extract skill groups - can't use the iterator directly here
@@ -99,7 +118,8 @@ export class SkillMonCharacterViewComponent implements OnChanges {
       .router
       .createUrlTree(['/apps/skillmon'],
         {
-          queryParams: {'tab': this.selectedTab, 'side': this.tabView, 'hide': event.checked ? 1 : 0}, relativeTo: this.routeInfo})
+          queryParams: {'tab': this.selectedTab, 'side': this.tabView, 'hide': event.checked ? 1 : 0}, relativeTo: this.routeInfo
+        })
       .toString();
 
     this.location.go(url);
@@ -111,12 +131,12 @@ export class SkillMonCharacterViewComponent implements OnChanges {
       .router
       .createUrlTree(['/apps/skillmon'],
         {
-          queryParams: {'tab': this.selectedTab, 'side': event.index, 'hide': this.hideUntrained}, relativeTo: this.routeInfo})
+          queryParams: {'tab': this.selectedTab, 'side': event.index, 'hide': this.hideUntrained ? 1 : 0}, relativeTo: this.routeInfo
+        })
       .toString();
 
     this.location.go(url);
   }
-
 
   queueToDivisions(active: number): Array<TrainingDivision> {
     const results: Array<TrainingDivision> = [];
@@ -271,7 +291,9 @@ export class SkillMonCharacterViewComponent implements OnChanges {
         this.retrieveSkills();
       },
       () => {
-        // TODO - error
+        this.dialog.makeWarnDialog('Character Details Error', 'Unable to retrieve character details for \'' +
+          this.account.eveCharacterName + '\'.  Please verify the access key still has the appropriate privileges.  Reload this ' +
+          'page to try again.  Please contact the site admin if this problem persists.');
       }
     );
   }
@@ -300,7 +322,9 @@ export class SkillMonCharacterViewComponent implements OnChanges {
           }
         },
         () => {
-          // TODO: error
+          this.dialog.makeWarnDialog('Character Skills Error', 'Unable to retrieve character skills for \'' +
+            this.account.eveCharacterName + '\'.  Please verify the access key still has the appropriate privileges.  Reload this ' +
+            'page to try again.  Please contact the site admin if this problem persists.');
         }
       );
   }
@@ -317,7 +341,9 @@ export class SkillMonCharacterViewComponent implements OnChanges {
         this.bloodline = results[1].length === 1 ? results[1][0].bloodlineName : '';
       },
       () => {
-        // TODO - error
+        this.dialog.makeWarnDialog('Character Heritage  Error', 'Unable to retrieve character heritage for \'' +
+          this.account.eveCharacterName + '\'.  Please verify the access key still has the appropriate privileges.  Reload this ' +
+          'page to try again.  Please contact the site admin if this problem persists.');
       }
     );
   }

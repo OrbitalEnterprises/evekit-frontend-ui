@@ -3,6 +3,7 @@ import {AccountService, SynchronizedAccountAccessKey, SynchronizedEveAccount} fr
 import {ModelCharacterService, ModelCommonService, SkillInQueue} from '../../../model-service-api';
 import {Observable, Subscription} from 'rxjs';
 import {SkillTree} from '../skill-mon-character-view/skill-tree';
+import {DialogsService} from '../../../platform/dialogs.service';
 
 export function formatLevel(level: number): string {
   switch (level) {
@@ -47,7 +48,8 @@ export class SkillMonCharacterSummaryComponent implements OnChanges, OnDestroy {
   skillQueueDoneTime = -1;
   formattedQueueFinish: string;
 
-  constructor(private accountService: AccountService,
+  constructor(private dialog: DialogsService,
+              private accountService: AccountService,
               private commonModelService: ModelCommonService,
               private charModelService: ModelCharacterService) {
   }
@@ -69,11 +71,13 @@ export class SkillMonCharacterSummaryComponent implements OnChanges, OnDestroy {
             this.access = keyList[0];
             this.update();
           } else {
-            // TODO - key list should have length of exactly 1
+            this.dialog.makeWarnDialog('Access Key Error', 'Error retrieving access key for \'' +
+              this.account.eveCharacterName + '\'.  Please reload page to try again.  If problems persist, please contact the site admin.');
           }
         },
         () => {
-          // TODO
+          this.dialog.makeWarnDialog('Access Key Error', 'Error retrieving access key for \'' +
+            this.account.eveCharacterName + '\'.  Please reload page to try again.  If problems persist, please contact the site admin.');
         }
       );
   }
@@ -108,10 +112,16 @@ export class SkillMonCharacterSummaryComponent implements OnChanges, OnDestroy {
         result => {
           if (result.length === 1) {
             this.balance = result[0].balance;
+          } else {
+            this.dialog.makeWarnDialog('Account Balance Error', 'Unable to retrieve account balance for \'' +
+              this.account.eveCharacterName + '\'.  Please verify the specified access key still has the required privileges.  Reload ' +
+              'this page to try again.  Please contact the site admin if this problem persists.');
           }
         },
         () => {
-          // TODO
+          this.dialog.makeWarnDialog('Account Balance Error', 'Unable to retrieve account balance for \'' +
+            this.account.eveCharacterName + '\'.  Please verify the specified access key still has the required privileges.  Reload ' +
+            'this page to try again.  Please contact the site admin if this problem persists.');
         }
       );
     // Update training skill info
@@ -185,7 +195,9 @@ export class SkillMonCharacterSummaryComponent implements OnChanges, OnDestroy {
           }
         },
         () => {
-          // TODO
+          this.dialog.makeWarnDialog('Skill Queue Error', 'Unable to retrieve skill queue for \'' +
+            this.account.eveCharacterName + '\'.  Please verify the specified access key still has the required privileges.  Reload ' +
+            'this page to try again.  Please contact the site admin if this problem persists.');
         }
       );
   }

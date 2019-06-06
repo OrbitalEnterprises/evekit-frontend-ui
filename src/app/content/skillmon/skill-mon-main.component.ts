@@ -31,6 +31,7 @@ export class SkillMonMainComponent implements OnDestroy {
   selectedTab = 0;
   refreshTimer = 299;
   timerUpdate: Subscription = null;
+  loading = false;
 
   constructor(private router: Router,
               private location: Location,
@@ -110,6 +111,7 @@ export class SkillMonMainComponent implements OnDestroy {
 
   refreshMonitorList(): void {
     this.refreshTimer = 299;
+    this.loading = true;
     this.adminService.getUserProp(parseInt(this.user.uid, 10), APP_CHAR_LIST_PROP)
       .subscribe(
         property => {
@@ -118,6 +120,7 @@ export class SkillMonMainComponent implements OnDestroy {
           this.monitoredNames.clear();
           const monList = JSON.parse(property.propertyValue);
           if (monList === null) {
+            this.loading = false;
             return;
           }
           for (const next of monList) {
@@ -142,14 +145,17 @@ export class SkillMonMainComponent implements OnDestroy {
                   this.monitorList.splice(i, 1);
                 }
               }
+              this.loading = false;
             },
             () => {
+              this.loading = false;
               this.dialogService.makeWarnDialog('User Configuration Error',
                 'Unable to read list of monitored accounts.  Please verify you are logged in a reload the page.');
             }
           );
         },
         () => {
+          this.loading = false;
           this.dialogService.makeWarnDialog('User Configuration Error',
             'Unable to read account configuration.  Please verify you are logged in a reload the page.');
         }
@@ -206,6 +212,7 @@ export class SkillMonMainComponent implements OnDestroy {
   }
 
   buildSkillTree(): void {
+    this.loading = true;
     this.invSDEService.getGroups(-1, 1000, undefined, undefined, undefined, '{values:[16]}')
       .subscribe(
         results => {
@@ -238,9 +245,11 @@ export class SkillMonMainComponent implements OnDestroy {
                         }
                       }
                       // Skill tree ready, start monitor
+                      this.loading = false;
                       this.startMonitorRefresh();
                     },
                     () => {
+                      this.loading = false;
                       this.dialogService.makeWarnDialog('Skill Tree Error',
                         'Unable to construct skill tree.  Please reload the page to try again.  If this problem persists, please ' +
                         'contact the administrator.');
@@ -248,6 +257,7 @@ export class SkillMonMainComponent implements OnDestroy {
                   );
               },
               () => {
+                this.loading = false;
                 this.dialogService.makeWarnDialog('Skill Tree Error',
                   'Unable to construct skill tree.  Please reload the page to try again.  If this problem persists, please ' +
                   'contact the administrator.');
@@ -255,6 +265,7 @@ export class SkillMonMainComponent implements OnDestroy {
             );
         },
         () => {
+          this.loading = false;
           this.dialogService.makeWarnDialog('Skill Tree Error',
             'Unable to construct skill tree.  Please reload the page to try again.  If this problem persists, please ' +
             'contact the administrator.');

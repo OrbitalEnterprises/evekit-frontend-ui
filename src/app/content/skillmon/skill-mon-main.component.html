@@ -1,4 +1,4 @@
-<div style="float: left; margin-right: 5px;">
+<div style="float: left; margin-right: 5px;" *ngIf="!loading">
   <div>
     <button mat-icon-button matTooltip="Add Character" (click)="addCharactersDialog()">
       <mat-icon>add</mat-icon>
@@ -13,7 +13,9 @@
     {{refreshTimer}}
   </div>
 </div>
-<mat-tab-group [selectedIndex]="selectedTab"
+<mat-spinner *ngIf="loading"></mat-spinner>
+<mat-tab-group *ngIf="!loading"
+               [selectedIndex]="selectedTab"
                (selectedTabChange)="updateRoute($event)">
   <mat-tab label="Overview">
     <p>
