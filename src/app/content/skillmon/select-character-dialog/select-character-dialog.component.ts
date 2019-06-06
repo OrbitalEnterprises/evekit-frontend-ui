@@ -38,7 +38,7 @@ export class SelectCharacterDialogComponent {
 
   constructor(@Inject(MAT_DIALOG_DATA) private data: any,
               private dialogRef: MatDialogRef<SelectCharacterDialogComponent>,
-              private dialog: DialogsService,
+              private dialogService: DialogsService,
               private adminService: AdminService,
               private acctService: AccountService) {
     // Caller will pass in list of current selected accounts.  We'll filter these
@@ -99,13 +99,16 @@ export class SelectCharacterDialogComponent {
               }
             },
             () => {
-              // TODO
+              this.dialogService.makeWarnDialog('Access Key Error',
+                'Unable to retrieve some access keys.  Attempting to continue but some accounts may not be visible.  ' +
+                'Cancel the \'add account\' dialog and re-open to try again.');
             }
           );
         }
       },
       () => {
-        // TODO
+        this.dialogService.makeWarnDialog('Account List Error',
+          'Unable to retrieve synchronized account list.  Cancel the \'add account\' dialog and re-open to try again.');
       }
     );
   }
@@ -125,13 +128,14 @@ export class SelectCharacterDialogComponent {
 
     // Update if necessary
     if (this.current.length !== startLength) {
-      this.adminService.setUserProp(parseInt(this.user.uid), APP_CHAR_LIST_PROP, JSON.stringify(this.current))
+      this.adminService.setUserProp(parseInt(this.user.uid, 10), APP_CHAR_LIST_PROP, JSON.stringify(this.current))
         .subscribe(
           () => {
             this.dialogRef.close(null);
           },
           () => {
-            // TODO
+            this.dialogService.makeWarnDialog('Save Error',
+              'Unable to save selection.  Please try again.  If this problem persists, please contact the site admin.');
           }
         );
     } else {

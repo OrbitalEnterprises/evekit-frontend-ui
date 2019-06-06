@@ -1,12 +1,14 @@
-import {Component, Input, OnChanges, OnInit} from '@angular/core';
+import {Component, Input, OnChanges} from '@angular/core';
 import {AccountService, SynchronizedAccountAccessKey, SynchronizedEveAccount} from '../../../platform-service-api';
 import {forkJoin, Observable} from 'rxjs';
-import {ModelCharacterService, CharacterSheet, ModelCommonService, CharacterSkill, SkillInQueue} from '../../../model-service-api';
-import {InvType, SDECharacterService, SDEInventoryService} from '../../../sde-service-api';
+import {CharacterSheet, CharacterSkill, ModelCharacterService, ModelCommonService, SkillInQueue} from '../../../model-service-api';
+import {InvType, SDECharacterService} from '../../../sde-service-api';
 import {SkillGroup} from './skill-group';
 import {SkillTree} from './skill-tree';
-import {formatLevel} from '../skill-mon-character-summary/skill-mon-character-summary.component';
 import {TrainingDivision} from '../skill-mon-skill-row/training-division';
+import {ActivatedRoute, Router} from '@angular/router';
+import {MatCheckboxChange, MatTabChangeEvent} from '@angular/material';
+import {Location} from '@angular/common';
 
 @Component({
   selector: 'app-skill-mon-character-view',
@@ -23,9 +25,11 @@ export class SkillMonCharacterViewComponent implements OnChanges {
   secondTimer: Observable<number>;
   @Input()
   skillTree: SkillTree;
+  @Input()
+  selectedTab = 0;
   access: SynchronizedAccountAccessKey;
   skillGroupList: Array<SkillGroup> = [];
-  hideUntrained: false;
+  hideUntrained = false;
 
   // Summary properties
   charSheet: CharacterSheet = null;
@@ -42,11 +46,16 @@ export class SkillMonCharacterViewComponent implements OnChanges {
   unallocatedSP = -1;
   knownSkills: Array<CharacterSkill> = [];
   currentQueue: Array<SkillInQueue> = [];
+  tabView = 0;
 
-  constructor(private accountService: AccountService,
+  constructor(private router: Router,
+              private location: Location,
+              private routeInfo: ActivatedRoute,
+              private accountService: AccountService,
               private commonModelService: ModelCommonService,
               private charModelService: ModelCharacterService,
               private charSDEService: SDECharacterService) {
+    this.setTabFromRoute();
   }
 
   ngOnChanges(): void {
@@ -74,6 +83,40 @@ export class SkillMonCharacterViewComponent implements OnChanges {
     }
     this.skillGroupList = this.skillGroupList.sort((a, b) => a.groupName.localeCompare(b.groupName));
   }
+
+  setTabFromRoute(): void {
+    const params = this.router.parseUrl(this.location.path()).queryParams;
+    if (params['side']) {
+      this.tabView = parseInt(params['side'], 10);
+    }
+    if (params['hide']) {
+      this.hideUntrained = parseInt(params['hide'], 10) === 1;
+    }
+  }
+
+  updateHide(event: MatCheckboxChange): void {
+    const url = this
+      .router
+      .createUrlTree(['/apps/skillmon'],
+        {
+          queryParams: {'tab': this.selectedTab, 'side': this.tabView, 'hide': event.checked ? 1 : 0}, relativeTo: this.routeInfo})
+      .toString();
+
+    this.location.go(url);
+  }
+
+  updateRoute(event: MatTabChangeEvent): void {
+    this.tabView = event.index;
+    const url = this
+      .router
+      .createUrlTree(['/apps/skillmon'],
+        {
+          queryParams: {'tab': this.selectedTab, 'side': event.index, 'hide': this.hideUntrained}, relativeTo: this.routeInfo})
+      .toString();
+
+    this.location.go(url);
+  }
+
 
   queueToDivisions(active: number): Array<TrainingDivision> {
     const results: Array<TrainingDivision> = [];
@@ -135,6 +178,17 @@ export class SkillMonCharacterViewComponent implements OnChanges {
       }
     }
     return total;
+  }
+
+  skillTimeProgress(target: SkillInQueue): number {
+    const now = Date.now();
+    if (now < target.startTime) {
+      return 0;
+    }
+    if (now > target.endTime) {
+      return 100;
+    }
+    return Math.floor((now - target.startTime) / (target.endTime - target.startTime) * 100);
   }
 
   levelForSkill(skill: InvType) {

@@ -16,7 +16,7 @@
   </div>
   <div class="ek-tbl-row">
     <div class="ek-tbl-cell" style="text-align: left; white-space: nowrap;">
-      SP: {{skillPoints}}/{{levelTargetSkillPoints(trainedLevel + 1, rank)}}
+      SP: {{levelCurrentSkillPoints(trainedLevel + 1, skillPoints, rank)}}/{{levelTargetSkillPoints(trainedLevel + 1, rank)}}
     </div>
     <div class="ek-tbl-cell" style="text-align: right; white-space: nowrap; width: 100%;">
       {{levelTargetPct(trainedLevel + 1, skillPoints, rank)}}% Done

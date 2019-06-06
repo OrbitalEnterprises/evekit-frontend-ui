@@ -50,12 +50,6 @@ const standardRoutes: Routes = [
     runGuardsAndResolvers: 'always'
   },
   {
-    path: 'apps/skillmon/:tab',
-    loadChildren: './content/skillmon/skillmon.module#SkillmonModule',
-    canActivate: [LoggedInActivator, AdminActivator],
-    runGuardsAndResolvers: 'always'
-  },
-  {
     // Admin properties display
     path: 'admin/props',
     loadChildren: './content/admin-props/admin-props.module#AdminPropsModule',

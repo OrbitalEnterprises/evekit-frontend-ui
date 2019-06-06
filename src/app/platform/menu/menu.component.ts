@@ -60,6 +60,11 @@ export class MenuComponent {
     if (this.location.path() !== null) {
       this.activeRoute = this.location.path();
 
+      // Remove any trailing query text
+      if (this.activeRoute.indexOf('?') >= 0) {
+        this.activeRoute = this.activeRoute.substring(0, this.activeRoute.indexOf('?'));
+      }
+
       // Ensure selected menu item is visible based on route
       const expandCheck: number[] = [];
       const nodeList = this.treeControl.dataNodes;

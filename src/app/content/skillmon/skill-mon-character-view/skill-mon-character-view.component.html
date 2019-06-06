@@ -106,7 +106,11 @@ Currently Training   <skill name> <#>
         <div class="ek-tbl" style="height: 100%;">
           <div class="ek-tbl-row">
             <div class="ek-tbl-cell" style="height: 100%;">
-              <mat-checkbox [(ngModel)]="hideUntrained" style="font-size: 10px;">Hide untrained skills</mat-checkbox>
+              <mat-checkbox [(ngModel)]="hideUntrained"
+                            (change)="updateHide($event)"
+                            style="font-size: 10px;">
+                Hide untrained skills
+              </mat-checkbox>
             </div>
           </div>
           <div class="ek-tbl-row">
@@ -163,7 +167,9 @@ Currently Training   <skill name> <#>
   </div>
   <div style="position: relative;">
     <div class="list-corner-upper-left"></div>
-    <mat-tab-group [selectedIndex]="0" style="padding-top: 5px;">
+    <mat-tab-group [selectedIndex]="tabView"
+                   (selectedTabChange)="updateRoute($event)"
+                   style="padding-top: 5px;">
       <mat-tab label="Skills">
         <mat-accordion multi="true">
           <ng-container *ngFor="let ng of skillGroupList">
@@ -195,6 +201,7 @@ Currently Training   <skill name> <#>
                                    [skillPoints]="spForSkill(skillTree.skillList.get(iq.typeID))"
                                    [active]="i === 0"
                                    [pending]="i > 0"
+                                   [timeProgress]="skillTimeProgress(iq)"
                                    [divisions]="queueToDivisions(i)">
           </app-skill-mon-skill-row>
         </div>

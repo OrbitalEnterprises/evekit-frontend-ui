@@ -1,4 +1,4 @@
-import {Component, OnChanges, OnDestroy} from '@angular/core';
+import {Component, OnDestroy} from '@angular/core';
 import {Location} from '@angular/common';
 import {MonitoredChar} from './monitored-char';
 import {AccountService, AdminService, EveKitUserAccount, SynchronizedEveAccount} from '../../platform-service-api';
@@ -13,6 +13,7 @@ import {InvType, SDEDogmaService, SDEInventoryService} from '../../sde-service-a
 import {SkillTree} from './skill-mon-character-view/skill-tree';
 import {DialogsService} from '../../platform/dialogs.service';
 import {ActivatedRoute, Router} from '@angular/router';
+import {filter} from 'rxjs/operators';
 
 @Component({
   selector: 'app-skill-mon-main',
@@ -60,14 +61,13 @@ export class SkillMonMainComponent implements OnDestroy {
 
   setTabFromRoute(): void {
     // Extract the selected tab
-    this.routeInfo.paramMap.subscribe(
-      next => {
-        const tab = next.get('tab');
-        if (tab) {
-          this.selectedTab = parseInt(tab, 10);
+    this.routeInfo.queryParams
+      .pipe(filter(params => params.tab))
+      .subscribe(
+        params => {
+          this.selectedTab = parseInt(params.tab, 10);
         }
-      }
-    );
+      );
   }
 
   updateRefreshTimer() {
@@ -78,15 +78,27 @@ export class SkillMonMainComponent implements OnDestroy {
   }
 
   updateRoute(event: MatTabChangeEvent): void {
+    let side = 0;
+    let hide = 0;
+    const params = this.router.parseUrl(this.location.path()).queryParams;
+    if (params['side']) {
+      side = parseInt(params['side'], 10);
+    }
+    if (params['hide']) {
+      hide = parseInt(params['hide'], 10);
+    }
+
     const url = this
       .router
-      .createUrlTree(['/apps/skillmon', event.index], {relativeTo: this.routeInfo})
+      .createUrlTree(['/apps/skillmon'],
+        {
+          queryParams: {'tab': event.index, 'side': side, 'hide': hide}, relativeTo: this.routeInfo})
       .toString();
 
     this.location.go(url);
   }
 
-  startMonitoRefresh(): void {
+  startMonitorRefresh(): void {
     // Retrieve account list
     this.uidListener = this.store.pipe(select(selectUserAccount)).subscribe(
       u => {
@@ -114,22 +126,28 @@ export class SkillMonMainComponent implements OnDestroy {
           // Now that we have a list of monitored chars we can honor any pre-selection in the route
           this.setTabFromRoute();
           // Resolve names of monitored characters for convenience
+          const requests: Array<Observable<SynchronizedEveAccount[]>> = [];
           for (const next of this.monitorList) {
-            this.accountService.getSyncAccount(-1, next.aid)
-              .subscribe(
-                info => {
-                  if (info.length === 1) {
-                    this.monitoredNames.set(info[0].aid, info[0]);
-                  } else {
-                    // TODO - error if 0
-                  }
-                },
-                () => {
-                  // TODO - error
-                }
-              );
+            requests.push(this.accountService.getSyncAccount(-1, next.aid));
           }
-          // TODO: eliminate any chars that are no longer valid.
+          forkJoin(requests).subscribe(
+            answers => {
+              for (let i = 0; i < answers.length; i++) {
+                const answerList = answers[i];
+                if (answerList.length === 1) {
+                  this.monitoredNames.set(answerList[0].aid, answerList[0]);
+                } else {
+                  // Requested account missing, remove from monitor list.
+                  // TODO - save the new list.
+                  this.monitorList.splice(i, 1);
+                }
+              }
+            },
+            () => {
+              this.dialogService.makeWarnDialog('User Configuration Error',
+                'Unable to read list of monitored accounts.  Please verify you are logged in a reload the page.');
+            }
+          );
         },
         () => {
           this.dialogService.makeWarnDialog('User Configuration Error',
@@ -148,6 +166,41 @@ export class SkillMonMainComponent implements OnDestroy {
       }).afterClosed().subscribe(
       () => {
         this.refreshMonitorList();
+      }
+    );
+  }
+
+  removeCharacter(target: MonitoredChar): void {
+    if (!this.monitoredNames.has(target.aid)) {
+      // Stale reference, kick off a reload.
+      this.refreshMonitorList();
+      return;
+    }
+    const acctInfo = this.monitoredNames.get(target.aid);
+    this.dialogService.makeConfirmDialog('Confirm Remove', 'Are you sure you want to remove \'' + acctInfo.eveCharacterName + '\'?')
+      .afterClosed().subscribe(
+      confirm => {
+        if (confirm) {
+          // Remove this account, save the property and refresh.
+          const newList = [];
+          for (const next of this.monitorList) {
+            if (next.aid === target.aid && next.kid === target.kid) {
+              continue;
+            }
+            newList.push({'aid': next.aid, 'kid': next.kid});
+          }
+          this.adminService.setUserProp(parseInt(this.user.uid, 10), APP_CHAR_LIST_PROP, JSON.stringify(newList))
+            .subscribe(
+              () => {
+                this.refreshMonitorList();
+              },
+              () => {
+                this.dialogService.makeWarnDialog('Property Save Error',
+                  'Unable to save new monitored account list.  Please try again.  If this problem persists, ' +
+                  'please contact the site admin.');
+              }
+            );
+        }
       }
     );
   }
@@ -185,7 +238,7 @@ export class SkillMonMainComponent implements OnDestroy {
                         }
                       }
                       // Skill tree ready, start monitor
-                      this.startMonitoRefresh();
+                      this.startMonitorRefresh();
                     },
                     () => {
                       this.dialogService.makeWarnDialog('Skill Tree Error',

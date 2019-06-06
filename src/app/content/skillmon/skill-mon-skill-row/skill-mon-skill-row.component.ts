@@ -35,6 +35,8 @@ export class SkillMonSkillRowComponent {
   pending = false;
   @Input()
   divisions: Array<TrainingDivision> = [];
+  @Input()
+  timeProgress = 0;
 
   // icons
   icOpen = far['faSquare'];
@@ -50,6 +52,16 @@ export class SkillMonSkillRowComponent {
     return BASE_SP[level] * rank;
   }
 
+  levelCurrentSkillPoints(level: number, sp: number, rank: number): number {
+    if (!this.active) {
+      return sp;
+    }
+    const startSP = this.levelTargetSkillPoints(level - 1, rank);
+    const endSP = this.levelTargetSkillPoints(level, rank);
+    const tgtPct = this.levelTargetPct(level, sp, rank)
+    return Math.floor(startSP + (endSP - startSP) * (tgtPct / 100));
+  }
+
   levelTargetPct(level: number, sp: number, rank: number): number {
     if (level > 5) {
       level = 5;
@@ -57,7 +69,8 @@ export class SkillMonSkillRowComponent {
     const targetSP = this.levelTargetSkillPoints(level, rank);
     const prevSP = this.levelTargetSkillPoints(level - 1, rank);
     const delta = targetSP - prevSP;
-    return Math.floor(Math.max(sp - prevSP, 0) / delta * 100);
+    const spBasedProgress = Math.floor(Math.max(sp - prevSP, 0) / delta * 100);
+    return Math.max(spBasedProgress, this.timeProgress);
   }
 
   levelClassMap(target: number): object {
