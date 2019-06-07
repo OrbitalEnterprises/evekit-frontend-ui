@@ -1,10 +1,12 @@
 <div class="ek-tbl">
   <div class="ek-tbl-row">
     <div class="ek-tbl-cell" style="vertical-align: middle;">
-      <img src="{{'https://image.eveonline.com/character/' + (account ? account.eveCharacterID : 0) + '_128.jpg'}}">
+      <img src="{{'https://image.eveonline.com/character/' + (account ? account.eveCharacterID : 0) + '_128.jpg'}}"
+           alt="{{account ? account.eveCharacterName : 'N/A'}}">
     </div>
     <div class="ek-tbl-cell" style="padding-left: 20px;">
-      <div class="ek-tbl">
+      <mat-spinner *ngIf="loading"></mat-spinner>
+      <div class="ek-tbl" *ngIf="!loading">
         <div class="ek-tbl-row">
           <div class="ek-tbl-cell" style="white-space: nowrap;">
             <b>{{account ? account.eveCharacterName : ''}}</b>

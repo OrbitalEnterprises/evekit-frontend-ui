@@ -51,10 +51,11 @@ Currently Training   <skill name> <#>
     <div class="ek-tbl-row">
       <div class="ek-tbl-cell" style="vertical-align: top;">
         <img src="{{'https://image.eveonline.com/character/' + (account ? account.eveCharacterID : 0) + '_128.jpg'}}"
-             alt="character image">
+             alt="{{account ? account.eveCharacterName : 'N/A'}}">
       </div>
       <div class="ek-tbl-cell" style="padding-left: 10px; vertical-align: top">
-        <div class="ek-tbl">
+        <mat-spinner *ngIf="loading"></mat-spinner>
+        <div class="ek-tbl" *ngIf="!loading">
           <div class="ek-tbl-row">
             <div class="ek-tbl-cell" style="white-space: nowrap;">
               <b>{{account ? account.eveCharacterName : ''}}</b>
@@ -102,7 +103,7 @@ Currently Training   <skill name> <#>
           </div>
         </div>
       </div>
-      <div class="ek-tbl-cell" style="padding-left: 2in;">
+      <div class="ek-tbl-cell" style="padding-left: 2in;" *ngIf="!loading">
         <div class="ek-tbl" style="height: 100%;">
           <div class="ek-tbl-row">
             <div class="ek-tbl-cell" style="height: 100%;">
@@ -153,7 +154,7 @@ Currently Training   <skill name> <#>
     </div>
     <div class="list-corner-lower-left"></div>
   </div>
-  <div style="margin-bottom: 8px; margin-top: 8px; padding-right: 5px; position: relative;">
+  <div style="margin-bottom: 8px; margin-top: 8px; padding-right: 5px; position: relative;" *ngIf="!loading">
     <div class="list-corner-upper-right"></div>
     <app-skill-mon-current-training [empty]="currentQueue.length === 0"
                                     [paused]="currentQueue.length > 0 && currentQueue[0].endTime === 0"
@@ -165,7 +166,7 @@ Currently Training   <skill name> <#>
     </app-skill-mon-current-training>
     <div class="list-corner-lower-right"></div>
   </div>
-  <div style="position: relative;">
+  <div style="position: relative;" *ngIf="!loading">
     <div class="list-corner-upper-left"></div>
     <mat-tab-group [selectedIndex]="tabView"
                    (selectedTabChange)="updateRoute($event)"

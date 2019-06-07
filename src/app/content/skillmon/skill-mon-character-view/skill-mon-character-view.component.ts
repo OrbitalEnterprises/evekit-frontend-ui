@@ -49,7 +49,7 @@ export class SkillMonCharacterViewComponent implements OnChanges, OnDestroy {
   currentQueue: Array<SkillInQueue> = [];
   tabView = 0;
   secondWatcher: Subscription = null;
-  toggle = false;
+  loading = false;
 
   constructor(private router: Router,
               private location: Location,
@@ -69,19 +69,14 @@ export class SkillMonCharacterViewComponent implements OnChanges, OnDestroy {
   }
 
   ngOnChanges(): void {
-    if (this.secondWatcher === null) {
-      this.secondWatcher = this.secondTimer.subscribe(
-        () => {
-          this.toggle = !this.toggle;
-        }
-      );
-    }
     if (!this.account) {
       return;
     }
+    this.loading = true;
     this.accountService.getAccessKey(-1, this.account.aid, this.kid)
       .subscribe(
         keyList => {
+          this.loading = false;
           if (keyList.length === 1) {
             this.access = keyList[0];
             this.update();
@@ -91,6 +86,7 @@ export class SkillMonCharacterViewComponent implements OnChanges, OnDestroy {
           }
         },
         () => {
+          this.loading = false;
           this.dialog.makeWarnDialog('Access Key Error', 'Error retrieving access key for \'' +
             this.account.eveCharacterName + '\'.  Please reload page to try again.  If problems persist, please contact the site admin.');
         }
@@ -255,6 +251,7 @@ export class SkillMonCharacterViewComponent implements OnChanges, OnDestroy {
   }
 
   update(): void {
+    this.loading = true;
     forkJoin(
       this.commonModelService.getAccountBalance(this.access.accessKey, this.access.credential),
       this.charModelService.getCharacterSheets(this.access.accessKey, this.access.credential),
@@ -263,6 +260,7 @@ export class SkillMonCharacterViewComponent implements OnChanges, OnDestroy {
       this.charModelService.getSkillsInQueue(this.access.accessKey, this.access.credential)
     ).subscribe(
       results => {
+        this.loading = false;
         // Extract account balance
         this.balance = results[0].length === 1 ? results[0][0].balance : -1;
         // Extract attributes
@@ -291,6 +289,7 @@ export class SkillMonCharacterViewComponent implements OnChanges, OnDestroy {
         this.retrieveSkills();
       },
       () => {
+        this.loading = false;
         this.dialog.makeWarnDialog('Character Details Error', 'Unable to retrieve character details for \'' +
           this.account.eveCharacterName + '\'.  Please verify the access key still has the appropriate privileges.  Reload this ' +
           'page to try again.  Please contact the site admin if this problem persists.');
@@ -312,9 +311,11 @@ export class SkillMonCharacterViewComponent implements OnChanges, OnDestroy {
     if (contid === -1) {
       this.knownSkills = [];
     }
+    this.loading = true;
     this.charModelService.getSkills(this.access.accessKey, this.access.credential, undefined, contid)
       .subscribe(
         results => {
+          this.loading = false;
           this.knownSkills = this.knownSkills.concat(results);
           if (results.length > 0) {
             const last = results.pop();
@@ -322,6 +323,7 @@ export class SkillMonCharacterViewComponent implements OnChanges, OnDestroy {
           }
         },
         () => {
+          this.loading = false;
           this.dialog.makeWarnDialog('Character Skills Error', 'Unable to retrieve character skills for \'' +
             this.account.eveCharacterName + '\'.  Please verify the access key still has the appropriate privileges.  Reload this ' +
             'page to try again.  Please contact the site admin if this problem persists.');
@@ -330,17 +332,20 @@ export class SkillMonCharacterViewComponent implements OnChanges, OnDestroy {
   }
 
   retrieveHeritage(): void {
+    this.loading = true;
     forkJoin(
       this.charSDEService.getRaces(-1, 1000, '{values:[' + String(this.charSheet.raceID) + ']}'),
       this.charSDEService.getBloodlines(-1, 1000, '{values:[' + String(this.charSheet.bloodlineID) + ']}')
     ).subscribe(
       results => {
+        this.loading = false;
         // Extract race
         this.race = results[0].length === 1 ? results[0][0].raceName : '';
         // Extract bloodline
         this.bloodline = results[1].length === 1 ? results[1][0].bloodlineName : '';
       },
       () => {
+        this.loading = false;
         this.dialog.makeWarnDialog('Character Heritage  Error', 'Unable to retrieve character heritage for \'' +
           this.account.eveCharacterName + '\'.  Please verify the access key still has the appropriate privileges.  Reload this ' +
           'page to try again.  Please contact the site admin if this problem persists.');

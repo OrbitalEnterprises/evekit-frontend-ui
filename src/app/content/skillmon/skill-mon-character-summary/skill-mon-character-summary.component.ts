@@ -1,7 +1,7 @@
 import {Component, Input, OnChanges, OnDestroy} from '@angular/core';
 import {AccountService, SynchronizedAccountAccessKey, SynchronizedEveAccount} from '../../../platform-service-api';
 import {ModelCharacterService, ModelCommonService, SkillInQueue} from '../../../model-service-api';
-import {Observable, Subscription} from 'rxjs';
+import {forkJoin, Observable, Subscription} from 'rxjs';
 import {SkillTree} from '../skill-mon-character-view/skill-tree';
 import {DialogsService} from '../../../platform/dialogs.service';
 
@@ -47,6 +47,7 @@ export class SkillMonCharacterSummaryComponent implements OnChanges, OnDestroy {
   empty = false;
   skillQueueDoneTime = -1;
   formattedQueueFinish: string;
+  loading = false;
 
   constructor(private dialog: DialogsService,
               private accountService: AccountService,
@@ -64,9 +65,11 @@ export class SkillMonCharacterSummaryComponent implements OnChanges, OnDestroy {
     if (!this.account) {
       return;
     }
+    this.loading = true;
     this.accountService.getAccessKey(-1, this.account.aid, this.kid)
       .subscribe(
         keyList => {
+          this.loading = false;
           if (keyList.length === 1) {
             this.access = keyList[0];
             this.update();
@@ -76,6 +79,7 @@ export class SkillMonCharacterSummaryComponent implements OnChanges, OnDestroy {
           }
         },
         () => {
+          this.loading = false;
           this.dialog.makeWarnDialog('Access Key Error', 'Error retrieving access key for \'' +
             this.account.eveCharacterName + '\'.  Please reload page to try again.  If problems persist, please contact the site admin.');
         }
@@ -106,96 +110,98 @@ export class SkillMonCharacterSummaryComponent implements OnChanges, OnDestroy {
   }
 
   update(): void {
-    // Update account balance
-    this.commonModelService.getAccountBalance(this.access.accessKey, this.access.credential)
+    this.loading = true;
+    forkJoin(
+      this.commonModelService.getAccountBalance(this.access.accessKey, this.access.credential),
+      this.charModelService.getSkillsInQueue(this.access.accessKey, this.access.credential))
       .subscribe(
-        result => {
-          if (result.length === 1) {
-            this.balance = result[0].balance;
-          } else {
-            this.dialog.makeWarnDialog('Account Balance Error', 'Unable to retrieve account balance for \'' +
-              this.account.eveCharacterName + '\'.  Please verify the specified access key still has the required privileges.  Reload ' +
-              'this page to try again.  Please contact the site admin if this problem persists.');
-          }
-        },
-        () => {
-          this.dialog.makeWarnDialog('Account Balance Error', 'Unable to retrieve account balance for \'' +
-            this.account.eveCharacterName + '\'.  Please verify the specified access key still has the required privileges.  Reload ' +
-            'this page to try again.  Please contact the site admin if this problem persists.');
-        }
-      );
-    // Update training skill info
-    this.charModelService.getSkillsInQueue(this.access.accessKey, this.access.credential)
-      .subscribe(
-        result => {
-          if (result.length === 0) {
-            this.skillTrainingName = null;
-            this.skillTrainingDoneTime = -1;
-            this.empty = true;
-            this.paused = false;
-            return;
-          }
-
-          // Queue only updated when user logs in.  If user hasn't logged in for a while, there may be
-          // several older entries still in queue.  We eliminate those here.
-          const process: Array<SkillInQueue> = [];
-          const now = Date.now();
-          for (const next of result) {
-            if (next.endTime === 0 || next.endTime > now) {
-              process.push(next);
+        pair => {
+          this.loading = false;
+          // Update account balance
+          {
+            const result = pair[0];
+            if (result.length === 1) {
+              this.balance = result[0].balance;
+            } else {
+              this.dialog.makeWarnDialog('Account Balance Error', 'Unable to retrieve account balance for \'' +
+                this.account.eveCharacterName + '\'.  Please verify the specified access key still has the required privileges.  Reload ' +
+                'this page to try again.  Please contact the site admin if this problem persists.');
             }
           }
-          if (process.length === 0) {
-            this.empty = true;
-            this.paused = false;
-            return;
-          }
-
-          // Queue not always numbered from 1, much less in order.  Use the lowest numbered item in the queue.
-          let index: SkillInQueue = null;
-          this.paused = true;
-          this.empty = false;
-          for (const next of process) {
-            if (index === null && next.endTime > now) {
-              index = next;
-            } else if (index !== null && next.queuePosition < index.queuePosition && next.endTime > now) {
-              index = next;
-            }
-          }
-
-          if (index != null) {
-            this.paused = false;
-
-            // Determine when the entire queue will finish.
-            this.skillQueueDoneTime = index.endTime;
-            for (const next of process) {
-              if (next.endTime > this.skillQueueDoneTime) {
-                this.skillQueueDoneTime = next.endTime;
-              }
-            }
-            this.formattedQueueFinish = this.formatFinishTime(now, this.skillQueueDoneTime);
-
-            // Resolve the current training time and finish time
-            if (this.skillTree === null || !this.skillTree.skillList.has(index.typeID)) {
+          // Update training skill info
+          {
+            const result = pair[1];
+            if (result.length === 0) {
+              this.skillTrainingName = null;
+              this.skillTrainingDoneTime = -1;
+              this.empty = true;
+              this.paused = false;
               return;
             }
-            this.skillTrainingName = this.skillTree.skillList.get(index.typeID).typeName + ' ' + formatLevel(index.level);
-            this.skillTrainingDoneTime = index.endTime;
-            this.formattedFinish = this.formatFinishTime(Date.now(), index.endTime);
-            this.secondWatcher = this.secondTimer.subscribe(
-              () => {
-                let ts = Date.now();
-                if (ts > index.endTime) {
-                  ts = index.endTime;
-                }
-                this.formattedFinish = this.formatFinishTime(ts, index.endTime);
-                this.formattedQueueFinish = this.formatFinishTime(ts, this.skillQueueDoneTime);
+
+            // Queue only updated when user logs in.  If user hasn't logged in for a while, there may be
+            // several older entries still in queue.  We eliminate those here.
+            const process: Array<SkillInQueue> = [];
+            const now = Date.now();
+            for (const next of result) {
+              if (next.endTime === 0 || next.endTime > now) {
+                process.push(next);
               }
-            );
+            }
+            if (process.length === 0) {
+              this.empty = true;
+              this.paused = false;
+              return;
+            }
+
+            // Queue not always numbered from 1, much less in order.  Use the lowest numbered item in the queue.
+            let index: SkillInQueue = null;
+            this.paused = true;
+            this.empty = false;
+            for (const next of process) {
+              if (index === null && next.endTime > now) {
+                index = next;
+              } else if (index !== null && next.queuePosition < index.queuePosition && next.endTime > now) {
+                index = next;
+              }
+            }
+
+            if (index != null) {
+              this.paused = false;
+
+              // Determine when the entire queue will finish.
+              this.skillQueueDoneTime = index.endTime;
+              for (const next of process) {
+                if (next.endTime > this.skillQueueDoneTime) {
+                  this.skillQueueDoneTime = next.endTime;
+                }
+              }
+              this.formattedQueueFinish = this.formatFinishTime(now, this.skillQueueDoneTime);
+
+              // Resolve the current training time and finish time
+              if (this.skillTree === null || !this.skillTree.skillList.has(index.typeID)) {
+                return;
+              }
+              this.skillTrainingName = this.skillTree.skillList.get(index.typeID).typeName + ' ' + formatLevel(index.level);
+              this.skillTrainingDoneTime = index.endTime;
+              this.formattedFinish = this.formatFinishTime(Date.now(), index.endTime);
+              this.secondWatcher = this.secondTimer.subscribe(
+                () => {
+                  let ts = Date.now();
+                  if (ts > index.endTime) {
+                    ts = index.endTime;
+                  }
+                  this.formattedFinish = this.formatFinishTime(ts, index.endTime);
+                  this.formattedQueueFinish = this.formatFinishTime(ts, this.skillQueueDoneTime);
+                }
+              );
+            }
+
           }
         },
         () => {
-          this.dialog.makeWarnDialog('Skill Queue Error', 'Unable to retrieve skill queue for \'' +
+          this.loading = false;
+          this.dialog.makeWarnDialog('Character Summary Error', 'Unable to retrieve summary for \'' +
             this.account.eveCharacterName + '\'.  Please verify the specified access key still has the required privileges.  Reload ' +
             'this page to try again.  Please contact the site admin if this problem persists.');
         }
