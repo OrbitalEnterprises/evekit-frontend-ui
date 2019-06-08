@@ -46,7 +46,7 @@ const standardRoutes: Routes = [
     // Applications - SkillMon display
     path: 'apps/skillmon',
     loadChildren: './content/skillmon/skillmon.module#SkillmonModule',
-    canActivate: [LoggedInActivator, AdminActivator],
+    canActivate: [LoggedInActivator],
     runGuardsAndResolvers: 'always'
   },
   {
