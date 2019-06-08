@@ -24,18 +24,39 @@
       Monitored characters will be removed from this application if an assigned access key is no longer
       available or has incorrect permissions.
     </p>
-    <mat-grid-list cols="2" rowHeight="3:1" style="padding-top: 10px;">
-      <mat-grid-tile *ngFor="let mm of monitorList" style="justify-content: flex-start;">
-        <div class="list-corner-upper-left"></div>
-        <app-skill-mon-character-summary
-          style="padding-top: 10px; padding-left: 10px;"
-          [account]="monitoredNames.get(mm.aid)"
-          [kid]="mm.kid"
-          [secondTimer]="secondTimer"
-          [skillTree]="finalSkillTree">
-        </app-skill-mon-character-summary>
-      </mat-grid-tile>
-    </mat-grid-list>
+    <div class="ek-tbl">
+      <ng-container *ngFor="let mm of monitorList; let i = index">
+        <div class="ek-tbl-row" *ngIf="i % 2 === 0">
+          <div class="ek-tbl-cell" style="padding-top: 10px; padding-left: 10px; position: relative;">
+            <div class="list-corner-upper-left"></div>
+            <app-skill-mon-character-summary
+              [account]="monitoredNames.get(monitorList[i].aid)"
+              [kid]="monitorList[i].kid"
+              [secondTimer]="secondTimer"
+              [skillTree]="finalSkillTree">
+            </app-skill-mon-character-summary>
+          </div>
+          <div class="ek-tbl-cell" style="padding-top: 10px; padding-left: 20px; position: relative;">
+            <div class="list-corner-upper-left"></div>
+            <app-skill-mon-character-summary
+              *ngIf="i + 1 < monitorList.length"
+              [account]="monitoredNames.get(monitorList[i + 1].aid)"
+              [kid]="monitorList[i + 1].kid"
+              [secondTimer]="secondTimer"
+              [skillTree]="finalSkillTree">
+            </app-skill-mon-character-summary>
+          </div>
+        </div>
+        <div class="ek-tbl-row" *ngIf="i % 2 === 1">
+          <div class="ek-tbl-cell" style="padding-top: 5px;">
+            &nbsp;
+          </div>
+          <div class="ek-tbl-cell" style="padding-top: 5px;">
+            &nbsp;
+          </div>
+        </div>
+      </ng-container>
+    </div>
   </mat-tab>
   <mat-tab *ngFor="let mm of monitorList; let i = index">
     <ng-template mat-tab-label>
