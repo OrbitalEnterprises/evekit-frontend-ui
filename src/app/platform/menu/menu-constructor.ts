@@ -23,6 +23,7 @@ const MENU_STRUCTURE: MenuNode[] = [
   new ExpandableMenuNode('Accounts', 'people', null)
     .addGuard(MenuGuard.LOGGED_IN),
   new ExpandableMenuNode('Applications', 'apps', null)
+    .addGuard(MenuGuard.LOGGED_IN)
     .addChild(new SingleMenuNode('Skill Monitor', '/apps/skillmon', 'portrait', null)),
   new ExpandableMenuNode('APIs', 'code', null)
     .addChild(new SingleMenuNode('Model', '/sapi/model/-1/-1', 'memory', null))
