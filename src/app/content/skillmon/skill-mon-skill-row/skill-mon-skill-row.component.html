@@ -19,7 +19,7 @@
       SP: {{levelCurrentSkillPoints(trainedLevel + 1, skillPoints, rank)}}/{{levelTargetSkillPoints(trainedLevel + 1, rank)}}
     </div>
     <div class="ek-tbl-cell" style="text-align: right; white-space: nowrap; width: 100%;">
-      {{levelTargetPct(trainedLevel + 1, skillPoints, rank)}}% Done
+      {{ levelTargetPct(trainedLevel + 1, skillPoints, rank) | number : '1.0-0' }}% Done
     </div>
     <div class="ek-tbl-cell" style="white-space: nowrap; padding-left: 5px;">
       <mat-progress-bar color="accent"

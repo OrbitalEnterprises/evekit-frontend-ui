@@ -69,6 +69,11 @@ export class SkillMonCharacterViewComponent implements OnChanges, OnDestroy {
   }
 
   ngOnChanges(): void {
+    if (this.secondWatcher === null) {
+      this.secondWatcher = this.secondTimer.subscribe(
+        () => this.updateTimeInProgress()
+      );
+    }
     if (!this.account) {
       return;
     }
@@ -97,6 +102,12 @@ export class SkillMonCharacterViewComponent implements OnChanges, OnDestroy {
       this.skillGroupList.push(next.value);
     }
     this.skillGroupList = this.skillGroupList.sort((a, b) => a.groupName.localeCompare(b.groupName));
+  }
+
+  updateTimeInProgress(): void {
+    for (const next of this.currentQueue) {
+      next['timeProgress'] = this.skillTimeProgress(next);
+    }
   }
 
   setTabFromRoute(): void {
@@ -197,6 +208,10 @@ export class SkillMonCharacterViewComponent implements OnChanges, OnDestroy {
   }
 
   skillTimeProgress(target: SkillInQueue): number {
+    if (target.endTime === 0) {
+      // paused, progress always based on current skill points
+      return 0;
+    }
     const now = Date.now();
     if (now < target.startTime) {
       return 0;
@@ -204,7 +219,7 @@ export class SkillMonCharacterViewComponent implements OnChanges, OnDestroy {
     if (now > target.endTime) {
       return 100;
     }
-    return Math.floor((now - target.startTime) / (target.endTime - target.startTime) * 100);
+    return (now - target.startTime) / (target.endTime - target.startTime) * 100;
   }
 
   levelForSkill(skill: InvType) {
@@ -239,6 +254,7 @@ export class SkillMonCharacterViewComponent implements OnChanges, OnDestroy {
     const now = Date.now();
     for (const next of retrieved) {
       if (next.endTime === 0 || next.endTime > now) {
+        next['timeProgress'] = 0;
         process.push(next);
       }
     }

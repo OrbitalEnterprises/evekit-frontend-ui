@@ -103,6 +103,11 @@ export class SkillMonMainComponent implements OnDestroy {
     // Retrieve account list
     this.uidListener = this.store.pipe(select(selectUserAccount)).subscribe(
       u => {
+        if (u === null) {
+          // User logged out, reroute
+          this.router.navigateByUrl('/');
+          return;
+        }
         this.user = u;
         this.refreshMonitorList();
       }
@@ -219,6 +224,10 @@ export class SkillMonMainComponent implements OnDestroy {
           // Set list of skill groups
           const getSkillLists: Array<Observable<InvType[]>> = [];
           for (const next of results) {
+            if (next.groupID === 505) {
+              // Ignore fake skills group
+              continue;
+            }
             this.skillTree.skillGroups.set(next.groupID, new SkillGroup(next.groupID, next.groupName, []));
             getSkillLists.push(this.invSDEService.getTypes(-1, 1000, undefined, undefined,
               undefined, undefined, undefined, undefined,

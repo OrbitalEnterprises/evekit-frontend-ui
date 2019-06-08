@@ -202,7 +202,7 @@ Currently Training   <skill name> <#>
                                    [skillPoints]="spForSkill(skillTree.skillList.get(iq.typeID))"
                                    [active]="i === 0"
                                    [pending]="i > 0"
-                                   [timeProgress]="skillTimeProgress(iq)"
+                                   [timeProgress]="iq['timeProgress']"
                                    [divisions]="queueToDivisions(i)">
           </app-skill-mon-skill-row>
         </div>
