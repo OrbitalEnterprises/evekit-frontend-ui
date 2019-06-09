@@ -37,7 +37,7 @@
             </app-skill-mon-character-summary>
           </div>
           <div class="ek-tbl-cell" style="padding-top: 10px; padding-left: 20px; position: relative;">
-            <div class="list-corner-upper-left"></div>
+            <div class="list-corner-upper-left" *ngIf="i + 1 < monitorList.length"></div>
             <app-skill-mon-character-summary
               *ngIf="i + 1 < monitorList.length"
               [account]="monitoredNames.get(monitorList[i + 1].aid)"

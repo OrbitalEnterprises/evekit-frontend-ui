@@ -1,4 +1,4 @@
-import {Component, OnDestroy} from '@angular/core';
+import {Component, DoCheck, OnDestroy} from '@angular/core';
 import {Location} from '@angular/common';
 import {MonitoredChar} from './monitored-char';
 import {AccountService, AdminService, EveKitUserAccount, SynchronizedEveAccount} from '../../platform-service-api';
@@ -20,7 +20,7 @@ import {filter} from 'rxjs/operators';
   templateUrl: './skill-mon-main.component.html',
   styleUrls: ['./skill-mon-main.component.css']
 })
-export class SkillMonMainComponent implements OnDestroy {
+export class SkillMonMainComponent implements OnDestroy, DoCheck {
   uidListener: Subscription = null;
   user: EveKitUserAccount = null;
   monitorList: Array<MonitoredChar> = [];
@@ -60,6 +60,20 @@ export class SkillMonMainComponent implements OnDestroy {
     }
   }
 
+  ngDoCheck(): void {
+    this.setTabFromURL();
+  }
+
+  setTabFromURL(): void {
+    const params = this.router.parseUrl(this.location.path()).queryParams;
+    if (params['tab']) {
+      const target = parseInt(params['tab'], 10);
+      if (this.selectedTab !== target) {
+        this.selectedTab = target;
+      }
+    }
+  }
+
   setTabFromRoute(): void {
     // Extract the selected tab
     this.routeInfo.queryParams
@@ -93,7 +107,8 @@ export class SkillMonMainComponent implements OnDestroy {
       .router
       .createUrlTree(['/apps/skillmon'],
         {
-          queryParams: {'tab': event.index, 'side': side, 'hide': hide}, relativeTo: this.routeInfo})
+          queryParams: {'tab': event.index, 'side': side, 'hide': hide}, relativeTo: this.routeInfo
+        })
       .toString();
 
     this.location.go(url);
