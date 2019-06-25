@@ -118,12 +118,12 @@ export class SkillMonMainComponent implements OnDestroy, DoCheck {
     // Retrieve account list
     this.uidListener = this.store.pipe(select(selectUserAccount)).subscribe(
       u => {
+        this.user = u;
         if (u === null) {
           // User logged out, reroute
           this.router.navigateByUrl('/');
           return;
         }
-        this.user = u;
         this.refreshMonitorList();
       }
     );
@@ -131,6 +131,9 @@ export class SkillMonMainComponent implements OnDestroy, DoCheck {
 
   refreshMonitorList(): void {
     this.refreshTimer = 299;
+    if (this.user === null) {
+      return;
+    }
     this.loading = true;
     this.adminService.getUserProp(parseInt(this.user.uid, 10), APP_CHAR_LIST_PROP)
       .subscribe(
