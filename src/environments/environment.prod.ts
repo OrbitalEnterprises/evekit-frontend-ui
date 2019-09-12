@@ -1,7 +1,7 @@
 export const environment = {
   production: true,
   platformServiceApiBasePath: 'https://evekit.orbital.enterprises/api',
-  sdeServiceApiBasePath: 'https://evekit-sde.orbital.enterprises/20190625/api/ws/v20190625',
+  sdeServiceApiBasePath: 'https://evekit-sde.orbital.enterprises/20190911/api/ws/v20190911',
   modelServiceApiBasePath: 'https://evekit-model.orbital.enterprises//api',
   modelViewURL: 'https://evekit-model.orbital.enterprises/api/swagger.json',
   marketViewURL: 'https://evekit-market.orbital.enterprises/swagger',
